@@ -2,12 +2,7 @@ import 'package:back_to_us/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/*
-  displayLarge => headers
-  titleLarge => section titles
-  bodyLarge/bodyMedium => texts
-  labelLarge => buttons
-*/
+
 
 
 void main() {
