@@ -1,11 +1,22 @@
+import 'package:back_to_us/firebase_options.dart';
 import 'package:back_to_us/screens/sign_up_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/*
+  displayLarge => headers
+  titleLarge => section titles
+  bodyLarge/bodyMedium => text
+  labelLarge => buttons
+*/
 
 
-
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

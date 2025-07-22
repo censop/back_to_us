@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "205352381402",
+    "project_id": "back-to-us-base",
+    "storage_bucket": "back-to-us-base.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205352381402:android:56bbc40d0a81b6d664aee3",
+        "android_client_info": {
+          "package_name": "com.example.back_to_us"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDughrlHz4715fm0SsBFa-LIJHPx_cMQl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
