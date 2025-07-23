@@ -1,7 +1,7 @@
-import 'package:back_to_us/screens/Authentication/sign_up_screen.dart';
+
+import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:back_to_us/screens/home_screen.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -37,10 +37,8 @@ class _LogInScreenState extends State<LogInScreen> {
       );
       print(userCreds);
 
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.home,
         (Route<dynamic> route) => false,
       );
     }    
@@ -62,11 +60,14 @@ class _LogInScreenState extends State<LogInScreen> {
         children: [
           Text(
             "Log In",
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.displayMedium,
           ),
           Container(
             margin: EdgeInsets.all(20),
-            child: Text("Enter e_mail:")
+            child: Text(
+              "Enter e-mail:",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),          
           Container(
             padding: EdgeInsets.only(left: 40, right: 40),
@@ -82,7 +83,10 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           Container(
             margin: EdgeInsets.all(20),
-            child: Text("Enter password:")
+            child: Text(
+              "Enter password:",
+              style: Theme.of(context).textTheme.titleMedium
+            ),
           ),
           Container(
             padding: EdgeInsets.only(left: 40, right: 40),
@@ -98,21 +102,28 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           SizedBox(height: 20),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               _logIn(email: _emailController.text, password: _passwordController.text);
             }, 
-            child: Text("Log In"),
+            child: Text(
+              "Log In",
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                color: Colors.white
+              ),
+            ),
           ),
+          SizedBox(height: 60),
           Text(
             "Don't have an account yet?",
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => SignUpScreen(),
-                ),
+              Navigator.of(context).pushReplacementNamed(
+                Routes.signUp,
               );
             },
             child: Text("Join Back to Us"),

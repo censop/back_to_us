@@ -1,5 +1,5 @@
-import 'package:back_to_us/screens/Authentication/log_in_screen.dart';
-import 'package:back_to_us/screens/Authentication/sign_up_screen.dart';
+
+import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -12,13 +12,17 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void _onSelectSignUp() {
-    print("SignUpSelected");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen()));
+    Navigator.pushNamed(
+      context, 
+      Routes.signUp,
+    );
   }
 
   void _onSelectLogIn() {
-    print("LogInSelected");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LogInScreen()));
+    Navigator.pushNamed(
+      context, 
+      Routes.logIn,
+    );
   }
 
   @override

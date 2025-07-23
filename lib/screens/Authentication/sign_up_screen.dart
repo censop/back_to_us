@@ -1,5 +1,5 @@
-import 'package:back_to_us/screens/Authentication/log_in_screen.dart';
-import 'package:back_to_us/screens/home_screen.dart';
+
+import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -15,11 +15,10 @@ class SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool signedUp = false;
-  
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -27,21 +26,20 @@ class SignUpScreenState extends State<SignUpScreen> {
   //signs up users when sign up button is pressed:
   Future<void> _signUp({required email, required password}) async {
 
-    if (email == null || password == null ) {
+    if (email == null || password == null) {
       return;
     }
 
     try {
       final userCreds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email, 
-        password: password
+        password: password,
+        ///TO DO username ekle!!!!!
       );
       print(userCreds);
 
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.home,
         (Route<dynamic> route) => false,
       );
     }    
@@ -63,11 +61,14 @@ class SignUpScreenState extends State<SignUpScreen> {
         children: [
            Text(
             "Sign Up",
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.displayMedium,
           ),
           Container(
             margin: EdgeInsets.all(20),
-            child: Text("Enter e_mail:")
+            child: Text(
+              "Enter e_mail:",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),   
           Container(
             padding: EdgeInsets.only(left: 40, right: 40),
@@ -83,40 +84,47 @@ class SignUpScreenState extends State<SignUpScreen> {
           ),
            Container(
             margin: EdgeInsets.all(20),
-            child: Text("Enter password:")
+            child: Text(
+              "Enter password:",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           Container(
             padding: EdgeInsets.only(left: 40, right: 40),
             child: TextFormField(
               controller: _passwordController,
              decoration: InputDecoration(
-                hintText: "Email",
+                hintText: "Password",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(40),
                 ),
               ),
             ),
           ),
+          SizedBox(height: 20),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               _signUp(email: _emailController.text, password: _passwordController.text);
-
-              if (signedUp) {
-
-              }
             }, 
-            child: Text("Sign Up"),
+            child: Text(
+              "Sign Up",
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                color: Colors.white
+              ),             
+            ),
           ),
+          SizedBox(height: 60),
           Text(
             "Already have an account?",
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => LogInScreen(),
-                ),
+              Navigator.of(context).pushReplacementNamed(
+                Routes.logIn,
               );
             }, 
             child: Text("Log In"),

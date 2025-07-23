@@ -1,13 +1,17 @@
 import 'package:back_to_us/firebase_options.dart';
+import 'package:back_to_us/routes.dart';
+import 'package:back_to_us/screens/Authentication/sign_up_screen.dart';
 import 'package:back_to_us/screens/Authentication/welcome_screen.dart';
 import 'package:back_to_us/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:back_to_us/screens/Authentication/log_in_screen.dart';
 
 /*
   displayLarge => headers
+  displayMedium => smaller headers
   titleLarge => section titles
   bodyLarge/bodyMedium => text
   labelLarge => buttons
@@ -33,6 +37,16 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Back To Us Demo',
+
+      initialRoute: currentUser != null ? Routes.home : Routes.welcome,
+
+      routes: {
+        Routes.home : (context) => HomeScreen(),
+        Routes.welcome : (context) => WelcomeScreen(),
+        Routes.signUp : (context) => SignUpScreen(),
+        Routes.logIn : (context) => LogInScreen(),
+      },
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 130, 14, 42),
@@ -47,11 +61,21 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: const Color.fromARGB(255, 130, 14, 42),
           ),
+          displayMedium: GoogleFonts.poppins(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: const Color.fromARGB(255, 130, 14, 42),
+          ),
           titleLarge: GoogleFonts.poppins(
             fontSize: 24,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
+          titleMedium: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),         
           bodyLarge: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.normal,
@@ -68,9 +92,8 @@ class MyApp extends StatelessWidget {
             color: const Color.fromARGB(255, 130, 14, 42),
           ),
         ),
-  useMaterial3: true,
-),
-      home: currentUser != null ? HomeScreen() : WelcomeScreen(),
+        useMaterial3: true,
+      ),
     );
   }
 }

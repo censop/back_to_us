@@ -1,6 +1,6 @@
+import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:back_to_us/screens/Authentication/welcome_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,10 +13,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _logOut() {
     FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => WelcomeScreen(),
-      ), 
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.welcome, 
       (Route<dynamic> route) => false,
     );
   }
