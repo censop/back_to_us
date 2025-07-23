@@ -1,8 +1,10 @@
 import 'package:back_to_us/firebase_options.dart';
-import 'package:back_to_us/screens/sign_up_screen.dart';
+import 'package:back_to_us/screens/Authentication/welcome_screen.dart';
+import 'package:back_to_us/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /*
   displayLarge => headers
@@ -26,6 +28,9 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
     return MaterialApp(
       title: 'Back To Us Demo',
       theme: ThemeData(
@@ -65,7 +70,7 @@ class MyApp extends StatelessWidget {
         ),
   useMaterial3: true,
 ),
-      home: SignUpScreen(),
+      home: currentUser != null ? HomeScreen() : WelcomeScreen(),
     );
   }
 }
