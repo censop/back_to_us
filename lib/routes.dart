@@ -3,5 +3,6 @@ class Routes {
   static String signUp = "/signup";
   static String logIn = "/logIn";
   static String welcome = "/welcome";
+  static String forgotPassword = "/forgotPassword";
 
 } 

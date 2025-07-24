@@ -1,5 +1,6 @@
 
 import 'package:back_to_us/routes.dart';
+import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -49,8 +50,6 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
 
-  //ONLY A PLACEHOLDER FOR NOW
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,19 +67,8 @@ class _LogInScreenState extends State<LogInScreen> {
               "Enter e-mail:",
               style: Theme.of(context).textTheme.titleMedium,
             ),
-          ),          
-          Container(
-            padding: EdgeInsets.only(left: 40, right: 40),
-            child: TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                hintText: "Email",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-            ),
           ),
+          CustomTextFormField(controller: _emailController, title: "E-mail"),          
           Container(
             margin: EdgeInsets.all(20),
             child: Text(
@@ -88,18 +76,7 @@ class _LogInScreenState extends State<LogInScreen> {
               style: Theme.of(context).textTheme.titleMedium
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 40, right: 40),
-            child: TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                hintText: "Password",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-            ),
-          ),
+          CustomTextFormField(controller: _passwordController, title: "Password"),
           SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -114,6 +91,16 @@ class _LogInScreenState extends State<LogInScreen> {
                 color: Colors.white
               ),
             ),
+          ),
+          SizedBox(height:10),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                Routes.forgotPassword,
+              );
+            }, 
+            child: Text("Forgot password?")
           ),
           SizedBox(height: 60),
           Text(
@@ -133,3 +120,4 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 }
+

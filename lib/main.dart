@@ -1,13 +1,14 @@
+import 'package:back_to_us/Screens/Authentication/ForgotPassword/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
 import 'package:back_to_us/routes.dart';
-import 'package:back_to_us/screens/Authentication/sign_up_screen.dart';
-import 'package:back_to_us/screens/Authentication/welcome_screen.dart';
-import 'package:back_to_us/screens/home_screen.dart';
+import 'package:back_to_us/Screens/Authentication/sign_up_screen.dart';
+import 'package:back_to_us/Screens/Authentication/welcome_screen.dart';
+import 'package:back_to_us/Screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:back_to_us/screens/Authentication/log_in_screen.dart';
+import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
 
 /*
   displayLarge => headers
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         Routes.welcome : (context) => WelcomeScreen(),
         Routes.signUp : (context) => SignUpScreen(),
         Routes.logIn : (context) => LogInScreen(),
+        Routes.forgotPassword : (context) => ForgotPassword(),
       },
 
       theme: ThemeData(

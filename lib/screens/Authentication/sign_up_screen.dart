@@ -1,5 +1,6 @@
 
 import 'package:back_to_us/routes.dart';
+import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -34,7 +35,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       final userCreds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email, 
         password: password,
-        ///TO DO username ekle!!!!!
+        //TODO username ekle!!!!! 
       );
       print(userCreds);
 
@@ -66,22 +67,11 @@ class SignUpScreenState extends State<SignUpScreen> {
           Container(
             margin: EdgeInsets.all(20),
             child: Text(
-              "Enter e_mail:",
+              "Enter e-mail:",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),   
-          Container(
-            padding: EdgeInsets.only(left: 40, right: 40),
-            child: TextFormField(
-              controller: _emailController,
-             decoration: InputDecoration(
-                hintText: "Email",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-            ),
-          ),
+          CustomTextFormField(controller: _emailController, title: "E-mail"),
            Container(
             margin: EdgeInsets.all(20),
             child: Text(
@@ -89,18 +79,7 @@ class SignUpScreenState extends State<SignUpScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 40, right: 40),
-            child: TextFormField(
-              controller: _passwordController,
-             decoration: InputDecoration(
-                hintText: "Password",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-              ),
-            ),
-          ),
+          CustomTextFormField(controller: _passwordController, title: "Password"),
           SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -116,6 +95,12 @@ class SignUpScreenState extends State<SignUpScreen> {
               ),             
             ),
           ),
+          SizedBox(height:10),
+          /*TODO add terms and conditions page, add checkbox
+          TextButton(
+            onPressed: () {}, 
+            child: Text("Terms and Conditions")
+          ),*/
           SizedBox(height: 60),
           Text(
             "Already have an account?",
