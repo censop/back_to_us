@@ -19,10 +19,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     super.dispose();
   }
 
-  void _sendEmail(String email) {
-    print("mail sent");
+  Future<void> _sendEmail() async {
     try {
-      FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("New password request is sent, Check your inbox."),
@@ -45,10 +44,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            margin: EdgeInsets.all(20),
+          Padding(
+            padding: EdgeInsets.all(20),
             child: Text(
               "Enter your e-mail:",
               style: Theme.of(context).textTheme.titleMedium
@@ -63,12 +61,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primary,
             ),
-            onPressed: () {
-              _sendEmail(_emailController.text);
+            onPressed: () async {
+              await _sendEmail();
             }, 
             child: Text(
               "Reset Password",
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: Colors.white
               ),
             ),

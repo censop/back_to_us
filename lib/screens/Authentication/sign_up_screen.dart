@@ -58,22 +58,21 @@ class SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body:Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
            Text(
             "Sign Up",
             style: Theme.of(context).textTheme.displayMedium,
           ),
-          Container(
-            margin: EdgeInsets.all(20),
+          Padding(
+            padding: EdgeInsets.all(20),
             child: Text(
               "Enter e-mail:",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),   
           CustomTextFormField(controller: _emailController, title: "E-mail"),
-           Container(
-            margin: EdgeInsets.all(20),
+           Padding(
+            padding: EdgeInsets.all(20),
             child: Text(
               "Enter password:",
               style: Theme.of(context).textTheme.titleMedium,
@@ -90,7 +89,7 @@ class SignUpScreenState extends State<SignUpScreen> {
             }, 
             child: Text(
               "Sign Up",
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: Colors.white
               ),             
             ),

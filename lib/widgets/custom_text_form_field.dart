@@ -13,8 +13,8 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 40, right: 40),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
