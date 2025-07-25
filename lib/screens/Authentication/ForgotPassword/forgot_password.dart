@@ -53,8 +53,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
           ),
           CustomTextFormField(
-              controller: _emailController, 
-              title: "E-mail"
+            controller: _emailController, 
+            title: "E-mail"
           ),
           SizedBox(height: 10),
           ElevatedButton(

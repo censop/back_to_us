@@ -15,6 +15,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String? errorMesage;
 
   @override
   void dispose() {
@@ -45,7 +46,6 @@ class SignUpScreenState extends State<SignUpScreen> {
       );
     }    
     on FirebaseAuthException catch (e) {
-      print(e.code);
       print(e.message);
     }
   }
@@ -70,7 +70,10 @@ class SignUpScreenState extends State<SignUpScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),   
-          CustomTextFormField(controller: _emailController, title: "E-mail"),
+          CustomTextFormField(
+            controller: _emailController, 
+            title: "E-mail",
+          ),
            Padding(
             padding: EdgeInsets.all(20),
             child: Text(
@@ -78,7 +81,11 @@ class SignUpScreenState extends State<SignUpScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          CustomTextFormField(controller: _passwordController, title: "Password"),
+          CustomTextFormField(
+            controller: _passwordController, 
+            title: "Password", 
+            isPassword: true,
+          ),
           SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(

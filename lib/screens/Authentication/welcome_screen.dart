@@ -30,14 +30,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
+          //TODO 20 100 20 100 uygun değil mediaquery kullanarak oranlarla bu değerleri yaz
           padding: EdgeInsetsGeometry.fromLTRB(20, 100, 20, 100),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 "join Back To Us",
-                style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
@@ -45,7 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(height:20),
               Text(
                 "Capture what matters.",
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Colors.black,
                 ),
               ),
@@ -58,7 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 child: Text(
                   "Log In",
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: Colors.white,
                   ),
                 ),

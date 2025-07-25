@@ -49,6 +49,7 @@ class _LogInScreenState extends State<LogInScreen> {
     }
   }
 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,10 @@ class _LogInScreenState extends State<LogInScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          CustomTextFormField(controller: _emailController, title: "E-mail"),          
+          CustomTextFormField(
+            controller: _emailController, 
+            title: "E-mail",
+          ),          
           Padding(
             padding: EdgeInsets.all(20),
             child: Text(
@@ -75,7 +79,11 @@ class _LogInScreenState extends State<LogInScreen> {
               style: Theme.of(context).textTheme.titleMedium
             ),
           ),
-          CustomTextFormField(controller: _passwordController, title: "Password"),
+          CustomTextFormField(
+            controller: _passwordController, 
+            title: "Password", 
+            isPassword: true,
+          ),
           SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(

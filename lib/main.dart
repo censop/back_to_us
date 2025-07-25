@@ -58,37 +58,44 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
         textTheme: TextTheme(
-          displayLarge: GoogleFonts.poppins(
+          displayLarge: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 48,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: const Color.fromARGB(255, 130, 14, 42),
           ),
-          displayMedium: GoogleFonts.poppins(
+          displayMedium: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 48,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: const Color.fromARGB(255, 130, 14, 42),
           ),
-          titleLarge: GoogleFonts.poppins(
+          titleLarge: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 24,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
-          titleMedium: GoogleFonts.poppins(
+          titleMedium: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),         
-          bodyLarge: GoogleFonts.poppins(
+          bodyLarge: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 16,
             fontWeight: FontWeight.normal,
             color: Colors.black87,
           ),
-          bodyMedium: GoogleFonts.poppins(
+          bodyMedium: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 14,
             fontWeight: FontWeight.normal,
             color: Colors.black87,
           ),
-          labelLarge: GoogleFonts.poppins(
+          labelLarge: TextStyle(
+            fontFamily: "Poppins",
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: const Color.fromARGB(255, 130, 14, 42),
