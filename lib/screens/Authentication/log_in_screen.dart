@@ -16,6 +16,7 @@ class _LogInScreenState extends State<LogInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   
+  
   @override
   void dispose() {
     _emailController.dispose();
@@ -44,8 +45,9 @@ class _LogInScreenState extends State<LogInScreen> {
       );
     }    
     on FirebaseAuthException catch (e) {  //Exception Codes: email-already-in-use, invalid-email, operation-not-allowed, weak-password  
-      print(e.code);
-      print(e.message);
+      setState(() {
+        
+      });
     }
   }
 

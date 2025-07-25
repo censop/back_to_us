@@ -15,7 +15,6 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String? errorMesage;
 
   @override
   void dispose() {

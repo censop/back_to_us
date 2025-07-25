@@ -18,6 +18,7 @@ import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
   labelLarge => buttons
 */
 
+AppTheme myAppTheme = AppTheme();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
         Routes.forgotPassword : (context) => ForgotPassword(),
       },
 
-      theme: AppTheme.myTheme,
+      theme: myAppTheme.myTheme,
     );
   }
 }
