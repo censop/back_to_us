@@ -1,6 +1,11 @@
+import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+
+
+
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
@@ -23,11 +28,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        customSnackbar(
           content: Text("New password request is sent, Check your inbox."),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Theme.of(context).colorScheme.secondary
         ),
       );
+      /*floatingSnackBar(
+        context: context,
+        message: "New password request is sent, Check your inbox.",
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        duration: Duration(seconds: 2),
+
+      );*/
     }
     on FirebaseAuthException catch (e) {
       print(e.message);
@@ -76,3 +88,4 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 }
+

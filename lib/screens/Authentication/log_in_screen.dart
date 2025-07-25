@@ -13,9 +13,12 @@ class LogInScreen extends StatefulWidget {
 
 class _LogInScreenState extends State<LogInScreen> {
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String? errorMessage; 
+
   
   @override
   void dispose() {
@@ -44,10 +47,8 @@ class _LogInScreenState extends State<LogInScreen> {
         (Route<dynamic> route) => false,
       );
     }    
-    on FirebaseAuthException catch (e) {  //Exception Codes: email-already-in-use, invalid-email, operation-not-allowed, weak-password  
-      setState(() {
-        
-      });
+    on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
+      errorMessage = e.message;
     }
   }
 
@@ -56,75 +57,83 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "Log In",
-            style: Theme.of(context).textTheme.displayMedium,
-          ),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              "Enter e-mail:",
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ),
-          CustomTextFormField(
-            controller: _emailController, 
-            title: "E-mail",
-          ),          
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              "Enter password:",
-              style: Theme.of(context).textTheme.titleMedium
-            ),
-          ),
-          CustomTextFormField(
-            controller: _passwordController, 
-            title: "Password", 
-            isPassword: true,
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-            onPressed: () {
-              _logIn(email: _emailController.text, password: _passwordController.text);
-            }, 
-            child: Text(
+      body:Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
               "Log In",
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Colors.white
+              style: Theme.of(context).textTheme.displayMedium,
+            ),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                "Enter e-mail:",
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
-          ),
-          SizedBox(height:10),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                Routes.forgotPassword,
-              );
-            }, 
-            child: Text("Forgot password?")
-          ),
-          SizedBox(height: 60),
-          Text(
-            "Don't have an account yet?",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacementNamed(
-                Routes.signUp,
-              );
-            },
-            child: Text("Join Back to Us"),
-          ),          
-        ],
+            CustomTextFormField(
+              controller: _emailController, 
+              title: "E-mail",
+              
+            ),          
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                "Enter password:",
+                style: Theme.of(context).textTheme.titleMedium
+              ),
+            ),
+            CustomTextFormField(
+              controller: _passwordController, 
+              title: "Password", 
+              isPassword: true,
+              
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+              onPressed: () {
+                //validating the form before attempting to login
+              if (_formKey.currentState!.validate()){
+                _logIn(email: _emailController.text, password: _passwordController.text);
+              }
+              }, 
+              child: Text(
+                "Log In",
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Colors.white
+                ),
+              ),
+            ),
+            SizedBox(height:10),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.forgotPassword,
+                );
+              }, 
+              child: Text("Forgot password?")
+            ),
+            SizedBox(height: 60),
+            Text(
+              "Don't have an account yet?",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(
+                  Routes.signUp,
+                );
+              },
+              child: Text("Join Back to Us"),
+            ),          
+          ],
+        ),
       ),
     );
   }

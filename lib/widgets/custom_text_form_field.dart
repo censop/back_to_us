@@ -6,11 +6,16 @@ class CustomTextFormField extends StatefulWidget {
     required this.controller,
     required this.title,
     this.isPassword = false,
+    this.errorText,
+    this.validator,
   });
 
   final TextEditingController controller;
   final String title;
   final bool isPassword;
+  final String? errorText;
+  final String? Function(String?)? validator;
+  
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -26,6 +31,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       child: TextFormField(
         controller: widget.controller,
         decoration: InputDecoration(
+          errorText: widget.errorText,
           hintText: widget.title,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
@@ -44,6 +50,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           : null,
         ),
         obscureText: widget.isPassword ? !seePassword : false,
+        validator: widget.validator,
       ),
     );
   }

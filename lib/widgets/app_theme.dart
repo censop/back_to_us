@@ -4,7 +4,7 @@ class AppTheme {
   static String poppinsFont = "Poppins";
 
 
-  ThemeData myTheme = ThemeData(
+  static ThemeData myTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 130, 14, 42),
   ).copyWith(

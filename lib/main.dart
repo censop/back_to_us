@@ -18,8 +18,6 @@ import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
   labelLarge => buttons
 */
 
-AppTheme myAppTheme = AppTheme();
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -50,7 +48,7 @@ class MyApp extends StatelessWidget {
         Routes.forgotPassword : (context) => ForgotPassword(),
       },
 
-      theme: myAppTheme.myTheme,
+      theme: AppTheme.myTheme,
     );
   }
 }
