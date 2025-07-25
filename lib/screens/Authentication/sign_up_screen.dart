@@ -45,7 +45,7 @@ class SignUpScreenState extends State<SignUpScreen> {
         (Route<dynamic> route) => false,
       );
     }    
-    on FirebaseAuthException catch (e) {
+    on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
       print(e.message);
     }
   }

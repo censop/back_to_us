@@ -43,7 +43,7 @@ class _LogInScreenState extends State<LogInScreen> {
         (Route<dynamic> route) => false,
       );
     }    
-    on FirebaseAuthException catch (e) {
+    on FirebaseAuthException catch (e) {  //Exception Codes: email-already-in-use, invalid-email, operation-not-allowed, weak-password  
       print(e.code);
       print(e.message);
     }
