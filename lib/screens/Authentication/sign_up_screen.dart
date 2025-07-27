@@ -49,24 +49,32 @@ class SignUpScreenState extends State<SignUpScreen> {
         Routes.home,
         (Route<dynamic> route) => false,
       );
+      setState(() {
+        emailError = null;
+        passwordError = null;
+      });
+
     }    
     on FirebaseAuthException catch (e) {  //TODO Exception Codes: email-already-in-use, invalid-email, operation-not-allowed ????, weak-password  
       if (e.code == "email-already-in-use") {
       setState(() {
         emailError = "E-mail is already in use."; 
       });
+      return;
       } 
       else if (e.code == "invalid-email") {
         setState(() {
           emailError = "Enter a valid e-mail.";
         });
+        return;
       }
-      else if (e.code == "weak-password") {
+      if (e.code == "weak-password") {
         setState(() {
           passwordError == "Password should have at least 6 characters.";
         });
+        return;
       }
-      else { //TODO fix this it shows every time there is an exception
+      else { //unexpected error veriyor
         ScaffoldMessenger.of(context).showSnackBar(
           customSnackbar(
             content: Text("Unexpected error. Please try again later."), 
@@ -162,7 +170,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  
+
 
   String? validatePassword(value) {
     if (value == null || value.isEmpty || value.length <6) { //TODO add uppercase and special char requirements

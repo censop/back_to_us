@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? errorMessage; 
+  String? emailError; 
+  String? passwordError;
 
   
   @override
@@ -46,13 +48,42 @@ class _LogInScreenState extends State<LogInScreen> {
         Routes.home,
         (Route<dynamic> route) => false,
       );
+
+      setState(() {
+        emailError = null;
+        passwordError = null;
+      });
     }    
+
     on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
-      errorMessage = e.message;
+      if (e.code == "user-not-found") {
+        setState(() {
+          emailError = "User doesn't exist."; 
+        });
+        return;
+      } 
+      else if (e.code == "invalid-email") {
+        setState(() {
+          emailError = "Enter a valid e-mail.";
+        });
+        return;
+      }
+      if (e.code == "wrong-password") {
+        setState(() {
+          passwordError = "Password is wrong.";
+        });
+        return;
+      }
+      else { 
+        ScaffoldMessenger.of(context).showSnackBar(
+          customSnackbar(
+            content: Text("Unexpected error. Please try again later."), 
+            backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer
+          ),
+        );  
+      }
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +107,8 @@ class _LogInScreenState extends State<LogInScreen> {
             CustomTextFormField(
               controller: _emailController, 
               title: "E-mail",
+              validator: validateEmail,
+              errorText: emailError,
               
             ),          
             Padding(
@@ -89,6 +122,8 @@ class _LogInScreenState extends State<LogInScreen> {
               controller: _passwordController, 
               title: "Password", 
               isPassword: true,
+              validator: validatePassword,
+              errorText: passwordError,
               
             ),
             SizedBox(height: 20),
@@ -136,6 +171,25 @@ class _LogInScreenState extends State<LogInScreen> {
         ),
       ),
     );
+  }
+
+  String? validatePassword(value) {
+    if (value == null || value.isEmpty || value.length <6) { //TODO add uppercase and special char requirements
+      passwordError = "Password should have at least 6 characters.";
+      return passwordError;
+    }
+    passwordError = null;
+    return passwordError;
+  }
+
+  String? validateEmail(value) {
+    if (value == null || value.isEmpty || !value.contains("@")) {
+      emailError = "Enter a valid e-mail.";
+      return emailError;
+    }
+    emailError = null;
+    return emailError;
+
   }
 }
 
