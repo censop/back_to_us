@@ -42,7 +42,7 @@ class _LogInScreenState extends State<LogInScreen> {
         email: email, 
         password: password
       );
-      print(userCreds);
+      print(userCreds.user);
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home,
@@ -88,86 +88,90 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Log In",
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                "Enter e-mail:",
-                style: Theme.of(context).textTheme.titleMedium,
+      body:SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Text(
+                    "Log In",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text(
+                      "Enter e-mail:",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  CustomTextFormField(
+                    controller: _emailController, 
+                    title: "E-mail",
+                    validator: validateEmail,
+                    errorText: emailError,
+                  ),          
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text(
+                      "Enter password:",
+                      style: Theme.of(context).textTheme.titleMedium
+                    ),
+                  ),
+                  CustomTextFormField(
+                    controller: _passwordController, 
+                    title: "Password", 
+                    isPassword: true,
+                    validator: validatePassword,
+                    errorText: passwordError,
+                    
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onPressed: () {
+                      //validating the form before attempting to login
+                    if (_formKey.currentState!.validate()){
+                      _logIn(email: _emailController.text, password: _passwordController.text);
+                    }
+                    }, 
+                    child: Text(
+                      "Log In",
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Colors.white
+                      ),
+                    ),
+                  ),
+                  SizedBox(height:10),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.forgotPassword,
+                      );
+                    }, 
+                    child: Text("Forgot password?")
+                  ),
+                  SizedBox(height: 60),
+                  Text(
+                    "Don't have an account yet?",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed(
+                        Routes.signUp,
+                      );
+                    },
+                    child: Text("Join Back to Us"),
+                  ),          
+                ],
               ),
             ),
-            CustomTextFormField(
-              controller: _emailController, 
-              title: "E-mail",
-              validator: validateEmail,
-              errorText: emailError,
-              
-            ),          
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                "Enter password:",
-                style: Theme.of(context).textTheme.titleMedium
-              ),
-            ),
-            CustomTextFormField(
-              controller: _passwordController, 
-              title: "Password", 
-              isPassword: true,
-              validator: validatePassword,
-              errorText: passwordError,
-              
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              onPressed: () {
-                //validating the form before attempting to login
-              if (_formKey.currentState!.validate()){
-                _logIn(email: _emailController.text, password: _passwordController.text);
-              }
-              }, 
-              child: Text(
-                "Log In",
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Colors.white
-                ),
-              ),
-            ),
-            SizedBox(height:10),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.forgotPassword,
-                );
-              }, 
-              child: Text("Forgot password?")
-            ),
-            SizedBox(height: 60),
-            Text(
-              "Don't have an account yet?",
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                  Routes.signUp,
-                );
-              },
-              child: Text("Join Back to Us"),
-            ),          
-          ],
+          ),
         ),
       ),
     );

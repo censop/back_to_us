@@ -27,11 +27,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          //TODO 20 100 20 100 uygun değil mediaquery kullanarak oranlarla bu değerleri yaz
-          padding: EdgeInsetsGeometry.fromLTRB(20, 100, 20, 100),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
