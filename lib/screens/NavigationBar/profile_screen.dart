@@ -1,9 +1,9 @@
-import 'package:back_to_us/Widgets/album_list_tile.dart';
-import 'package:back_to_us/models/app_user.dart';
+import 'package:back_to_us/Getx/current_user_controller.dart';
 import 'package:back_to_us/routes.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +13,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  CurrentUserController c = Get.find();
 
   void _logOut() {
     FirebaseAuth.instance.signOut();
@@ -26,11 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
         title: Text(
           "Home Page",
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-          ),
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
         actions: [
@@ -47,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ListView(
           children: [
             Text(
-              "PROFİİİL",
+              "Username: ${c.currentUser?.username}",
               style: Theme.of(context).textTheme.titleLarge,
             ),
             //...dummyAlbums,

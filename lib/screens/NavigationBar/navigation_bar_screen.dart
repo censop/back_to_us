@@ -1,6 +1,8 @@
+
 import 'package:back_to_us/Screens/NavigationBar/home_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/profile_screen.dart';
 import 'package:flutter/material.dart';
+
 
 class NavigationBarScreen extends StatefulWidget {
   const NavigationBarScreen({super.key});
@@ -10,6 +12,7 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
+
   int currentPageIndex = 0;
 
   List<Widget> screens = [

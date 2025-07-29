@@ -1,9 +1,9 @@
-import 'package:back_to_us/Widgets/album_list_tile.dart';
-import 'package:back_to_us/models/app_user.dart';
+import 'package:back_to_us/Getx/current_user_controller.dart';
 import 'package:back_to_us/routes.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  //c is the controller
+  CurrentUserController c = Get.find();
+
+/*
   AppUser? currentUser;
 
   Future<void> getAppUser() async {
@@ -27,12 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       print(e);
     }
-  }
+  }*/
 
   @override
   void initState() {
     super.initState();
-    getAppUser();
+    c.onInit();
   }
 
   /*List<AlbumListTile> dummyAlbums = [
@@ -53,8 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
+        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
         title: Text(
-          "Home Page",
+          "Back\nTo\nUs",
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
             color: Theme.of(context).colorScheme.primary,
           ),
@@ -74,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           children: [
             Text(
-              "Welcome ${currentUser?.username ?? ""}!",
+              "Welcome ${c.currentUser?.username ?? ""}!",
               style: Theme.of(context).textTheme.titleLarge,
             ),
             //...dummyAlbums,

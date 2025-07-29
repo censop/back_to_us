@@ -1,6 +1,6 @@
 
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
-import 'package:back_to_us/models/app_user.dart';
+import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
