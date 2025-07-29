@@ -4,5 +4,6 @@ class Routes {
   static String logIn = "/logIn";
   static String welcome = "/welcome";
   static String forgotPassword = "/forgotPassword";
+  static String navigationBar = "/navigationBar";
 
 } 

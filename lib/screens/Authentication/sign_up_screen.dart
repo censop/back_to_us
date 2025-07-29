@@ -1,5 +1,6 @@
 
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
+import 'package:back_to_us/models/app_user.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool isCreatingUser = false;
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -34,7 +37,6 @@ class SignUpScreenState extends State<SignUpScreen> {
     _usernameController.dispose();
     super.dispose();
   }
-
 
   //signs up users when sign up button is pressed:
   Future<void> _signUp({required email, required password, required username}) async {
@@ -53,14 +55,24 @@ class SignUpScreenState extends State<SignUpScreen> {
       await userCreds.user?.updateDisplayName(username);
       await userCreds.user?.reload();
 
+      setState(() {
+        isCreatingUser = true;
+      });
+      
+
+      final newUser = AppUser(
+        uid: userCreds.user!.uid,
+        email: email, 
+        username: username,
+        createdAt: Timestamp.now(),
+        password: password,
+      );
 
       //upload user to data base
-      users.doc(userCreds.user!.uid).set({
-        "email": email,
-        "username": username,
-        "createdAt": DateTime.now(),
-        }
-      );
+      users.doc(userCreds.user!.uid).set(newUser.toJson());
+      setState(() {
+        isCreatingUser = false;
+      });
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home,
@@ -73,6 +85,11 @@ class SignUpScreenState extends State<SignUpScreen> {
 
     }    
     on FirebaseAuthException catch (e) {  //TODO Exception Codes: email-already-in-use, invalid-email, operation-not-allowed ????, weak-password  
+      setState(() {
+        isCreatingUser = false;
+      });
+
+      
       if (e.code == "email-already-in-use") {
       setState(() {
         emailError = "E-mail is already in use."; 
@@ -166,8 +183,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()){
-                        _signUp(email: _emailController.text, password: _passwordController.text, username: _usernameController.text);
+                      if (isCreatingUser) {}
+                      else{
+                        if (_formKey.currentState!.validate()){
+                          _signUp(email: _emailController.text, password: _passwordController.text, username: _usernameController.text);
+                        }
                       }
                     }, 
                     child: Text(

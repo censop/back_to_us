@@ -1,10 +1,11 @@
+import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Widgets/app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/ForgotPassword/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/Screens/Authentication/sign_up_screen.dart';
 import 'package:back_to_us/Screens/Authentication/welcome_screen.dart';
-import 'package:back_to_us/Screens/home_screen.dart';
+import 'package:back_to_us/Screens/NavigationBar/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Back To Us Demo',
 
-      initialRoute: currentUser != null ? Routes.home : Routes.welcome,
+      initialRoute: currentUser != null ? Routes.navigationBar : Routes.welcome,
 
       routes: {
         Routes.home : (context) => HomeScreen(),
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         Routes.signUp : (context) => SignUpScreen(),
         Routes.logIn : (context) => LogInScreen(),
         Routes.forgotPassword : (context) => ForgotPassword(),
+        Routes.navigationBar : (context) => NavigationBarScreen(),
       },
 
       theme: AppTheme.myTheme,

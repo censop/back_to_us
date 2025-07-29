@@ -17,6 +17,7 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
 
   TextEditingController _emailController =  TextEditingController();
+  String? emailError;
 
   @override
   void dispose() {
@@ -33,16 +34,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           backgroundColor: Theme.of(context).colorScheme.secondary
         ),
       );
-      /*floatingSnackBar(
-        context: context,
-        message: "New password request is sent, Check your inbox.",
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        duration: Duration(seconds: 2),
-
-      );*/
+      setState(() {
+        emailError = null;
+      });
     }
     on FirebaseAuthException catch (e) {
       print(e.message);
+      setState(() {
+        emailError = "Try another e-mail.";
+      });
     }
   }
 
@@ -66,7 +66,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
           CustomTextFormField(
             controller: _emailController, 
-            title: "E-mail"
+            title: "E-mail",
+            errorText: emailError,
           ),
           SizedBox(height: 10),
           ElevatedButton(
