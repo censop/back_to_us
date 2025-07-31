@@ -8,7 +8,7 @@ class AppTheme {
   colorScheme: ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 130, 14, 42),
   ).copyWith(
-    background: Colors.white,
+    surface: Colors.white,//const Color.fromARGB(255, 225, 225, 225),
     primary: const Color.fromARGB(255, 130, 14, 42),
   ),
   scaffoldBackgroundColor: Colors.white,
@@ -39,13 +39,13 @@ class AppTheme {
     ),         
     bodyLarge: TextStyle(
       fontFamily: poppinsFont,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.normal,
       color: Colors.black87,
     ),
     bodyMedium: TextStyle(
       fontFamily: poppinsFont,
-      fontSize: 14,
+      fontSize: 16,
       fontWeight: FontWeight.normal,
       color: Colors.black87,
     ),

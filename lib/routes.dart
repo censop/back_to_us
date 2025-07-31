@@ -5,5 +5,7 @@ class Routes {
   static String welcome = "/welcome";
   static String forgotPassword = "/forgotPassword";
   static String navigationBar = "/navigationBar";
+  static String profileSettings = "/profileSettings";
+  static String settings = "/settings";
 
 } 

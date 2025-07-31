@@ -1,9 +1,8 @@
-import 'package:back_to_us/Getx/current_user_controller.dart';
+import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,7 +12,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  CurrentUserController c = Get.find();
+
 
   void _logOut() {
     FirebaseAuth.instance.signOut();
@@ -27,13 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
           color: Theme.of(context).colorScheme.primary,
         ),
         title: Text(
-          "Home Page",
+          "Profile",
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           IconButton(
             onPressed: _logOut,
@@ -47,10 +47,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(8),
         child: ListView(
           children: [
-            Text(
-              "Username: ${c.currentUser?.username}",
-              style: Theme.of(context).textTheme.titleLarge,
+            Center(
+              child: Stack(
+                children: [
+                  CustomProfilePictureDisplayer(
+                    imageUrl: FirebaseService.currentUser?.profilePic, 
+                    radius: 50,
+                  ),
+                  Positioned(
+                    top: -8,
+                    right: -10,
+                    child: IconButton(
+                      onPressed: () {}, 
+                      icon: Icon(Icons.edit),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ]
+              ),
             ),
+            Divider(
+              height: 50,
+              thickness: 5,
+            ),
+            Text(
+              "Username: ${FirebaseService.currentUser?.username}",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ), 
             //...dummyAlbums,
           ],
         ),

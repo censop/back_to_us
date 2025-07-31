@@ -1,6 +1,7 @@
 
 import 'package:back_to_us/Screens/NavigationBar/home_screen.dart';
-import 'package:back_to_us/Screens/NavigationBar/profile_screen.dart';
+import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
+import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
 
@@ -17,21 +18,27 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   List<Widget> screens = [
     HomeScreen(),
-    ProfileScreen(),
+    SettingsScreen(),
   ];
+
+   @override
+  void initState() {
+    super.initState();
+    FirebaseService.getAppUser();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
         selectedIndex: currentPageIndex,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: [ 
           NavigationDestination(
             icon: Icon(Icons.home_outlined), 
@@ -39,9 +46,9 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             label: "Home",
           ),
           NavigationDestination(
-            icon: Icon(Icons.account_circle_outlined), 
-            selectedIcon: Icon(Icons.account_circle),
-            label: "Profile",
+            icon: Icon(Icons.settings_outlined), 
+            selectedIcon: Icon(Icons.settings),
+            label: "Settings",
           ),
         ],
       ),
