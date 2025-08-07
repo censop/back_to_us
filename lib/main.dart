@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         Routes.settings : (context) => SettingsScreen(),
       },
 
-      theme: AppTheme.myTheme,
+      theme: AppTheme.lightTheme,
     );
   }
 }

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,6 +17,30 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   bool _changeProfilePicture = false;
+
+  File? _image;
+  ImagePicker _imagePicker = ImagePicker();
+
+  void _imageFromGallery() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null){
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+    print(_image);
+  }
+
+  void _imageFromCamera() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null){
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+    print(_image);
+  }
 
 
   void _logOut() {
@@ -74,11 +101,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Column(
                       children: [
                         TextButton(
-                          onPressed: () {}, 
+                          onPressed: _imageFromGallery, 
                           child: Text("Choose from library"),
                         ),
                         TextButton(
-                          onPressed: () {}, 
+                          onPressed: _imageFromCamera, 
                           child: Text("Take picture"),
                         ),
                       ],

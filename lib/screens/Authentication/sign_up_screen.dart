@@ -23,6 +23,8 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   bool isCreatingUser = false;
 
+  bool seePassword = true;
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -173,9 +175,19 @@ class SignUpScreenState extends State<SignUpScreen> {
                   CustomTextFormField(
                     controller: _passwordController, 
                     title: "Password", 
-                    isPassword: true,
                     validator: validatePassword,
                     errorText: passwordError,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        seePassword ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          seePassword = !seePassword;
+                        });
+                      },
+                    ),
+                    obscureText: seePassword,
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(

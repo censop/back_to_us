@@ -122,7 +122,6 @@ class _LogInScreenState extends State<LogInScreen> {
                   CustomTextFormField(
                     controller: _passwordController, 
                     title: "Password", 
-                    isPassword: true,
                     validator: validatePassword,
                     errorText: passwordError,
                     
