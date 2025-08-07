@@ -5,22 +5,26 @@ class CustomSettingsTiles extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.title,
-    required this.leading,
+    this.leading,
+    this.trailing,
   });
 
   final void Function()? onPressed;
   final String title;
-  final Widget leading;
+  final Widget? leading;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: leading,
-      title: Text(title),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 20,
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+          color: Colors.black
+        ),
       ),
+      trailing: trailing,
       onTap: onPressed,
     );
   }

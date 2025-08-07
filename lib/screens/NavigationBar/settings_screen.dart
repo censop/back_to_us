@@ -49,28 +49,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(8),
         child: ListView(
           children: [
-            Center(
-              child: Stack(
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
                 children: [
                   CustomProfilePictureDisplayer(
                     imageUrl: FirebaseService.currentUser?.profilePic, 
                     radius: 50,
                   ),
-                  Positioned(
-                    top: -8,
-                    right: -10,
-                    child: IconButton(
-                      onPressed: () {}, 
-                      icon: Icon(Icons.edit),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  SizedBox(width: 15,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Hello,"),
+                      Text(
+                        "${FirebaseService.currentUser!.username}!",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    ],
                   ),
-                ]
+                  
+                ],
               ),
             ),
             Divider(
               height: 50,
-              thickness: 5,
+              thickness: 7,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+             Text(
+              "About your account",
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 14
+              ),
+            ),
+            CustomSettingsTiles(
+              title: "Friends",
+              //friends ekle firebase
+              trailing:Text(
+                "0",
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Color.fromARGB(255, 165, 165, 165),
+                ),
+              ),
+              onPressed:() {
+                //fill this
+              },
+            ),
+            CustomSettingsTiles(
+              title: "Albums",
+              //friends ekle firebase
+              trailing:Text(
+                FirebaseService.currentUser!.albumIds != null ? FirebaseService.currentUser!.albumIds!.length.toString() : "0",
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Color.fromARGB(255, 165, 165, 165),
+                ),
+              ),
+              onPressed:() {
+                //fill this
+              },
+            ),
+            Divider(
+              height: 50,
+              thickness: 2,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
+              "About your profile",
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 14
+              ),
             ),
             CustomSettingsTiles(
               title: "Profile Settings",
@@ -78,6 +127,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed:() {
                 Navigator.of(context).pushNamed(Routes.profileSettings);
               },
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 20,
+              ),
             ),
             /*Text(
               "Username: ${FirebaseService.currentUser?.username}",

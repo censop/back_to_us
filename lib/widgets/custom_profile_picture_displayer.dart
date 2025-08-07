@@ -27,14 +27,18 @@ class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisp
         backgroundImage: widget.imageUrl == null ? null : NetworkImage(widget.imageUrl!),
         radius: widget.radius,
         child: widget.imageUrl == null 
-        ? Text(
-          FirebaseService.currentUser!.username[0].toUpperCase(),
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            fontSize: widget.radius,
-            color: const Color.fromARGB(255, 243, 241, 241),
-             
-          ),
-        ) 
+        ? (
+            FirebaseService.currentUser != null
+            ? Text(
+                FirebaseService.currentUser!.username[0].toUpperCase(),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize: widget.radius,
+                      color: const Color.fromARGB(255, 243, 241, 241),
+                    ),
+              )
+            : const Icon(Icons.person, color: const Color.fromARGB(255, 243, 241, 241),
+            )
+        )
         : null,
       ),
     );

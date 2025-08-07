@@ -3,7 +3,7 @@ import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
 import 'package:back_to_us/Screens/Settings/profile_screen.dart';
 import 'package:back_to_us/Widgets/app_theme.dart';
-import 'package:back_to_us/Screens/Authentication/ForgotPassword/forgot_password.dart';
+import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/Screens/Authentication/sign_up_screen.dart';

@@ -13,6 +13,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
+  bool _changeProfilePicture = false;
+
 
   void _logOut() {
     FirebaseAuth.instance.signOut();
@@ -21,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       (Route<dynamic> route) => false,
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +51,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ListView(
           children: [
             Center(
-              child: Stack(
+              child: Column(
                 children: [
                   CustomProfilePictureDisplayer(
                     imageUrl: FirebaseService.currentUser?.profilePic, 
-                    radius: 50,
+                    radius: 45,
                   ),
-                  Positioned(
-                    top: -8,
-                    right: -10,
-                    child: IconButton(
-                      onPressed: () {}, 
-                      icon: Icon(Icons.edit),
-                      color: Theme.of(context).colorScheme.primary,
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      overlayColor: Theme.of(context).colorScheme.surface,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _changeProfilePicture = !_changeProfilePicture;
+                      });
+                    }, 
+                    child: Text("Edit profile picture"),
+                  ),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 1),
+                    child: _changeProfilePicture ?
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () {}, 
+                          child: Text("Choose from library"),
+                        ),
+                        TextButton(
+                          onPressed: () {}, 
+                          child: Text("Take picture"),
+                        ),
+                      ],
+                    )
+                    : SizedBox(height:2),
+
                   ),
                 ]
               ),

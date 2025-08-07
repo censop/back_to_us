@@ -8,11 +8,12 @@ class FirebaseService {
   static AppUser? currentUser;
   
   static Future<void> getAppUser() async {
-   if (FirebaseAuth.instance.currentUser != null) {
+    User? user = FirebaseAuth.instance.currentUser;
+   if (user != null) {
     try {
        DocumentSnapshot doc = await FirebaseFirestore.instance
       .collection("users")
-      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .doc(user.uid)
       .get();
       currentUser = AppUser.fromJson(doc.data() as Map<String, dynamic>);
     } catch (e) {

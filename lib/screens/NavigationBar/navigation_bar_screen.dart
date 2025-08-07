@@ -13,6 +13,7 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
+  bool isLoading = false;
 
   int currentPageIndex = 0;
 
@@ -24,7 +25,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
    @override
   void initState() {
     super.initState();
-    FirebaseService.getAppUser();
+    loadAppData();
   }
 
   @override
@@ -38,6 +39,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           });
         },
         selectedIndex: currentPageIndex,
+        indicatorColor: Theme.of(context).colorScheme.surface,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: [ 
           NavigationDestination(
@@ -52,7 +54,17 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           ),
         ],
       ),
-      body: screens[currentPageIndex],
+      body: isLoading ? Center(child: CircularProgressIndicator()) : screens[currentPageIndex],
     );
+  }
+
+  Future<void> loadAppData() async {
+    setState(() {
+      isLoading = true;
+    });
+    await FirebaseService.getAppUser();
+    setState(() {
+      isLoading = false;
+    });
   }
 }
