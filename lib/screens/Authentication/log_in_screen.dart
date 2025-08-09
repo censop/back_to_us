@@ -139,9 +139,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     }, 
                     child: Text(
                       "Log In",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Colors.white
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge
                     ),
                   ),
                   SizedBox(height:10),

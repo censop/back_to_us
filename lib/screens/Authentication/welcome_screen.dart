@@ -36,17 +36,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             children: [
               Text(
                 "join Back To Us",
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.black,
-                ),
+                style: Theme.of(context).textTheme.displayLarge,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height:20),
               Text(
                 "Capture what matters.",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.black,
-                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(height:20,),
               ElevatedButton(
@@ -57,9 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 child: Text(
                   "Log In",
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(context).textTheme.labelLarge
                 ),
               ),
               SizedBox(height:40),

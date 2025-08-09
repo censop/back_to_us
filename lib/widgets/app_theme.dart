@@ -54,21 +54,21 @@ class AppTheme {
       fontFamily: poppinsFont,
       fontSize: 14,
       fontWeight: FontWeight.w500,
-      color: const Color.fromARGB(255, 130, 14, 42),
+      color: Colors.white,
     ),
   ),
   useMaterial3: true,
 );
 
 static ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.dark,
     seedColor: const Color.fromARGB(255, 249, 244, 246),
   ).copyWith(
     surface: const Color.fromARGB(255, 32, 30, 31),
     primary: const Color.fromARGB(255, 249, 244, 246),
   ),
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: const Color.fromARGB(255, 32, 30, 31),
   textTheme: TextTheme(
     displayLarge: TextStyle(
       fontFamily: poppinsFont,
@@ -110,10 +110,10 @@ static ThemeData darkTheme = ThemeData(
       fontFamily: poppinsFont,
       fontSize: 14,
       fontWeight: FontWeight.w500,
-      color: const Color.fromARGB(255, 249, 244, 246),
+      color: const Color.fromARGB(255, 32, 30, 31),
     ),
   ),
   useMaterial3: true,
 );
 }
-
+     
