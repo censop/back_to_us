@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomSettingsTiles extends StatelessWidget {
   const CustomSettingsTiles({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.title,
     this.leading,
     this.trailing,
@@ -20,9 +20,7 @@ class CustomSettingsTiles extends StatelessWidget {
       leading: leading,
       title: Text(
         title,
-        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-          color: Colors.black
-        ),
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
       trailing: trailing,
       onTap: onPressed,

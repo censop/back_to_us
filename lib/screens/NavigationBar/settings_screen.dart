@@ -5,6 +5,7 @@ import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:back_to_us/main.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,7 +16,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
 
-
+  
   void _logOut() {
     FirebaseAuth.instance.signOut();
     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -122,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             CustomSettingsTiles(
-              title: "Profile Settings",
+              title: "Display Settings",
               leading:Icon(Icons.account_circle),
               onPressed:() {
                 Navigator.of(context).pushNamed(Routes.profileSettings);
@@ -132,11 +133,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 size: 20,
               ),
             ),
-            /*Text(
-              "Username: ${FirebaseService.currentUser?.username}",
-              style: Theme.of(context).textTheme.bodyLarge,
-            ), */
-            //...dummyAlbums,
+            Divider(
+              height: 50,
+              thickness: 2,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
+              "About your profile",
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 14
+              ),
+            ),
+            ValueListenableBuilder<bool>(
+              valueListenable: darkModeNotifier,
+              builder: (context, isDarkMode, child) {
+                return SwitchListTile(
+                  title: Text(isDarkMode ? "Dark Mode" : "Light Mode"),
+                  value: isDarkMode,
+                  onChanged: (value) {
+                    darkModeNotifier.value = value;
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
