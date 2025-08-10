@@ -145,7 +145,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   value: isDarkMode,
                   onChanged: (value) async {
                     darkModeNotifier.value = value;
-
                     final prefs = await SharedPreferencesWithCache.create(
                       cacheOptions: const SharedPreferencesWithCacheOptions()
                     );
