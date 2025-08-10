@@ -7,19 +7,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfileSettingsScreen extends StatefulWidget {
+  const ProfileSettingsScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   bool _changeProfilePicture = false;
 
   File? _image;
-  ImagePicker _imagePicker = ImagePicker();
+  final ImagePicker _imagePicker = ImagePicker();
 
   void _imageFromGallery() async {
     final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
@@ -81,7 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   CustomProfilePictureDisplayer(
-                    imageUrl: FirebaseService.currentUser?.profilePic, 
                     radius: 45,
                   ),
                   TextButton(

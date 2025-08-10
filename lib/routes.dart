@@ -7,5 +7,6 @@ class Routes {
   static String navigationBar = "/navigationBar";
   static String profileSettings = "/profileSettings";
   static String settings = "/settings";
+  static String profile = "/profile";
 
 } 

@@ -8,10 +8,10 @@ class AppTheme {
   colorScheme: ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 130, 14, 42),
   ).copyWith(
-    surface: Colors.white,//const Color.fromARGB(255, 225, 225, 225),
+    surface: const Color.fromARGB(255, 241, 241, 241),
     primary: const Color.fromARGB(255, 130, 14, 42),
   ),
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: const Color.fromARGB(255, 241, 241, 241),
   brightness: Brightness.light,
   textTheme: TextTheme(
     displayLarge: TextStyle(

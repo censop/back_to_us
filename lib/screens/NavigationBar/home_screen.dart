@@ -1,7 +1,7 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +25,17 @@ class _HomeScreenState extends State<HomeScreen> {
           "Back\nTo\nUs",
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
+        actions: [
+          CustomProfilePictureDisplayer(
+            radius: 30,
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                Routes.profile,
+              );
+            },
+          ),
+          SizedBox(width: 20,)
+        ],
       ),
 
       body: Padding(

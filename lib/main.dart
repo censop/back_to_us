@@ -1,7 +1,8 @@
 
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
-import 'package:back_to_us/Screens/Settings/profile_screen.dart';
+import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
+import 'package:back_to_us/Screens/profile_screen.dart';
 import 'package:back_to_us/Widgets/app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
@@ -63,8 +64,9 @@ class MyApp extends StatelessWidget {
             Routes.logIn : (context) => LogInScreen(),
             Routes.forgotPassword : (context) => ForgotPassword(),
             Routes.navigationBar : (context) => NavigationBarScreen(),
-            Routes.profileSettings : (context) => ProfileScreen(),
+            Routes.profileSettings : (context) => ProfileSettingsScreen(),
             Routes.settings : (context) => SettingsScreen(),
+            Routes.profile : (context) => ProfileScreen(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,

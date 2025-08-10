@@ -47,7 +47,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Row(
                 children: [
                   CustomProfilePictureDisplayer(
-                    imageUrl: FirebaseService.currentUser?.profilePic, 
                     radius: 50,
                   ),
                   SizedBox(width: 15,),

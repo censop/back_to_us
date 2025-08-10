@@ -5,11 +5,9 @@ class CustomProfilePictureDisplayer extends StatefulWidget {
   const CustomProfilePictureDisplayer({
     super.key,
     required this.radius,
-    this.imageUrl,
     this.onPressed,
   });
 
-  final String? imageUrl;
   final void Function()? onPressed;
   final double radius;
 
@@ -18,15 +16,18 @@ class CustomProfilePictureDisplayer extends StatefulWidget {
 }
 
 class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisplayer> {
+
+  String? imageUrl = FirebaseService.currentUser?.profilePic;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onPressed,
       child: CircleAvatar(
         backgroundColor: const Color.fromARGB(255, 206, 203, 203),
-        backgroundImage: widget.imageUrl == null ? null : NetworkImage(widget.imageUrl!),
+        backgroundImage: imageUrl == null ? null : NetworkImage(imageUrl!),
         radius: widget.radius,
-        child: widget.imageUrl == null 
+        child: imageUrl == null
         ? (
             FirebaseService.currentUser != null
             ? Text(

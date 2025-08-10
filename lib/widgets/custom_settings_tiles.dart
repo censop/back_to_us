@@ -1,3 +1,4 @@
+import 'package:back_to_us/main.dart';
 import 'package:flutter/material.dart';
 
 class CustomSettingsTiles extends StatelessWidget {
@@ -16,14 +17,18 @@ class CustomSettingsTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: leading,
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.bodyLarge,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      child: ListTile(
+        tileColor: darkModeNotifier.value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142),
+        leading: leading,
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        trailing: trailing,
+        onTap: onPressed,
       ),
-      trailing: trailing,
-      onTap: onPressed,
     );
   }
 }
