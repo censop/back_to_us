@@ -16,6 +16,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ValueNotifier<bool> seePassword = ValueNotifier(true);
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? emailError; 
@@ -27,62 +29,6 @@ class _LogInScreenState extends State<LogInScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-
-  //signs up users when sign up button is pressed:
-  Future<void> _logIn({required email, required password}) async {
-
-    if (email == null || password == null ) {
-      return;
-    }
-
-    try {
-      final userCreds = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email, 
-        password: password
-      );
-      print(userCreds.user);
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        Routes.home,
-        (Route<dynamic> route) => false,
-      );
-
-      setState(() {
-        emailError = null;
-        passwordError = null;
-      });
-    }    
-
-    on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
-      if (e.code == "user-not-found") {
-        setState(() {
-          emailError = "User doesn't exist."; 
-        });
-        return;
-      } 
-      else if (e.code == "invalid-email") {
-        setState(() {
-          emailError = "Enter a valid e-mail.";
-        });
-        return;
-      }
-      if (e.code == "wrong-password") {
-        setState(() {
-          passwordError = "Password is wrong.";
-        });
-        return;
-      }
-      else { 
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackbar(
-            content: Text("Unexpected error. Please try again later."), 
-            backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer
-          ),
-        );  
-      }
-    }
   }
 
   @override
@@ -119,12 +65,27 @@ class _LogInScreenState extends State<LogInScreen> {
                       style: Theme.of(context).textTheme.titleMedium
                     ),
                   ),
-                  CustomTextFormField(
-                    controller: _passwordController, 
-                    title: "Password", 
-                    validator: validatePassword,
-                    errorText: passwordError,
-                    
+                  ValueListenableBuilder(
+                    valueListenable: seePassword,
+                    builder: (context, value, child) {
+                      return CustomTextFormField(
+                        controller: _passwordController,
+                        title: "Password",
+                        validator: validatePassword,
+                        errorText: passwordError,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            seePassword.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            seePassword.value = !seePassword.value;
+                          },
+                        ),
+                        obscureText: seePassword.value,
+                      );
+                    },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
@@ -192,5 +153,61 @@ class _LogInScreenState extends State<LogInScreen> {
     return emailError;
 
   }
+
+    //signs up users when sign up button is pressed:
+  Future<void> _logIn({required email, required password}) async {
+
+    if (email == null || password == null ) {
+      return;
+    }
+
+    try {
+      final userCreds = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email, 
+        password: password
+      );
+      print(userCreds.user);
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.home,
+        (Route<dynamic> route) => false,
+      );
+
+      setState(() {
+        emailError = null;
+        passwordError = null;
+      });
+    }    
+
+    on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
+      if (e.code == "user-not-found") {
+        setState(() {
+          emailError = "User doesn't exist."; 
+        });
+        return;
+      } 
+      else if (e.code == "invalid-email") {
+        setState(() {
+          emailError = "Enter a valid e-mail.";
+        });
+        return;
+      }
+      if (e.code == "wrong-password") {
+        setState(() {
+          passwordError = "Password is wrong.";
+        });
+        return;
+      }
+      else { 
+        ScaffoldMessenger.of(context).showSnackBar(
+          customSnackbar(
+            content: Text("Unexpected error. Please try again later."), 
+            backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer
+          ),
+        );  
+      }
+    }
+  }
+
 }
 

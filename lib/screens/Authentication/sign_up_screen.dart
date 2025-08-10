@@ -22,8 +22,6 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   ValueNotifier<bool> seePassword = ValueNotifier(true);
 
-  ValueNotifier<Color> containerColor = ValueNotifier(Colors.red);
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -43,7 +41,6 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Tüm build yenilendi");
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -113,24 +110,6 @@ class SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   SizedBox(height: 20),
-
-                  ValueListenableBuilder(
-                    valueListenable: containerColor,
-                    builder: (context, value, child) {
-                      print("Sadece container güncellnedi");
-                      return InkWell(
-                        onTap: () {
-                          containerColor.value = Colors.amber;
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          color: containerColor.value,
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -151,7 +130,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       "Sign Up",
                       style: Theme.of(
                         context,
-                      ).textTheme.labelLarge?.copyWith(color: Colors.white),
+                      ).textTheme.labelLarge,
                     ),
                   ),
                   SizedBox(height: 10),

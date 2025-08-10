@@ -13,8 +13,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-ValueNotifier<bool> darkModeNotifier = ValueNotifier(false);
+ValueNotifier<bool> darkModeNotifier = ValueNotifier(true);
 
 /*
   displayLarge => headers
@@ -29,6 +30,11 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final prefs = await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions()
+  );
+  darkModeNotifier.value = prefs.getBool('darkMode') ?? true;
   
   runApp(const MyApp());
 }

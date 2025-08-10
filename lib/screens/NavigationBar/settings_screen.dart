@@ -6,6 +6,7 @@ import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:back_to_us/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,15 +16,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
-  
-  void _logOut() {
-    FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.welcome, 
-      (Route<dynamic> route) => false,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             CustomSettingsTiles(
-              title: "Display Settings",
+              title: "Profile Settings",
               leading:Icon(Icons.account_circle),
               onPressed:() {
                 Navigator.of(context).pushNamed(Routes.profileSettings);
@@ -139,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              "About your profile",
+              "Display",
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontSize: 14
               ),
@@ -148,10 +140,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               valueListenable: darkModeNotifier,
               builder: (context, isDarkMode, child) {
                 return SwitchListTile(
+                  activeColor: const Color.fromARGB(255, 130, 14, 42),
                   title: Text(isDarkMode ? "Dark Mode" : "Light Mode"),
                   value: isDarkMode,
-                  onChanged: (value) {
+                  onChanged: (value) async {
                     darkModeNotifier.value = value;
+
+                    final prefs = await SharedPreferencesWithCache.create(
+                      cacheOptions: const SharedPreferencesWithCacheOptions()
+                    );
+                    await prefs.setBool('darkMode', darkModeNotifier.value);
                   },
                 );
               },
@@ -161,4 +159,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
+  void _logOut() {
+    FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.welcome, 
+      (Route<dynamic> route) => false,
+    );
+  }
+
 }
