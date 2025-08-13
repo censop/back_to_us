@@ -3,7 +3,8 @@ import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
 import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/profile_screen.dart';
-import 'package:back_to_us/Widgets/app_theme.dart';
+import 'package:back_to_us/Services/notifiers.dart';
+import 'package:back_to_us/app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
 import 'package:back_to_us/routes.dart';
@@ -15,8 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-ValueNotifier<bool> darkModeNotifier = ValueNotifier(true);
 
 /*
   displayLarge => headers

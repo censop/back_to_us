@@ -1,4 +1,4 @@
-import 'package:back_to_us/main.dart';
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:flutter/material.dart';
 
 class CustomSettingsTiles extends StatelessWidget {

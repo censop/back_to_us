@@ -1,9 +1,11 @@
 import 'dart:io';
-
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,37 +22,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   File? _image;
   final ImagePicker _imagePicker = ImagePicker();
-
-  void _imageFromGallery() async {
-    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null){
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-    print(_image);
-  }
-
-  void _imageFromCamera() async {
-    final pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null){
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-    print(_image);
-  }
-
-
-  void _logOut() {
-    FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.welcome, 
-      (Route<dynamic> route) => false,
-    );
-  }
-
+  final ref = FirebaseStorage.instance.ref().child("profile_pictures").child(FirebaseService.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +95,64 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               "Username: ${FirebaseService.currentUser?.username}",
               style: Theme.of(context).textTheme.bodyLarge,
             ), 
-            //...dummyAlbums,
           ],
         ),
       ),
+    );
+  }
+
+  void _imageFromGallery() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null){
+      try {
+        _image = File(pickedFile.path);
+        await ref.putFile(_image!); 
+        _updateProfilePictureUrl();
+      } catch (e) {
+        print("Error uploading image: $e");
+      }
+    }
+  }
+
+  void _imageFromCamera() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null){
+      try {
+        _image = File(pickedFile.path);
+        await ref.putFile(_image!); 
+        _updateProfilePictureUrl();
+      } catch (e) {
+        print("Error uploading image: $e");
+      }
+    }
+    
+  }
+
+  void _updateProfilePictureUrl() async {
+    final url = await ref.getDownloadURL();
+
+    FirebaseFirestore.instance
+    .collection("users")
+    .doc(FirebaseService.currentUser!.uid)
+    .update({
+      "profilePic" : url,
+    });
+
+    await FirebaseService.getAppUser();
+
+    profilePic.value = url;
+    
+    print(url);
+  }
+
+
+  void _logOut() {
+    FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.welcome, 
+      (Route<dynamic> route) => false,
     );
   }
 }

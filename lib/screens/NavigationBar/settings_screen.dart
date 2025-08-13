@@ -1,11 +1,11 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:back_to_us/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {

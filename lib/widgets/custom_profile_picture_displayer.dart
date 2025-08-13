@@ -1,4 +1,5 @@
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:flutter/material.dart';
 
 class CustomProfilePictureDisplayer extends StatefulWidget {
@@ -17,31 +18,35 @@ class CustomProfilePictureDisplayer extends StatefulWidget {
 
 class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisplayer> {
 
-  String? imageUrl = FirebaseService.currentUser?.profilePic;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onPressed,
-      child: CircleAvatar(
-        backgroundColor: const Color.fromARGB(255, 206, 203, 203),
-        backgroundImage: imageUrl == null ? null : NetworkImage(imageUrl!),
-        radius: widget.radius,
-        child: imageUrl == null
-        ? (
-            FirebaseService.currentUser != null
-            ? Text(
-                FirebaseService.currentUser!.username[0].toUpperCase(),
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontSize: widget.radius,
-                      color: const Color.fromARGB(255, 243, 241, 241),
-                    ),
-              )
-            : const Icon(Icons.person, color: const Color.fromARGB(255, 243, 241, 241),
+    return ValueListenableBuilder(
+      valueListenable: profilePic,
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: widget.onPressed,
+          child: CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 206, 203, 203),
+            backgroundImage: profilePic.value == null ? null : NetworkImage(profilePic.value!),
+            radius: widget.radius,
+            child: profilePic.value == null
+            ? (
+                FirebaseService.currentUser != null
+                ? Text(
+                    FirebaseService.currentUser!.username[0].toUpperCase(),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontSize: widget.radius,
+                          color: const Color.fromARGB(255, 243, 241, 241),
+                        ),
+                  )
+                : const Icon(Icons.person, color: const Color.fromARGB(255, 243, 241, 241),
+                )
             )
-        )
-        : null,
-      ),
+            : null,
+          ),
+        );
+      }
     );
   }
 }

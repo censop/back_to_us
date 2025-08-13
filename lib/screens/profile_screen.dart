@@ -1,5 +1,5 @@
 import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
+import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +23,33 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
+      body: ListView(
+        children: [
+          CustomSettingsTiles(
+            title: "Settings",
+            leading: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                Routes.settings,
+              );
+            },
+          ),
+          CustomSettingsTiles(
+            title: "Friends",
+            leading: Icon(Icons.people),
+            onPressed: () {
+              //to be filled
+            },
+          ),
+          CustomSettingsTiles(
+            title: "Notifications",
+            leading: Icon(Icons.notifications),
+            onPressed: () {
+              //to be filled
+            },
+          ),
+        ],
+      )
     );
   }
 }
