@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.suffixIcon,
     this.obscureText = false,
+    this.editable = true,
   });
 
   final TextEditingController controller;
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
   final bool obscureText;
+  final bool editable;
   
 
   @override
@@ -36,6 +38,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         obscureText: obscureText,
         validator: validator,
+        readOnly: editable,
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
+import 'package:back_to_us/Widgets/custom_text_form_field.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,7 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   bool _changeProfilePicture = false;
+  final TextEditingController _usernameController = TextEditingController();
 
   File? _image;
   final ImagePicker _imagePicker = ImagePicker();
@@ -33,7 +35,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           color: Theme.of(context).colorScheme.primary,
         ),
         title: Text(
-          "Profile",
+          "Edit Profile",
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
@@ -87,14 +89,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 ]
               ),
             ),
-            Divider(
-              height: 50,
-              thickness: 5,
+            Row(
+              children: [
+                Text("Username: "),
+                Expanded(
+                  child: CustomTextFormField(
+                    controller: _usernameController, 
+                    title: "${FirebaseService.currentUser?.username}",
+                    editable: false,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              "Username: ${FirebaseService.currentUser?.username}",
-              style: Theme.of(context).textTheme.bodyLarge,
-            ), 
           ],
         ),
       ),

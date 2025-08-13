@@ -1,7 +1,4 @@
-
-import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
-import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,9 +33,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
           )
         ],
       ),
-
-      //PLACEHOLDER
       body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: ListView(
+          children: [
+            CustomSettingsTiles(
+              title: "Profile Settings",
+              leading:Icon(Icons.account_circle_outlined),
+              onPressed:() {
+                Navigator.of(context).pushNamed(Routes.profileSettings);
+              },
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 20,
+              ),
+            ),
+            CustomSettingsTiles(
+              title: "Account Settings",
+              leading:Icon(Icons.lock_outline),
+              onPressed:() {
+                //to be filled
+              },
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 20,
+              ),
+            ),
+            CustomSettingsTiles(
+              title: "Language Settings",
+              leading:Icon(Icons.language),
+              onPressed:() {
+                //to be filled
+              },
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 20,
+              ),
+            ),
+            ValueListenableBuilder<bool>(
+              valueListenable: darkModeNotifier,
+              builder: (context, isDarkMode, child) {
+                return CustomSettingsTiles(
+                  title: isDarkMode ? "Dark Mode" : "Light Mode",
+                  leading: isDarkMode ? Icon(Icons.dark_mode) : Icon(Icons.light_mode),
+                  trailing: Switch(
+                    activeColor: const Color.fromARGB(255, 130, 14, 42),
+                    value: isDarkMode,
+                    onChanged: (value) async {
+                      darkModeNotifier.value = value;
+                      final prefs = await SharedPreferencesWithCache.create(
+                        cacheOptions: const SharedPreferencesWithCacheOptions()
+                      );
+                      await prefs.setBool('darkMode', darkModeNotifier.value);
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _logOut() {
+    FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.welcome, 
+      (Route<dynamic> route) => false,
+    );
+  }
+
+}
+
+
+
+
+
+/* 
+body: Padding(
         padding: const EdgeInsets.all(8),
         child: ListView(
           children: [
@@ -155,15 +228,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  void _logOut() {
-    FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.welcome, 
-      (Route<dynamic> route) => false,
-    );
-  }
-
-}
+*/
