@@ -38,7 +38,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         obscureText: obscureText,
         validator: validator,
-        readOnly: editable,
+        enabled: editable,
       ),
     );
   }

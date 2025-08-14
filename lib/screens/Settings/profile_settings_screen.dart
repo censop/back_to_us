@@ -2,10 +2,9 @@ import 'dart:io';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
+import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/Widgets/custom_text_form_field.dart';
-import 'package:back_to_us/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +19,7 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   bool _changeProfilePicture = false;
+  bool editable = false;
   final TextEditingController _usernameController = TextEditingController();
 
   File? _image;
@@ -38,12 +38,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           "Edit Profile",
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
-        actions: [
-          IconButton(
-            onPressed: _logOut,
-            icon: Icon(Icons.exit_to_app),
-          )
-        ],
       ),
 
       //PLACEHOLDER
@@ -89,16 +83,35 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 ]
               ),
             ),
+            CustomSettingsTiles(
+              title: null,
+              trailing: Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "${FirebaseService.currentUser?.username}"
+                  ),
+                ),
+              ), 
+            ),
             Row(
+              //apply logic and backend change
               children: [
                 Text("Username: "),
                 Expanded(
                   child: CustomTextFormField(
                     controller: _usernameController, 
                     title: "${FirebaseService.currentUser?.username}",
-                    editable: false,
+                    editable: editable,
                   ),
                 ),
+                IconButton(
+                    icon: editable ? Icon(Icons.edit_off) : Icon(Icons.edit),
+                    onPressed: () {
+                      setState(() {
+                        editable = !editable;
+                      });
+                    },
+                  ),
               ],
             ),
           ],
@@ -151,14 +164,5 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     profilePic.value = url;
     
     print(url);
-  }
-
-
-  void _logOut() {
-    FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.welcome, 
-      (Route<dynamic> route) => false,
-    );
   }
 }

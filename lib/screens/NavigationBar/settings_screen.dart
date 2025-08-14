@@ -26,12 +26,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           "Settings",
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
-        actions: [
-          IconButton(
-            onPressed: _logOut,
-            icon: Icon(Icons.exit_to_app),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -52,7 +46,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: "Account Settings",
               leading:Icon(Icons.lock_outline),
               onPressed:() {
-                //to be filled
+                Navigator.of(context).pushNamed(
+                  Routes.accountSettings
+                );
               },
               trailing: Icon(
                 Icons.arrow_forward_ios,
@@ -95,15 +91,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
-  void _logOut() {
-    FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.welcome, 
-      (Route<dynamic> route) => false,
-    );
-  }
-
 }
 
 

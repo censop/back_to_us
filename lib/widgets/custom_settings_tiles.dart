@@ -11,7 +11,7 @@ class CustomSettingsTiles extends StatelessWidget {
   });
 
   final void Function()? onPressed;
-  final String title;
+  final String? title;
   final Widget? leading;
   final Widget? trailing;
 
@@ -23,7 +23,7 @@ class CustomSettingsTiles extends StatelessWidget {
         tileColor: darkModeNotifier.value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142),
         leading: leading,
         title: Text(
-          title,
+          title ?? "",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         trailing: trailing,

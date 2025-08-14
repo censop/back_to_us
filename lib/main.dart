@@ -1,6 +1,7 @@
 
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
+import 'package:back_to_us/Screens/Settings/account_settings.dart';
 import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/profile_screen.dart';
 import 'package:back_to_us/Services/notifiers.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
             Routes.profileSettings : (context) => ProfileSettingsScreen(),
             Routes.settings : (context) => SettingsScreen(),
             Routes.profile : (context) => ProfileScreen(),
+            Routes.accountSettings : (context) => AccountSettings(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,

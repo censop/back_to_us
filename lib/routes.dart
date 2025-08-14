@@ -8,5 +8,6 @@ class Routes {
   static String profileSettings = "/profileSettings";
   static String settings = "/settings";
   static String profile = "/profile";
+  static String accountSettings = "/accountSettings";
 
 } 
