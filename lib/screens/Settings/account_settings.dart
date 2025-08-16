@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,10 +29,27 @@ class _AccountSettingsState extends State<AccountSettings> {
       body: ListView(
         children: [
           CustomSettingsTiles(
+            title: "E-mail: ${FirebaseService.currentUser?.email}",
+            onPressed: () {},
+          ),
+          CustomSettingsTiles(
+            title: "Change Passowrd",
+            onPressed: () {},
+          ),
+          CustomSettingsTiles(
+            title: "Membership Plan",
+            onPressed: () {},
+          ),
+          CustomSettingsTiles(
             title: "Log out",
             trailing: Icon(Icons.logout),
             onPressed: _logOut,
-          )
+          ),
+          CustomSettingsTiles(
+            title: "Delete account",
+            trailing: Icon(Icons.logout),
+            onPressed: () {},
+          ),
         ],
       ),
     );

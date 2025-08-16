@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
-import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/Widgets/custom_text_form_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -83,37 +82,27 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 ]
               ),
             ),
-            CustomSettingsTiles(
-              title: null,
-              trailing: Expanded(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "${FirebaseService.currentUser?.username}"
-                  ),
-                ),
-              ), 
-            ),
             Row(
-              //apply logic and backend change
               children: [
-                Text("Username: "),
+                Text(
+                  "Username ",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
                 Expanded(
-                  child: CustomTextFormField(
-                    controller: _usernameController, 
-                    title: "${FirebaseService.currentUser?.username}",
-                    editable: editable,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: FirebaseService.currentUser?.username,
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
+                Spacer(),
                 IconButton(
-                    icon: editable ? Icon(Icons.edit_off) : Icon(Icons.edit),
-                    onPressed: () {
-                      setState(() {
-                        editable = !editable;
-                      });
-                    },
-                  ),
+                  icon: Icon(Icons.edit),
+                  onPressed: () {},
+                ),
               ],
-            ),
+            )
           ],
         ),
       ),

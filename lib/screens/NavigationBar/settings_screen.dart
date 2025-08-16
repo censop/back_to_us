@@ -1,7 +1,6 @@
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
