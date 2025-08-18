@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.add_circle_outline),
                 iconSize: 50,
                 onPressed: () {
-                  //fill this later
+                  _clickCreateIcon();
                 },
               ),
             ]
@@ -69,6 +69,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         )
       ),
+    );
+  }
+
+  void _clickCreateIcon() {
+    showModalBottomSheet(
+      context: context, 
+      builder: (context) {
+        return Column(
+          children: [
+            Text("Album name"),
+            Text("Duration of album"),
+            Text("Mode"),
+            Text("Additional user invites according to the mode"),
+          ],
+        );
+      }
     );
   }
 }

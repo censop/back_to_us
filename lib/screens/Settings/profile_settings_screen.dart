@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
-import 'package:back_to_us/Widgets/custom_text_form_field.dart';
+import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -39,72 +39,73 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
 
-      //PLACEHOLDER
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView(
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  CustomProfilePictureDisplayer(
-                    radius: 45,
+      body: ListView(
+        children: [
+          Center(
+            child: Column(
+              children: [
+                CustomProfilePictureDisplayer(
+                  radius: 45,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    overlayColor: Theme.of(context).colorScheme.surface,
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      overlayColor: Theme.of(context).colorScheme.surface,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _changeProfilePicture = !_changeProfilePicture;
-                      });
-                    }, 
-                    child: Text("Edit profile picture"),
-                  ),
-                  AnimatedSwitcher(
-                    duration: Duration(milliseconds: 1),
-                    child: _changeProfilePicture ?
-                    Column(
-                      children: [
-                        TextButton(
-                          onPressed: _imageFromGallery, 
-                          child: Text("Choose from library"),
-                        ),
-                        TextButton(
-                          onPressed: _imageFromCamera, 
-                          child: Text("Take picture"),
-                        ),
-                      ],
-                    )
-                    : SizedBox(height:2),
-
-                  ),
-                ]
+                  onPressed: () {
+                    setState(() {
+                      _changeProfilePicture = !_changeProfilePicture;
+                    });
+                  }, 
+                  child: Text("Edit profile picture"),
+                ),
+                      
+                //for this use popup menu button with menu anchor
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 1),
+                  child: _changeProfilePicture ?
+                  Column(
+                    children: [
+                      TextButton(
+                        onPressed: _imageFromGallery, 
+                        child: Text("Choose from library"),
+                      ),
+                      TextButton(
+                        onPressed: _imageFromCamera, 
+                        child: Text("Take picture"),
+                      ),
+                    ],
+                  )
+                  : SizedBox(height:2),
+      
+                ),
+              ]
+            ),
+          ),
+          //add logic
+          CustomSettingsTiles(
+            leading: Text(
+              "Username: ",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            mainWidget: Expanded(
+              child: TextFormField(
+                enabled: editable,
+                decoration: InputDecoration(
+                  hintText: FirebaseService.currentUser?.username,
+                  border: InputBorder.none,
+                ),
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  "Username ",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: FirebaseService.currentUser?.username,
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {},
-                ),
-              ],
-            )
-          ],
-        ),
+            trailing: IconButton(
+              onPressed: () {
+                setState(() {
+                  editable = !editable;
+                });
+              }, 
+              icon: editable ? Icon(Icons.edit) : Icon(Icons.edit_off),
+            ),
+          ),
+        ],
       ),
     );
   }

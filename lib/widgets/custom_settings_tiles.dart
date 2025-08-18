@@ -5,7 +5,8 @@ class CustomSettingsTiles extends StatelessWidget {
   const CustomSettingsTiles({
     super.key,
     this.onPressed,
-    required this.title,
+    this.title,
+    this.mainWidget,
     this.leading,
     this.trailing,
   });
@@ -14,6 +15,7 @@ class CustomSettingsTiles extends StatelessWidget {
   final String? title;
   final Widget? leading;
   final Widget? trailing;
+  final Widget? mainWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,11 @@ class CustomSettingsTiles extends StatelessWidget {
       child: ListTile(
         tileColor: darkModeNotifier.value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142),
         leading: leading,
-        title: Text(
-          title ?? "",
+        title: title != null ? Text(
+          title!,
           style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        ) :
+        mainWidget,
         trailing: trailing,
         onTap: onPressed,
       ),
