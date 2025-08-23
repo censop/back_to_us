@@ -89,7 +89,6 @@ class SignUpScreenState extends State<SignUpScreen> {
                   ValueListenableBuilder(
                     valueListenable: seePassword,
                     builder: (context, value, child) {
-                      print("Sadece text formu güncellendi");
                       return CustomTextFormField(
                         controller: _passwordController,
                         title: "Password",

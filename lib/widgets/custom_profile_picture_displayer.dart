@@ -28,9 +28,10 @@ class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisp
           onTap: widget.onPressed,
           child: CircleAvatar(
             backgroundColor: const Color.fromARGB(255, 206, 203, 203),
-            backgroundImage: profilePic.value == null ? null : NetworkImage(profilePic.value!),
+            backgroundImage: profilePic.value == null || profilePic.value == ""
+             ? null : NetworkImage(profilePic.value!),
             radius: widget.radius,
-            child: profilePic.value == null
+            child: profilePic.value == null || profilePic.value == ""
             ? (
                 FirebaseService.currentUser != null
                 ? Text(

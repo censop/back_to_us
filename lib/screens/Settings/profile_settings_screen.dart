@@ -18,8 +18,9 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   bool _changeProfilePicture = false;
-  bool editable = false;
+
   final TextEditingController _usernameController = TextEditingController();
+  bool editable = false;
 
   File? _image;
   final ImagePicker _imagePicker = ImagePicker();
@@ -76,7 +77,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     ],
                   )
                   : SizedBox(height:2),
-      
                 ),
               ]
             ),
@@ -87,14 +87,19 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               "Username: ",
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            mainWidget: Expanded(
-              child: TextFormField(
-                enabled: editable,
-                decoration: InputDecoration(
-                  hintText: FirebaseService.currentUser?.username,
-                  border: InputBorder.none,
+            mainWidget: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _usernameController,
+                    enabled: editable,
+                    decoration: InputDecoration(
+                      hintText: FirebaseService.currentUser?.username,
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             trailing: IconButton(
               onPressed: () {

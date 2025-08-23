@@ -19,6 +19,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   List<Widget> screens = [
     HomeScreen(),
+    //Camera(),
     SettingsScreen(),
   ];
 
@@ -47,6 +48,11 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             selectedIcon: Icon(Icons.home),
             label: "Home",
           ),
+          /*NavigationDestination(
+            icon: Icon(Icons.add_circle_outline),
+            selectedIcon: Icon(Icons.add_circle), 
+            label: "New"
+          ), */
           NavigationDestination(
             icon: Icon(Icons.settings_outlined), 
             selectedIcon: Icon(Icons.settings),

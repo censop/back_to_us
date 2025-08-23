@@ -1,5 +1,6 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/create_album_sheet.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
@@ -76,14 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showModalBottomSheet(
       context: context, 
       builder: (context) {
-        return Column(
-          children: [
-            Text("Album name"),
-            Text("Duration of album"),
-            Text("Mode"),
-            Text("Additional user invites according to the mode"),
-          ],
-        );
+        return CreateAlbumSheet();
       }
     );
   }

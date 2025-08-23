@@ -1,3 +1,4 @@
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,7 +53,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Forgot Password"),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,19 +71,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             errorText: emailError,
           ),
           SizedBox(height: 10),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-            onPressed: () async {
-              await _sendEmail();
-            }, 
-            child: Text(
-              "Reset Password",
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Colors.white
-              ),
-            ),
+          ValueListenableBuilder(
+            valueListenable: darkModeNotifier,
+            builder: (context, value, child) {
+              return ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: darkModeNotifier.value ? const Color.fromARGB(255, 130, 14, 42) : Theme.of(context).colorScheme.primary,
+                ),
+                onPressed: () async {
+                  await _sendEmail();
+                }, 
+                child: Text(
+                  "Reset Password",
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Colors.white
+                  ),
+                ),
+              );
+            }
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
@@ -106,10 +107,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   SizedBox(height:10),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.forgotPassword,
-                      );
+                      FirebaseService.forgotPassword(context);
                     }, 
                     child: Text("Forgot password?")
                   ),

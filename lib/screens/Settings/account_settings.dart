@@ -1,8 +1,7 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/change_password_sheet.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
-import 'package:back_to_us/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AccountSettings extends StatefulWidget {
@@ -13,6 +12,7 @@ class AccountSettings extends StatefulWidget {
 }
 
 class _AccountSettingsState extends State<AccountSettings> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +29,27 @@ class _AccountSettingsState extends State<AccountSettings> {
       body: ListView(
         children: [
           CustomSettingsTiles(
-            title: "E-mail: ${FirebaseService.currentUser?.email}",
-            onPressed: () {},
+            leading: Text(
+              "E-mail: ",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            mainWidget: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: FirebaseService.currentUser?.email,
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           CustomSettingsTiles(
-            title: "Change Passowrd",
-            onPressed: () {},
+            title: "Change Password",
+            onPressed: changePassword,
           ),
           CustomSettingsTiles(
             title: "Membership Plan",
@@ -43,11 +58,13 @@ class _AccountSettingsState extends State<AccountSettings> {
           CustomSettingsTiles(
             title: "Log out",
             trailing: Icon(Icons.logout),
-            onPressed: _logOut,
+            onPressed: () {
+              FirebaseService.logOut(context);
+            }
           ),
           CustomSettingsTiles(
             title: "Delete account",
-            trailing: Icon(Icons.logout),
+            trailing: Icon(Icons.delete),
             onPressed: () {},
           ),
         ],
@@ -55,11 +72,13 @@ class _AccountSettingsState extends State<AccountSettings> {
     );
   }
 
-  void _logOut() {
-    FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.welcome, 
-      (Route<dynamic> route) => false,
+  //add logic
+  void changePassword() {
+    showModalBottomSheet(
+      context: context, 
+      builder: (context) {
+        return ChangePasswordSheet();
+      }
     );
   }
 }
