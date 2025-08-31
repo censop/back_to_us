@@ -1,8 +1,10 @@
 
 import 'package:back_to_us/Models/app_user.dart';
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 
@@ -38,4 +40,37 @@ class FirebaseService {
       Routes.forgotPassword,
     );
   }
+
+  static Future<void> updateProfilePictureUrl(Reference ref) async {
+    final url = await ref.getDownloadURL();
+
+    FirebaseFirestore.instance
+    .collection("users")
+    .doc(FirebaseService.currentUser!.uid)
+    .update({
+      "profilePic" : url,
+    });
+
+    await FirebaseService.getAppUser();
+
+    profilePic.value = url;
+    
+  }
+
+  /*static void updateProfilePictureUrl(Reference ref) async {
+    final url = await ref.getDownloadURL();
+
+    FirebaseFirestore.instance
+    .collection("users")
+    .doc(FirebaseService.currentUser!.uid)
+    .update({
+      "profilePic" : url,
+    });
+
+    await FirebaseService.getAppUser();
+
+    profilePic.value = url;
+    
+    print(url);
+  } */
 }

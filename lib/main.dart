@@ -1,10 +1,11 @@
 
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
-import 'package:back_to_us/Screens/Settings/account_settings.dart';
+import 'package:back_to_us/Screens/Settings/account_settings_screen.dart';
 import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/profile_screen.dart';
 import 'package:back_to_us/Services/notifiers.dart';
+import 'package:back_to_us/Widgets/create_album_screen.dart';
 import 'package:back_to_us/app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
@@ -67,7 +68,8 @@ class MyApp extends StatelessWidget {
             Routes.profileSettings : (context) => ProfileSettingsScreen(),
             Routes.settings : (context) => SettingsScreen(),
             Routes.profile : (context) => ProfileScreen(),
-            Routes.accountSettings : (context) => AccountSettings(),
+            Routes.accountSettings : (context) => AccountSettingsScreenn(),
+            Routes.createAlbum : (context) => CreateAlbumScreen(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,

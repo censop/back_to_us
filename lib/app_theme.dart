@@ -67,6 +67,7 @@ static ThemeData darkTheme = ThemeData(
   ).copyWith(
     surface: const Color.fromARGB(255, 32, 30, 31),
     primary: const Color.fromARGB(255, 249, 244, 246),
+    secondary: const Color.fromARGB(255, 130, 14, 42),
   ),
   scaffoldBackgroundColor: const Color.fromARGB(255, 32, 30, 31),
   textTheme: TextTheme(

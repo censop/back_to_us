@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +19,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   final TextEditingController _usernameController = TextEditingController();
   bool editable = false;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    super.dispose();
+  }
 
   File? _image;
   final ImagePicker _imagePicker = ImagePicker();
@@ -122,7 +126,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       try {
         _image = File(pickedFile.path);
         await ref.putFile(_image!); 
-        _updateProfilePictureUrl();
+        await FirebaseService.updateProfilePictureUrl(ref);
       } catch (e) {
         print("Error uploading image: $e");
       }
@@ -136,28 +140,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       try {
         _image = File(pickedFile.path);
         await ref.putFile(_image!); 
-        _updateProfilePictureUrl();
+        await FirebaseService.updateProfilePictureUrl(ref);
       } catch (e) {
         print("Error uploading image: $e");
       }
     }
-    
-  }
-
-  void _updateProfilePictureUrl() async {
-    final url = await ref.getDownloadURL();
-
-    FirebaseFirestore.instance
-    .collection("users")
-    .doc(FirebaseService.currentUser!.uid)
-    .update({
-      "profilePic" : url,
-    });
-
-    await FirebaseService.getAppUser();
-
-    profilePic.value = url;
-    
-    print(url);
   }
 }

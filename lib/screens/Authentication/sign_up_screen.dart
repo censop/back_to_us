@@ -213,7 +213,6 @@ class SignUpScreenState extends State<SignUpScreen> {
         email: email,
         username: username,
         createdAt: Timestamp.now(),
-        password: password,
       );
 
       //upload user to data base

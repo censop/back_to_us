@@ -1,22 +1,18 @@
 
-
-//TODO şimdilik password böyle ama değişecek
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+ //TODO hash password
 class AppUser {
   AppUser({
     required this.username,
     required this.email,
     required this.uid,
     required this.createdAt,
-    required this.password,
     this.albumIds,
     this.profilePic,
     this.isPremium = false,
   });
 
   final String username;
-  final String password;
   final String email;
   final String uid;
   final String? profilePic;
@@ -33,7 +29,6 @@ class AppUser {
       profilePic : json["profilePic"],
       isPremium : json["isPremium"],
       albumIds : json["albumIds"],
-      password: json["password"],
       createdAt: json["createdAt"],
     );
   }
@@ -48,7 +43,6 @@ class AppUser {
     "isPremium" : isPremium,
     "albumIds" : albumIds,
     "createdAt" : createdAt,
-    "password" : password,
   };
 }
 

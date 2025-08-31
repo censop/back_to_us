@@ -2,7 +2,6 @@ import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -112,12 +111,6 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                           
                           // Update password in Firebase Auth
                           await user.updatePassword(_newPasswordController.text);
-                          
-                          // Update password in Firestore
-                          await FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(user.uid)
-                            .update({"password": _newPasswordController.text});
                           
                           // Refresh user data
                           await FirebaseService.getAppUser();

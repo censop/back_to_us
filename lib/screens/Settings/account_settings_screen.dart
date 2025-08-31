@@ -4,14 +4,14 @@ import 'package:back_to_us/Widgets/change_password_sheet.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:flutter/material.dart';
 
-class AccountSettings extends StatefulWidget {
-  const AccountSettings({super.key});
+class AccountSettingsScreenn extends StatefulWidget {
+  const AccountSettingsScreenn({super.key});
 
   @override
-  State<AccountSettings> createState() => _AccountSettingsState();
+  State<AccountSettingsScreenn> createState() => _AccountSettingsScreennState();
 }
 
-class _AccountSettingsState extends State<AccountSettings> {
+class _AccountSettingsScreennState extends State<AccountSettingsScreenn> {
 
   @override
   Widget build(BuildContext context) {

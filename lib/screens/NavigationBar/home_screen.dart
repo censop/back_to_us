@@ -1,6 +1,5 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Widgets/create_album_sheet.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
@@ -74,11 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _clickCreateIcon() {
-    showModalBottomSheet(
-      context: context, 
-      builder: (context) {
-        return CreateAlbumSheet();
-      }
+    Navigator.of(context).pushNamed(
+      Routes.createAlbum
     );
   }
 }
