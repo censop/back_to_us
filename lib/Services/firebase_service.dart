@@ -26,8 +26,9 @@ class FirebaseService {
     }
   }
 
-  static void logOut(BuildContext context) {
-    FirebaseAuth.instance.signOut();
+  static void logOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    FirebaseService.currentUser = null;
     Navigator.of(context).pushNamedAndRemoveUntil(
       Routes.welcome, 
       (Route<dynamic> route) => false,
@@ -56,21 +57,4 @@ class FirebaseService {
     profilePic.value = url;
     
   }
-
-  /*static void updateProfilePictureUrl(Reference ref) async {
-    final url = await ref.getDownloadURL();
-
-    FirebaseFirestore.instance
-    .collection("users")
-    .doc(FirebaseService.currentUser!.uid)
-    .update({
-      "profilePic" : url,
-    });
-
-    await FirebaseService.getAppUser();
-
-    profilePic.value = url;
-    
-    print(url);
-  } */
 }

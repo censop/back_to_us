@@ -9,6 +9,7 @@ class CustomSettingsTiles extends StatelessWidget {
     this.mainWidget,
     this.leading,
     this.trailing,
+    this.color
   });
 
   final void Function()? onPressed;
@@ -16,13 +17,14 @@ class CustomSettingsTiles extends StatelessWidget {
   final Widget? leading;
   final Widget? trailing;
   final Widget? mainWidget;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
       child: ListTile(
-        tileColor: darkModeNotifier.value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142),
+        tileColor: color ?? (darkModeNotifier.value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142)),
         leading: leading,
         title: title != null ? Text(
           title!,

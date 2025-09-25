@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Models/album.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
  //TODO hash password
 class AppUser {
@@ -10,6 +11,7 @@ class AppUser {
     this.albumIds,
     this.profilePic,
     this.isPremium = false,
+    this.albums,
   });
 
   final String username;
@@ -19,6 +21,7 @@ class AppUser {
   final bool isPremium;
   final List<String>? albumIds;
   final Timestamp createdAt;
+  final List<Album>? albums;
 
   //to get user from json
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -29,7 +32,8 @@ class AppUser {
       profilePic : json["profilePic"],
       isPremium : json["isPremium"],
       albumIds : json["albumIds"],
-      createdAt: json["createdAt"],
+      createdAt : json["createdAt"],
+      albums : json["albums"],
     );
   }
 
@@ -43,6 +47,7 @@ class AppUser {
     "isPremium" : isPremium,
     "albumIds" : albumIds,
     "createdAt" : createdAt,
+    "albums" : albums
   };
 }
 
