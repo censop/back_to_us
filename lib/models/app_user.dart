@@ -11,7 +11,6 @@ class AppUser {
     this.albumIds,
     this.profilePic,
     this.isPremium = false,
-    this.albums,
   });
 
   final String username;
@@ -21,7 +20,6 @@ class AppUser {
   final bool isPremium;
   final List<String>? albumIds;
   final Timestamp createdAt;
-  final List<Album>? albums;
 
   //to get user from json
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -29,26 +27,25 @@ class AppUser {
       username : json["username"],
       email : json["email"],
       uid : json["uid"],
-      profilePic : json["profilePic"],
+      profilePic : json["profilePic"] as String?,
       isPremium : json["isPremium"],
-      albumIds : json["albumIds"],
+      albumIds : json["albumIds"] != null 
+        ? List<String>.from(json["albumIds"] as List) 
+        : null,
       createdAt : json["createdAt"],
-      albums : json["albums"],
     );
   }
 
   //to turn user intojson to put is firestore
   Map<String, dynamic> toJson() {
-  return {
-    "username" : username,
-    "email" : email,
-    "uid" : uid,
-    "profilePic" : profilePic,
-    "isPremium" : isPremium,
-    "albumIds" : albumIds,
-    "createdAt" : createdAt,
-    "albums" : albums
-  };
-}
-
+    return {
+      "username" : username,
+      "email" : email,
+      "uid" : uid,
+      "profilePic" : profilePic,
+      "isPremium" : isPremium,
+      "albumIds" : albumIds,
+      "createdAt" : createdAt,
+    };
+  }
 }

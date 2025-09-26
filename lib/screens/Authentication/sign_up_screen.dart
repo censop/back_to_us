@@ -1,3 +1,4 @@
+import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/routes.dart';
@@ -19,6 +20,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isCreatingUser = false;
+
+   bool isLoading = false;
 
   ValueNotifier<bool> seePassword = ValueNotifier(true);
 
@@ -221,9 +224,14 @@ class SignUpScreenState extends State<SignUpScreen> {
         isCreatingUser = false;
       });
 
+      loadAppData();
+
       Navigator.of(
         context,
-      ).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false);
+      ).pushNamedAndRemoveUntil(
+        Routes.home, (Route<dynamic> route) => false
+      );
+
       setState(() {
         emailError = null;
         passwordError = null;
@@ -260,5 +268,17 @@ class SignUpScreenState extends State<SignUpScreen> {
         );
       }
     }
+  }
+
+  Future<void> loadAppData() async {
+    setState(() {
+      isLoading = true;
+    });
+    //you should fix this
+    await Future.delayed(Duration(milliseconds: 500));
+    await FirebaseService.getAppUser();
+    setState(() {
+      isLoading = false;
+    });
   }
 }

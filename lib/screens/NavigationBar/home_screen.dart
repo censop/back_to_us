@@ -1,5 +1,5 @@
 
-import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
@@ -40,33 +40,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: Center(
-          child: FirebaseService.currentUser?.albumIds == null ? 
-          Column(
-            mainAxisAlignment: FirebaseService.currentUser?.albumIds == null ? MainAxisAlignment.center : MainAxisAlignment.start,
-            children: [
-              Text(
-                "Create your first album", 
-                style: Theme.of(context).textTheme.titleMedium,
+        child: ValueListenableBuilder(
+          valueListenable: albumIdsNotifier,
+          builder: (context, value, child) {
+            return Center(
+              child: value == null ? 
+              Column(
+                mainAxisAlignment: value == null ? MainAxisAlignment.center : MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Create your first album", 
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    iconSize: 50,
+                    onPressed: () {
+                      _clickCreateIcon();
+                    },
+                  ),
+                ]
+              ) :
+              Column(
+                children: [
+                  Text("you have an album"),
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    iconSize: 50,
+                    onPressed: () {},
+                  ),
+                ]
               ),
-              IconButton(
-                icon: Icon(Icons.add_circle_outline),
-                iconSize: 50,
-                onPressed: () {
-                  _clickCreateIcon();
-                },
-              ),
-            ]
-          ) :
-          Column(
-            children: [
-              IconButton(
-                icon: Icon(Icons.add_circle_outline),
-                iconSize: 50,
-                onPressed: () {},
-              ),
-            ]
-          ),
+            );
+          }
         )
       ),
     );

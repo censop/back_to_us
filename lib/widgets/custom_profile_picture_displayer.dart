@@ -22,27 +22,19 @@ class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisp
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: profilePic,
+      valueListenable: profilePicNotifier,
       builder: (context, value, child) {
         return InkWell(
           onTap: widget.onPressed,
           child: CircleAvatar(
             backgroundColor: const Color.fromARGB(255, 206, 203, 203),
-            backgroundImage: profilePic.value == null || profilePic.value == ""
-             ? null : NetworkImage(profilePic.value!),
+            backgroundImage: value == null || value == ""
+             ? null : NetworkImage(value),
             radius: widget.radius,
-            child: profilePic.value == null || profilePic.value == ""
+            child: value == null || value == ""
             ? (
-                FirebaseService.currentUser != null
-                ? Text(
-                    FirebaseService.currentUser!.username[0].toUpperCase(),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontSize: widget.radius,
-                          color: const Color.fromARGB(255, 243, 241, 241),
-                        ),
-                  )
-                : const Icon(Icons.person, color: const Color.fromARGB(255, 243, 241, 241),
-                )
+                const Icon(Icons.person, color: const Color.fromARGB(255, 243, 241, 241),
+              )
             )
             : null,
           ),

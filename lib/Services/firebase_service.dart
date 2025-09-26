@@ -13,22 +13,32 @@ class FirebaseService {
   
   static Future<void> getAppUser() async {
     User? user = FirebaseAuth.instance.currentUser;
+    print('Firebase Auth user: ${user?.uid}');
     if (user != null) {
       try {
         DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection("users")
         .doc(user.uid)
         .get();
+        print('Document exists: ${doc.exists}');
+        print('Document data: ${doc.data()}');
         currentUser = AppUser.fromJson(doc.data() as Map<String, dynamic>);
+        albumIdsNotifier.value = currentUser?.albumIds;
+        profilePicNotifier.value = currentUser?.profilePic;
       } catch (e) {
-        print(e);
+        print('Error in getAppUser: $e');
       }
+    }
+    else {
+      print('No authenticated user found');
     }
   }
 
   static void logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     FirebaseService.currentUser = null;
+    albumIdsNotifier.value = null;
+    profilePicNotifier.value = null;
     Navigator.of(context).pushNamedAndRemoveUntil(
       Routes.welcome, 
       (Route<dynamic> route) => false,
@@ -54,7 +64,29 @@ class FirebaseService {
 
     await FirebaseService.getAppUser();
 
-    profilePic.value = url;
+    profilePicNotifier.value = url;
     
+  }
+
+  static Future<void> addAlbumId(String id) async {
+    await FirebaseFirestore.instance
+    .collection("users")
+    .doc(FirebaseService.currentUser!.uid)
+    .update({
+      "albumIds" : FieldValue.arrayUnion([id]),
+    });
+
+    await FirebaseService.getAppUser();
+  }
+
+  static Future<void> removeAlbumId(String id) async {
+    await FirebaseFirestore.instance
+    .collection("users")
+    .doc(FirebaseService.currentUser!.uid)
+    .update({
+      "albumIds" : FieldValue.arrayRemove([id]),
+    });
+
+    await FirebaseService.getAppUser();
   }
 }

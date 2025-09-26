@@ -13,8 +13,6 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
-  bool isLoading = false;
-
   int currentPageIndex = 0;
 
   List<Widget> screens = [
@@ -23,11 +21,6 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
     SettingsScreen(),
   ];
 
-   @override
-  void initState() {
-    super.initState();
-    loadAppData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +53,8 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           ),
         ],
       ),
-      body: isLoading ? Center(child: CircularProgressIndicator()) : screens[currentPageIndex],
+      body: screens[currentPageIndex],
     );
   }
 
-  Future<void> loadAppData() async {
-    setState(() {
-      isLoading = true;
-    });
-    await FirebaseService.getAppUser();
-    setState(() {
-      isLoading = false;
-    });
-  }
 }

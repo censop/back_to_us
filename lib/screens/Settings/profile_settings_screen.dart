@@ -28,7 +28,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   File? _image;
   final ImagePicker _imagePicker = ImagePicker();
-  final ref = FirebaseStorage.instance.ref().child("profile_pictures").child(FirebaseService.currentUser!.uid);
+  late Reference ref;
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +123,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null){
+      ref = FirebaseStorage.instance
+      .ref()
+      .child("profile_pictures")
+      .child(FirebaseService.currentUser!.uid);
       try {
         _image = File(pickedFile.path);
         await ref.putFile(_image!); 
@@ -137,6 +141,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     final pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null){
+      ref = FirebaseStorage.instance
+      .ref()
+      .child("profile_pictures")
+      .child(FirebaseService.currentUser!.uid);
       try {
         _image = File(pickedFile.path);
         await ref.putFile(_image!); 

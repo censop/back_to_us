@@ -16,7 +16,7 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Text("Hello,"),
             Text(
-              "${FirebaseService.currentUser!.username}!",
+              "${FirebaseService.currentUser?.username ?? "Loading.."}!",
               style: Theme.of(context).textTheme.titleLarge,
               overflow: TextOverflow.ellipsis,
             )

@@ -366,6 +366,8 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         "coverPath": coverUrl,
         "members": members,
       });
+
+      await FirebaseService.addAlbumId(albumId);
       
       ScaffoldMessenger.of(context).showSnackBar(
         customSnackbar(

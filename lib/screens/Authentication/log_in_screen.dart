@@ -19,6 +19,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   ValueNotifier<bool> seePassword = ValueNotifier(true);
 
+  bool isLoading = false;
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? emailError; 
@@ -35,7 +37,9 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:SafeArea(
+      body:isLoading 
+      ? Center(child: CircularProgressIndicator())
+      : SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Form(
@@ -160,11 +164,12 @@ class _LogInScreenState extends State<LogInScreen> {
     }
 
     try {
-      final userCreds = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email, 
         password: password
       );
-      print(userCreds.user);
+      
+      loadAppData();
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home,
@@ -175,6 +180,7 @@ class _LogInScreenState extends State<LogInScreen> {
         emailError = null;
         passwordError = null;
       });
+
     }    
 
     on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
@@ -206,6 +212,16 @@ class _LogInScreenState extends State<LogInScreen> {
       }
     }
   }
-
+  Future<void> loadAppData() async {
+    setState(() {
+      isLoading = true;
+    });
+    //you should fix this
+    await Future.delayed(Duration(milliseconds: 500));
+    await FirebaseService.getAppUser();
+    setState(() {
+      isLoading = false;
+    });
+  }
 }
 
