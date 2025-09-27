@@ -5,7 +5,7 @@ import 'package:back_to_us/Screens/Settings/account_settings_screen.dart';
 import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/profile_screen.dart';
 import 'package:back_to_us/Services/notifiers.dart';
-import 'package:back_to_us/Widgets/create_album_screen.dart';
+import 'package:back_to_us/Screens/create_album_screen.dart';
 import 'package:back_to_us/app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';

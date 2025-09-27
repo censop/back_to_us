@@ -1,7 +1,5 @@
 
 import 'dart:io';
-
-import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/album_mode.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
@@ -333,11 +331,8 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
     if (_formKey.currentState!.validate()) {
       final String uid = FirebaseService.currentUser!.uid;
         final albumRef = FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .collection("albums")
-          .doc(); 
-        
+        .collection("albums")
+        .doc();
         final albumId = albumRef.id;
         
         String coverUrl = "";
@@ -347,7 +342,6 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
             final coverRef = FirebaseStorage.instance
               .ref()
               .child("albums")
-              .child(uid)
               .child(albumId)
               .child("album_cover");
               await coverRef.putFile(_image!);
@@ -359,12 +353,13 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         } 
       await albumRef.set({
         "id": albumId,
+        "owner": uid,
         "mode": selectedMode,
         "name": _albumNameController.text, 
         "openAt": Timestamp.fromDate(selectedDate),
         "notificationsEnabled": notificationsOn,
         "coverPath": coverUrl,
-        "members": members,
+        "members": [uid, ...members],
       });
 
       await FirebaseService.addAlbumId(albumId);

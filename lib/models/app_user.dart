@@ -1,5 +1,4 @@
 
-import 'package:back_to_us/Models/album.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
  //TODO hash password
 class AppUser {
