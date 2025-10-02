@@ -10,5 +10,6 @@ class Routes {
   static String profile = "/profile";
   static String accountSettings = "/accountSettings";
   static String createAlbum = "/createAlbum";
+  static String friends = "/friends";
 
 } 

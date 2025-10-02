@@ -4,10 +4,10 @@ class AlbumMode {
 
   const AlbumMode({required this.name, required this.maxPeople});
 
-  static const single = AlbumMode(name: "single", maxPeople: 1);
-  static const couple = AlbumMode(name: "couple", maxPeople: 2);
-  static const friends = AlbumMode(name: "friends", maxPeople: 5);
-  static const friendsPlus = AlbumMode(name: "friends+", maxPeople: 10);
+  static const single = AlbumMode(name: "Single", maxPeople: 1);
+  static const couple = AlbumMode(name: "Couple", maxPeople: 2);
+  static const friends = AlbumMode(name: "Friends", maxPeople: 5);
+  static const friendsPlus = AlbumMode(name: "Friends+", maxPeople: 10);
 
   static List<AlbumMode> values = [single, couple, friends, friendsPlus];
 

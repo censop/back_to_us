@@ -10,6 +10,7 @@ class AppTheme {
   ).copyWith(
     surface: const Color.fromARGB(255, 241, 241, 241),
     primary: const Color.fromARGB(255, 130, 14, 42),
+    secondary: const Color.fromARGB(255, 241, 241, 241),
   ),
   scaffoldBackgroundColor: const Color.fromARGB(255, 241, 241, 241),
   brightness: Brightness.light,

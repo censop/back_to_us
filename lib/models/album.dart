@@ -13,6 +13,7 @@ class Album {
   final DateTime openAt;            // When album unlocks
   final bool notificationsEnabled;  // Notifications toggle
   final List<AlbumItem> items;      // Album contents
+  final DateTime createdAt;
 
   Album({
     required this.id,
@@ -22,6 +23,7 @@ class Album {
     required this.coverPath,
     required this.openAt,
     this.notificationsEnabled = true,
+    required this.createdAt, 
     this.items = const [],
   });
 
@@ -44,6 +46,7 @@ class Album {
       openAt: (data['openAt'] as Timestamp).toDate(),
       notificationsEnabled: data['notificationsEnabled'] ?? true,
       items: items,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
     );
   }
 
@@ -56,6 +59,7 @@ class Album {
       "coverPath": coverPath,
       "openAt": openAt,
       "notificationsEnabled": notificationsEnabled,
+      "createdAt": createdAt,
     };
   }
 }

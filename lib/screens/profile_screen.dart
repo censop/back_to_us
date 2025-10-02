@@ -38,7 +38,9 @@ class ProfileScreen extends StatelessWidget {
             title: "Friends",
             leading: Icon(Icons.people),
             onPressed: () {
-              //to be filled
+              Navigator.of(context).pushNamed(
+                Routes.friends,
+              );
             },
           ),
           CustomSettingsTiles(

@@ -62,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           final albums = snapshot.data ?? [];
 
+          albums.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
           if (albums.isEmpty) {
             return Center(
               child: Column(
@@ -83,41 +85,41 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
 
-          return Column(
-            children: [
-              Flexible(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 40),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: width * 0.15,
-                      mainAxisSpacing: height * 0.1,
-                    ), 
-                    itemCount: albums.length,
-                    itemBuilder: (context, index) {
-                      final album = albums[index];
-                  
-                      return AlbumGridItem(
-                        coverPath: album.coverPath, 
-                        id: album.id, 
-                        members: album.members, 
-                        mode: album.mode, 
-                        name: album.name, 
-                        notificationsEnabled: album.notificationsEnabled, 
-                        openAt: album.openAt
-                      );
-                    }
-                  ),
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 40),
+            child: Column(
+              children: [
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: width * 0.15,
+                    mainAxisSpacing: height * 0.01,
+                  ), 
+                  itemCount: albums.length,
+                  itemBuilder: (context, index) {
+                    final album = albums[index];
+                
+                    return AlbumGridItem(
+                      coverPath: album.coverPath, 
+                      id: album.id, 
+                      members: album.members, 
+                      mode: album.mode, 
+                      name: album.name, 
+                      notificationsEnabled: album.notificationsEnabled, 
+                      openAt: album.openAt
+                    );
+                  }
                 ),
-              ),
-              IconButton(
-                icon: Icon(Icons.add_circle_outline),
-                iconSize: 50,
-                onPressed: _clickCreateIcon,
-              ),
-            ],
+                IconButton(
+                  icon: Icon(Icons.add_circle_outline),
+                  iconSize: 50,
+                  onPressed: _clickCreateIcon,
+                ),
+              ],
+            ),
           );
         }
       ),

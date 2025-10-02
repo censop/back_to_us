@@ -4,5 +4,3 @@ import 'package:flutter/material.dart';
 ValueNotifier<bool> darkModeNotifier = ValueNotifier(true);
 
 ValueNotifier<String?> profilePicNotifier = ValueNotifier(FirebaseService.currentUser?.profilePic);
-
-ValueNotifier<List<String>?> albumIdsNotifier = ValueNotifier(FirebaseService.currentUser?.albumIds);

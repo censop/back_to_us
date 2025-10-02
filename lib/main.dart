@@ -3,6 +3,7 @@ import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
 import 'package:back_to_us/Screens/Settings/account_settings_screen.dart';
 import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
+import 'package:back_to_us/Screens/friends_screen.dart';
 import 'package:back_to_us/Screens/profile_screen.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Screens/create_album_screen.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
             Routes.profile : (context) => ProfileScreen(),
             Routes.accountSettings : (context) => AccountSettingsScreenn(),
             Routes.createAlbum : (context) => CreateAlbumScreen(),
+            Routes.friends : (context) => FriendsScreen(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,

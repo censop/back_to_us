@@ -7,9 +7,9 @@ class AppUser {
     required this.email,
     required this.uid,
     required this.createdAt,
-    this.albumIds,
     this.profilePic,
     this.isPremium = false,
+    this.friends = const [],
   });
 
   final String username;
@@ -17,8 +17,8 @@ class AppUser {
   final String uid;
   final String? profilePic;
   final bool isPremium;
-  final List<String>? albumIds;
   final Timestamp createdAt;
+  final List<String?> friends;
 
   //to get user from json
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -28,10 +28,8 @@ class AppUser {
       uid : json["uid"],
       profilePic : json["profilePic"] as String?,
       isPremium : json["isPremium"],
-      albumIds : json["albumIds"] != null 
-        ? List<String>.from(json["albumIds"] as List) 
-        : null,
       createdAt : json["createdAt"],
+      friends: List<String>.from(json['friends'] ?? []),
     );
   }
 
@@ -43,8 +41,8 @@ class AppUser {
       "uid" : uid,
       "profilePic" : profilePic,
       "isPremium" : isPremium,
-      "albumIds" : albumIds,
       "createdAt" : createdAt,
+      "friends" : friends,
     };
   }
 }

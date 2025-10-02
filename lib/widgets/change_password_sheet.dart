@@ -36,7 +36,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
               ),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 5),
             Text(

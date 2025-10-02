@@ -16,7 +16,9 @@ class _AddMembersSheetState extends State<AddMembersSheet> {
         children: [
           Text(
             "Add Members",
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+            ),
             textAlign: TextAlign.center,
           ),
           //friends will come here,

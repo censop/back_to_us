@@ -22,7 +22,7 @@ class CustomSettingsTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1),
+      padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
       child: ListTile(
         tileColor: color ?? (darkModeNotifier.value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142)),
         leading: leading,

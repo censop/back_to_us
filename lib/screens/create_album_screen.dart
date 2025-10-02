@@ -170,6 +170,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
                     if (value == null || value.isEmpty) {
                       return "Enter an album name.";
                     }
+                    return null;
                   },
                 ),
               );
@@ -221,7 +222,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
                       }
                     );
                   },
-                  trailing: Text("${members.length +1}/${AlbumMode.fromName(selectedMode).maxPeople}"),
+                  trailing: Text("${members.length}/${AlbumMode.fromName(selectedMode).maxPeople}"),
                   color: value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142)
                 ) :
                 SizedBox(height: 0)
@@ -360,10 +361,9 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         "notificationsEnabled": notificationsOn,
         "coverPath": coverUrl,
         "members": [uid, ...members],
+        "createdAt": FieldValue.serverTimestamp(),
       });
 
-      await FirebaseService.addAlbumId(albumId);
-      
       ScaffoldMessenger.of(context).showSnackBar(
         customSnackbar(
           content: Text("Album is created successfully."), 
