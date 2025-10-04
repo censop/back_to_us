@@ -19,10 +19,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
       body: Center(
         child: TextButton(
           onPressed: () {
+            BuildContext rootContext = context;
+
             showModalBottomSheet(
-              context: context, 
+              context: rootContext, 
               builder: (context) {
-                return FriendInviteSheet();
+                return FriendInviteSheet(rootContext: rootContext,);
               }
             );
           }, 

@@ -1,4 +1,5 @@
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
@@ -10,21 +11,38 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Hello,"),
-            Text(
-              "${FirebaseService.currentUser?.username ?? "Loading.."}!",
-              style: Theme.of(context).textTheme.titleLarge,
-              overflow: TextOverflow.ellipsis,
-            )
-          ],
+        title: Text(
+          "Profile"
         ),
+        centerTitle: true,
       ),
       body: ListView(
         children: [
+          Row(
+            children: [
+              CustomProfilePictureDisplayer(
+               radius: 50,
+              ),
+              SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hello,",
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.primary
+                    ),
+                  ),
+                  Text(
+                    "${FirebaseService.currentUser?.username ?? "Loading.."}!",
+                    style: Theme.of(context).textTheme.titleLarge,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
           CustomSettingsTiles(
             title: "Settings",
             leading: Icon(Icons.settings),

@@ -1,5 +1,4 @@
 import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Services/notifiers.dart';
 import 'package:flutter/material.dart';
 
 class CustomProfilePictureDisplayer extends StatefulWidget {
@@ -21,17 +20,17 @@ class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisp
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: profilePicNotifier,
-      builder: (context, value, child) {
+    return StreamBuilder(
+      stream: FirebaseService.profilePicStream(),
+      builder: (context, asyncSnapshot) {
         return InkWell(
           onTap: widget.onPressed,
           child: CircleAvatar(
             backgroundColor: const Color.fromARGB(255, 206, 203, 203),
-            backgroundImage: value == null || value == ""
-             ? null : NetworkImage(value),
+            backgroundImage: asyncSnapshot.data == null || asyncSnapshot.data == ""
+             ? null : NetworkImage(asyncSnapshot.data!),
             radius: widget.radius,
-            child: value == null || value == ""
+            child: asyncSnapshot.data == null || asyncSnapshot.data == ""
             ? (
                 const Icon(Icons.person, color: const Color.fromARGB(255, 243, 241, 241),
               )
