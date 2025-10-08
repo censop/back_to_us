@@ -1,7 +1,7 @@
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/Widgets/friend_invite_sheet.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 
 class FriendsScreen extends StatefulWidget {
@@ -25,12 +25,22 @@ class _FriendsScreenState extends State<FriendsScreen> {
             title: "Added Friends",
             leading: Icon(Icons.emoji_people),
             trailing: Text(FirebaseService.currentUser!.friends.length.toString()),
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                Routes.addedFriends
+              );
+            },
           ),
           //logic will be added for the invite amount
           CustomSettingsTiles(
             title: "Pending Invites",
             leading: Icon(Icons.mail),
             trailing: Text("0"),
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                Routes.pendingInvites
+              );
+            },
           ),
           CustomSettingsTiles(
             title: "Add a Friend",

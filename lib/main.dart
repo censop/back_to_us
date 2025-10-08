@@ -1,5 +1,7 @@
 
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
+import 'package:back_to_us/Screens/Profile/Friends/added_friends_screen.dart';
+import 'package:back_to_us/Screens/Profile/Friends/pending_invites_screen.dart';
 import 'package:back_to_us/Screens/Profile/Settings/settings_screen.dart';
 import 'package:back_to_us/Screens/Profile/Settings/account_settings_screen.dart';
 import 'package:back_to_us/Screens/Profile/Settings/profile_settings_screen.dart';
@@ -72,6 +74,8 @@ class MyApp extends StatelessWidget {
             Routes.accountSettings : (context) => AccountSettingsScreenn(),
             Routes.createAlbum : (context) => CreateAlbumScreen(),
             Routes.friends : (context) => FriendsScreen(),
+            Routes.addedFriends : (context) => AddedFriendsScreen(),
+            Routes.pendingInvites : (context) => PendingInvitesScreen(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,

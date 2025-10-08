@@ -11,5 +11,7 @@ class Routes {
   static String accountSettings = "/accountSettings";
   static String createAlbum = "/createAlbum";
   static String friends = "/friends";
+  static String pendingInvites = "/pendingInvites";
+  static String addedFriends = "/addedFriends";
 
 } 

@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 
 class FirebaseService {
@@ -96,17 +95,36 @@ class FirebaseService {
 
     return invitesRef
         .where('to', isEqualTo: currentUser!.uid)
-        .where('status', isEqualTo: 'pending')
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
             .toList());
   }
 
+  static Stream<List<AppUser>> friendsStream() {
+    if (currentUser == null) return const Stream.empty();
+
+    return usersRef.doc(currentUser!.uid).snapshots().asyncMap((snapshot) async {
+      if (!snapshot.exists) return [];
+
+      final data = snapshot.data() as Map<String, dynamic>;
+      final friendUids = List<String>.from(data['friends'] ?? []);
+
+      if (friendUids.isEmpty) return [];
+
+      final friendsSnap = await usersRef
+          .where(FieldPath.documentId, whereIn: friendUids)
+          .get();
+
+      return friendsSnap.docs
+          .map((doc) => AppUser.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
+}
+
 
 
   /// FRIEND INVITES
-
   static final CollectionReference invitesRef =
       FirebaseFirestore.instance.collection('friendInvites');
   static final CollectionReference usersRef =
@@ -115,10 +133,10 @@ class FirebaseService {
       FirebaseFirestore.instance.collection('friendInviteIds');
 
   /// Send a friend invite to a specific user
-  static Future<bool> sendFriendInvite(String inviteId) async {
+  static Future<bool> sendFriendInvite(String friendInviteId) async {
     if (currentUser == null) return false;
 
-    final inviteDoc = await inviteCodesRef.doc(inviteId).get();
+    final inviteDoc = await inviteCodesRef.doc(friendInviteId).get();
     if (!inviteDoc.exists) {
       print("Invalid invite code");
       return false;
@@ -137,7 +155,6 @@ class FirebaseService {
       final existing = await invitesRef
         .where('from', isEqualTo: currentUser!.uid)
         .where('to', isEqualTo: receiverUid)
-        .where('status', isEqualTo: 'pending')
         .get();
 
       if (existing.docs.isNotEmpty) return false;
@@ -145,9 +162,10 @@ class FirebaseService {
       await invitesRef.add({
         'from': currentUser!.uid,
         'to': receiverUid,
-        'status': 'pending',
         'createdAt': FieldValue.serverTimestamp(),
-        'senderInviteId': currentUser!.friendInviteId
+        'senderInviteId': currentUser!.friendInviteId,
+        'senderUsername': currentUser!.username,
+        'senderPhoto': currentUser!.profilePic,
     });
     } catch (e) {
       print(e);
@@ -162,31 +180,30 @@ class FirebaseService {
 
     final inviteDoc = invitesRef.doc(inviteId);
     final snapshot = await inviteDoc.get();
-
     if (!snapshot.exists) return false;
 
     final data = snapshot.data() as Map<String, dynamic>;
-    if (data['status'] != 'pending') return false;
 
     final senderUid = data['from'] as String;
 
+    final batch = FirebaseFirestore.instance.batch();
 
-    await inviteDoc.update({'status': 'accepted'});
-
-    await usersRef.doc(senderUid).update({
+    batch.update(usersRef.doc(senderUid), {
       'friends': FieldValue.arrayUnion([currentUser!.uid])
     });
-
-    await usersRef.doc(currentUser!.uid).update({
+    batch.update(usersRef.doc(currentUser!.uid), {
       'friends': FieldValue.arrayUnion([senderUid])
     });
 
-    await inviteDoc.delete();
+    batch.delete(inviteDoc);
 
-    await getAppUser();
+    await batch.commit();
+
+    await getAppUser(); 
 
     return true;
   }
+
 
   /// Decline a friend invite
   static Future<void> declineFriendInvite(String inviteId) async {
@@ -195,11 +212,6 @@ class FirebaseService {
     final inviteDoc = invitesRef.doc(inviteId);
     final snapshot = await inviteDoc.get();
     if (!snapshot.exists) return;
-
-    final data = snapshot.data() as Map<String, dynamic>;
-    if (data['status'] != 'pending') return;
-
-    await inviteDoc.update({'status': 'declined'});
 
     await inviteDoc.delete();
   }
