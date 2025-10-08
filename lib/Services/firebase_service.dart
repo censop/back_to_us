@@ -91,43 +91,72 @@ class FirebaseService {
     });
   }
 
-  static Stream<List<Map<String, dynamic>>> getUserInvites() {
-    if (currentUser == null) {
-      return const Stream.empty();
-    }
+  static Stream<List<Map<String, dynamic>>> pendingInvitesStream() {
+    if (currentUser == null) return const Stream.empty();
 
     return invitesRef
         .where('to', isEqualTo: currentUser!.uid)
         .where('status', isEqualTo: 'pending')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+            .toList());
   }
 
 
 
   /// FRIEND INVITES
-  
-  static final CollectionReference invitesRef = FirebaseFirestore.instance.collection('friendInvites');
-  static final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
 
-  static Future<String?> createInviteLink() async {
-    if (currentUser == null) {
-      return null;
+  static final CollectionReference invitesRef =
+      FirebaseFirestore.instance.collection('friendInvites');
+  static final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection('users');
+  static final CollectionReference inviteCodesRef = 
+      FirebaseFirestore.instance.collection('friendInviteIds');
+
+  /// Send a friend invite to a specific user
+  static Future<bool> sendFriendInvite(String inviteId) async {
+    if (currentUser == null) return false;
+
+    final inviteDoc = await inviteCodesRef.doc(inviteId).get();
+    if (!inviteDoc.exists) {
+      print("Invalid invite code");
+      return false;
     }
 
-    String inviteId = const Uuid().v4();
+    final receiverUid = (inviteDoc.data() as Map<String, dynamic>)["uid"];
+    final senderUid = currentUser!.uid;
 
-    await invitesRef.doc(inviteId).set({
-      'from': currentUser!.uid,
-      'to': null,
-      'status': 'pending',
-      'createdAt': FieldValue.serverTimestamp(),
+
+    if (receiverUid == senderUid) {
+      print("You can’t add yourself");
+      return false;
+    }
+
+    try {
+      final existing = await invitesRef
+        .where('from', isEqualTo: currentUser!.uid)
+        .where('to', isEqualTo: receiverUid)
+        .where('status', isEqualTo: 'pending')
+        .get();
+
+      if (existing.docs.isNotEmpty) return false;
+
+      await invitesRef.add({
+        'from': currentUser!.uid,
+        'to': receiverUid,
+        'status': 'pending',
+        'createdAt': FieldValue.serverTimestamp(),
+        'senderInviteId': currentUser!.friendInviteId
     });
-
-    return 'https://backtous.app/friend-invite/$inviteId';
+    } catch (e) {
+      print(e);
+    }
+    
+    return true;
   }
 
+  /// Accept a friend invite
   static Future<bool> acceptFriendInvite(String inviteId) async {
     if (currentUser == null) return false;
 
@@ -141,41 +170,38 @@ class FirebaseService {
 
     final senderUid = data['from'] as String;
 
-    await inviteDoc.update({
-      'to': currentUser!.uid,
-      'status': 'accepted',
-    });
+
+    await inviteDoc.update({'status': 'accepted'});
 
     await usersRef.doc(senderUid).update({
-      'friends': FieldValue.arrayUnion([currentUser!.uid]),
+      'friends': FieldValue.arrayUnion([currentUser!.uid])
     });
 
     await usersRef.doc(currentUser!.uid).update({
-      'friends': FieldValue.arrayUnion([senderUid]),
+      'friends': FieldValue.arrayUnion([senderUid])
     });
 
-    await getAppUser(); 
+    await inviteDoc.delete();
+
+    await getAppUser();
 
     return true;
   }
 
+  /// Decline a friend invite
   static Future<void> declineFriendInvite(String inviteId) async {
     if (currentUser == null) return;
 
     final inviteDoc = invitesRef.doc(inviteId);
     final snapshot = await inviteDoc.get();
-
     if (!snapshot.exists) return;
 
     final data = snapshot.data() as Map<String, dynamic>;
     if (data['status'] != 'pending') return;
 
-    await inviteDoc.update({
-      'to': currentUser!.uid,
-      'status': 'declined',
-    });
+    await inviteDoc.update({'status': 'declined'});
+
+    await inviteDoc.delete();
   }
-
-
-  
+    
 }

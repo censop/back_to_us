@@ -6,6 +6,7 @@ import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -31,6 +32,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   String? emailError;
   String? passwordError;
   String? usernameError;
+  
+  Uuid uuid = Uuid();
 
   @override
   void dispose() {
@@ -204,6 +207,8 @@ class SignUpScreenState extends State<SignUpScreen> {
       final userCreds = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
+      final codeRef = FirebaseFirestore.instance.collection('friendInviteIds');
+
       await userCreds.user?.updateDisplayName(username);
       await userCreds.user?.reload();
 
@@ -211,12 +216,34 @@ class SignUpScreenState extends State<SignUpScreen> {
         isCreatingUser = true;
       });
 
+      String friendInviteId = uuid.v4();
+
+      bool exists = true;
+    while (exists) {
+      final check = await codeRef.doc(friendInviteId).get();
+      if (check.exists) {
+        friendInviteId = uuid.v4();
+      } else {
+        exists = false;
+      }
+    }
+
       final newUser = AppUser(
         uid: userCreds.user!.uid,
         email: email,
         username: username,
         createdAt: Timestamp.now(),
+        friendInviteId: friendInviteId,
       );
+
+      
+
+      await codeRef.doc(friendInviteId).set({
+        "uid" : userCreds.user!.uid,
+        "active" : true,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+
 
       //upload user to data base
       users.doc(userCreds.user!.uid).set(newUser.toJson());

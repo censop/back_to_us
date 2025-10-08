@@ -1,6 +1,6 @@
 
 import 'package:back_to_us/Screens/NavigationBar/home_screen.dart';
-import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
+import 'package:back_to_us/Screens/Profile/Settings/settings_screen.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:flutter/material.dart';
 

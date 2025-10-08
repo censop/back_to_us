@@ -1,6 +1,7 @@
-import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Widgets/custom_snackbar.dart';
 
+import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/widgets/custom_text_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,6 +20,14 @@ class FriendInviteSheet extends StatefulWidget {
 class _FriendInviteSheetState extends State<FriendInviteSheet> {
   String? inviteLink;
 
+  TextEditingController _inviteIdController = TextEditingController();
+
+  @override
+  void dispose() {
+    _inviteIdController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,46 +35,44 @@ class _FriendInviteSheetState extends State<FriendInviteSheet> {
       child: Column(
         children: [
           Text(
-            "Send Friend Invite",
+            "Add a Friend",
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: Theme.of(context).colorScheme.primary,
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height:5),
-          FutureBuilder<String?>(
-            future: FirebaseService.createInviteLink(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                inviteLink = snapshot.data;
-                return Text(snapshot.data ?? 'No invite link generated');
-              } else {
-                return const Text('No invite link generated');
-              }
-            },
-          ),
-          SizedBox(height: 5,),
+          Text("Send you friend invite ID to whoever you want to add! \n This is you friend invite ID: "),
+          Text(FirebaseService.currentUser!.friendInviteId),
           IconButton(
-            icon: Icon(Icons.copy),
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: inviteLink ?? ""));
-              
-              Navigator.of(context).pop();
-
-              ScaffoldMessenger.of(
-                widget.rootContext
-                ).showSnackBar(
-                customSnackbar(
-                  content: Text("Friend invite link has been copied to clipboard."), 
-                  backgroundColor: Theme.of(context).colorScheme.primary
-                )
-              );
-            },
-          )
+              await Clipboard.setData(ClipboardData(text: FirebaseService.currentUser!.friendInviteId));
+            }, 
+            icon: Icon(Icons.copy)
+          ),
+          SizedBox(height:5),
+          Text("OR"),
+          Text("Send a friend request by entering your friend's friend invite ID: "),
+          SizedBox(height: 5),
+          CustomTextFormField(
+            controller: _inviteIdController, 
+            title: "Enter Friend Invite ID"
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              bool requestSent = await FirebaseService.sendFriendInvite(_inviteIdController.text);
+              print(requestSent);
+            }, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary
+            ),
+            child: Text(
+              "Send Request",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              )
+            )
+          ),
         ],
       ),
     );

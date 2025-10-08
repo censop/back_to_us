@@ -1,10 +1,10 @@
 
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
-import 'package:back_to_us/Screens/NavigationBar/settings_screen.dart';
-import 'package:back_to_us/Screens/Settings/account_settings_screen.dart';
-import 'package:back_to_us/Screens/Settings/profile_settings_screen.dart';
-import 'package:back_to_us/Screens/friends_screen.dart';
-import 'package:back_to_us/Screens/profile_screen.dart';
+import 'package:back_to_us/Screens/Profile/Settings/settings_screen.dart';
+import 'package:back_to_us/Screens/Profile/Settings/account_settings_screen.dart';
+import 'package:back_to_us/Screens/Profile/Settings/profile_settings_screen.dart';
+import 'package:back_to_us/Screens/Profile/Friends/friends_screen.dart';
+import 'package:back_to_us/Screens/Profile/profile_screen.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Screens/create_album_screen.dart';
 import 'package:back_to_us/app_theme.dart';

@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/v4.dart';
  //TODO hash password
 class AppUser {
   AppUser({
@@ -7,6 +8,7 @@ class AppUser {
     required this.email,
     required this.uid,
     required this.createdAt,
+    required this.friendInviteId,
     this.profilePic,
     this.isPremium = false,
     this.friends = const [],
@@ -17,6 +19,7 @@ class AppUser {
   final String uid;
   final String? profilePic;
   final bool isPremium;
+  final String friendInviteId;
   final Timestamp createdAt;
   final List<String?> friends;
 
@@ -30,6 +33,7 @@ class AppUser {
       isPremium : json["isPremium"],
       createdAt : json["createdAt"],
       friends: List<String>.from(json['friends'] ?? []),
+      friendInviteId: json["friendInviteId"],
     );
   }
 
@@ -43,6 +47,7 @@ class AppUser {
       "isPremium" : isPremium,
       "createdAt" : createdAt,
       "friends" : friends,
+      "friendInviteId" : friendInviteId
     };
   }
 }
