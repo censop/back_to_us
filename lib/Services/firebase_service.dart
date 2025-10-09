@@ -120,7 +120,19 @@ class FirebaseService {
           .map((doc) => AppUser.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     });
-}
+  }
+
+  static Stream<List<AppUser>> albumMembersStream(List<String> memberUids) {
+  if (memberUids.isEmpty) return const Stream.empty();
+
+  return usersRef
+      .where(FieldPath.documentId, whereIn: memberUids)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => AppUser.fromJson(doc.data() as Map<String, dynamic>))
+          .toList());
+  }
+
 
 
 
@@ -204,7 +216,6 @@ class FirebaseService {
     return true;
   }
 
-
   /// Decline a friend invite
   static Future<void> declineFriendInvite(String inviteId) async {
     if (currentUser == null) return;
@@ -215,5 +226,4 @@ class FirebaseService {
 
     await inviteDoc.delete();
   }
-    
 }

@@ -1,5 +1,8 @@
 
 import 'package:back_to_us/Models/album_mode.dart';
+import 'package:back_to_us/Models/app_user.dart';
+import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:flutter/material.dart';
 
 class AlbumGridItem extends StatefulWidget {
@@ -16,7 +19,7 @@ class AlbumGridItem extends StatefulWidget {
 
   final String? coverPath;
   final String id;
-  final List<String>? members;
+  final List<String> members;
   final AlbumMode mode;
   final String name;
   final bool notificationsEnabled;
@@ -58,6 +61,34 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
           Text(
             widget.name,
             overflow: TextOverflow.ellipsis,
+          ),
+          StreamBuilder<List<AppUser>>(
+            stream: FirebaseService.albumMembersStream(widget.members), 
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return SizedBox();
+              }
+              
+              final users = snapshot.data!;
+              final displayUsers = users.take(3).toList();
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ...displayUsers.map((user) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: CustomProfilePictureDisplayer(
+                        radius: 15,
+                        profileUrl: user.profilePic ?? "",
+                      ),
+                    );
+                  }).toList(),
+                  if (users.length >3) 
+                    Text("+${users.length - 3}")
+                ]
+              );
+            }
           ),
         ],
       ),

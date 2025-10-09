@@ -32,7 +32,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
 
   bool _imageLoading = false;
 
-  String? selectedMode = "single";
+  String? selectedMode = "Single";
   DateTime selectedDate = DateTime.now();
 
   final TextEditingController _albumNameController = TextEditingController();
@@ -57,19 +57,19 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
   //dummy mode items
   List<DropdownMenuItem<String>> modes = [
     DropdownMenuItem(
-      value: "single",
+      value: "Single",
       child: Text("Single", overflow: TextOverflow.ellipsis,)
     ),
     DropdownMenuItem(
-      value: "couple",
+      value: "Couple",
       child: Text("Couple", overflow: TextOverflow.ellipsis)
     ),
     DropdownMenuItem(
-      value: "friends",
+      value: "Friends",
       child: Text("Friends", overflow: TextOverflow.ellipsis)
     ),
     DropdownMenuItem(
-      value: "friends+",
+      value: "Friends+",
       child: Text("Friends+", overflow: TextOverflow.ellipsis)
     ),
   ];
@@ -189,7 +189,6 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
                     value: selectedMode,
                     items: modes, 
                     onChanged: (value) {
-                      //to be filled
                       setState(() {
                         selectedMode = value;
                       });
@@ -210,19 +209,36 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
               return AnimatedSwitcher(
                 key: ValueKey(selectedMode),
                 duration: Duration(milliseconds: 1),
-                child: selectedMode != "single" ?
+                child: selectedMode != "Single" ?
                 CustomSettingsTiles(
                   key: ValueKey(selectedMode),
-                  title: "Add Members",
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context, 
+                  leading: Text("Add Members"),
+                  mainWidget: Row(
+                    children: [
+                      
+                    ],
+                  ),
+                  onPressed: () async {
+                    final selected = await showModalBottomSheet<List<String>>(
+                      context: context,
+                      isScrollControlled: true,
                       builder: (context) {
-                        return AddMembersSheet();
-                      }
+                        return FractionallySizedBox(
+                          heightFactor: 0.85,
+                          child: AddMembersSheet(
+                            selectedMode: AlbumMode.fromName(selectedMode),
+                          ),
+                        );
+                      },
                     );
+
+                    if (selected != null && mounted) {
+                      setState(() {
+                        members = selected;
+                      });
+                    }
                   },
-                  trailing: Text("${members.length}/${AlbumMode.fromName(selectedMode).maxPeople}"),
+                  trailing: Text("${members.length + 1}/${AlbumMode.fromName(selectedMode).maxPeople}"),
                   color: value ? const Color.fromARGB(63, 64, 64, 64) : const Color.fromARGB(24, 143, 142, 142)
                 ) :
                 SizedBox(height: 0)

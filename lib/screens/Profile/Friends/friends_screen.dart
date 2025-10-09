@@ -35,7 +35,13 @@ class _FriendsScreenState extends State<FriendsScreen> {
           CustomSettingsTiles(
             title: "Pending Invites",
             leading: Icon(Icons.mail),
-            trailing: Text("0"),
+            trailing: StreamBuilder(
+              stream: FirebaseService.pendingInvitesStream(),
+              builder: (context, asyncSnapshot) {
+                final int count = asyncSnapshot.data?.length ?? 0;
+                return Text(count.toString());
+              }
+            ),
             onPressed: () {
               Navigator.of(context).pushNamed(
                 Routes.pendingInvites
@@ -48,12 +54,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
             onPressed: () {
               BuildContext rootContext = context;
 
-            showModalBottomSheet(
-              context: rootContext, 
-              builder: (context) {
-                return FriendInviteSheet(rootContext: rootContext,);
-              }
-            );
+              showModalBottomSheet(
+                context: rootContext, 
+                builder: (context) {
+                  return FriendInviteSheet(rootContext: rootContext,);
+                }
+              );
             },
           )
         ],

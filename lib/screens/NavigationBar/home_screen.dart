@@ -17,8 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppUser? user = FirebaseService.currentUser;
 
-  
-
   @override
   Widget build(BuildContext context) {
 
@@ -94,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.75,
+                    childAspectRatio: 0.65,
                     crossAxisSpacing: width * 0.15,
                     mainAxisSpacing: height * 0.01,
                   ), 
@@ -123,48 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
       ),
-      
-      
-      
-      /*Padding(
-        padding: const EdgeInsets.all(8),
-        child: ValueListenableBuilder(
-          valueListenable: albumIdsNotifier,
-          builder: (context, value, child) {
-            return Center(
-              child: value == null || value.isEmpty ? 
-              Column(
-                mainAxisAlignment: value == null ? MainAxisAlignment.center : MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Create your first album", 
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add_circle_outline),
-                    iconSize: 50,
-                    onPressed: () {
-                      _clickCreateIcon();
-                    },
-                  ),
-                ]
-              ) :
-              Column(
-                children: [
-                  /*AlbumGridItem(
-                    coverPath: ,
-                  ),*/
-                  IconButton(
-                    icon: Icon(Icons.add_circle_outline),
-                    iconSize: 50,
-                    onPressed: _clickCreateIcon,
-                  ),
-                ]
-              ),
-            );
-          }
-        )
-      ),*/
     );
   }
 
