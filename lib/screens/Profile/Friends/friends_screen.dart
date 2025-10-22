@@ -1,6 +1,6 @@
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
-import 'package:back_to_us/Widgets/friend_invite_sheet.dart';
+import 'package:back_to_us/Widgets/Sheets/friend_invite_sheet.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 

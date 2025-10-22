@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:back_to_us/Models/album_mode.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
-import 'package:back_to_us/Widgets/add_members_sheet.dart';
+import 'package:back_to_us/Widgets/Sheets/add_members_sheet.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';

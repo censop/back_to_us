@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Screens/NavigationBar/capture_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/home_screen.dart';
 import 'package:back_to_us/Screens/Profile/Settings/settings_screen.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
@@ -19,7 +20,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   List<Widget> screens = [
     HomeScreen(),
-    //Camera(),
+    CaptureScreen(),  //Camera(),
     SettingsScreen(),
   ];
 
@@ -49,11 +50,11 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             selectedIcon: Icon(Icons.home),
             label: "Home",
           ),
-          /*NavigationDestination(
+          NavigationDestination(
             icon: Icon(Icons.add_circle_outline),
             selectedIcon: Icon(Icons.add_circle), 
             label: "New"
-          ), */
+          ), 
           NavigationDestination(
             icon: Icon(Icons.settings_outlined), 
             selectedIcon: Icon(Icons.settings),

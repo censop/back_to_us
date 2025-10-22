@@ -1,6 +1,6 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Widgets/change_password_sheet.dart';
+import 'package:back_to_us/Widgets/Sheets/change_password_sheet.dart';
 import 'package:back_to_us/Widgets/custom_settings_tiles.dart';
 import 'package:flutter/material.dart';
 

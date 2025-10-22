@@ -1,4 +1,6 @@
 
+import 'package:back_to_us/Screens/AlbumRelated/save_item_screen.dart';
+import 'package:back_to_us/Screens/NavigationBar/capture_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/Profile/Friends/added_friends_screen.dart';
 import 'package:back_to_us/Screens/Profile/Friends/pending_invites_screen.dart';
@@ -7,8 +9,10 @@ import 'package:back_to_us/Screens/Profile/Settings/account_settings_screen.dart
 import 'package:back_to_us/Screens/Profile/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/Profile/Friends/friends_screen.dart';
 import 'package:back_to_us/Screens/Profile/profile_screen.dart';
+import 'package:back_to_us/Services/camera_provider.dart';
+import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
-import 'package:back_to_us/Screens/create_album_screen.dart';
+import 'package:back_to_us/Screens/AlbumRelated/create_album_screen.dart';
 import 'package:back_to_us/app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
@@ -20,6 +24,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /*
@@ -30,18 +35,29 @@ import 'package:shared_preferences/shared_preferences.dart';
   labelLarge => buttons
 */
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await CameraService.initialize();
+
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions()
   );
   darkModeNotifier.value = prefs.getBool('darkMode') ?? true;
   
-  runApp(const MyApp());
+  runApp(
+    
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CameraProvider())
+      ],
+      child: const MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -76,6 +92,8 @@ class MyApp extends StatelessWidget {
             Routes.friends : (context) => FriendsScreen(),
             Routes.addedFriends : (context) => AddedFriendsScreen(),
             Routes.pendingInvites : (context) => PendingInvitesScreen(),
+            Routes.capture : (context) => CaptureScreen(),
+            Routes.saveItem : (context) => SaveItemScreen(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,
