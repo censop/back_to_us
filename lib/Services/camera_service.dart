@@ -1,53 +1,81 @@
-
+import 'dart:ui';
 import 'package:camera/camera.dart';
-import 'package:flutter/widgets.dart';
 
 class CameraService {
   static List<CameraDescription> _cameras = [];
-  static CameraController? _controller;
 
   static double maxZoom = 1.0;
   static double minZoom = 1.0;
+  static String? displayItemPath;
+  static Size? previewSize;
 
+  // Initialize cameras on app start
   static Future<void> initialize() async {
-    if (_cameras.isEmpty) {
-      _cameras = await availableCameras();
-    }
+    _cameras = await availableCameras();
   }
 
-  static Future<CameraController> createController({
-    CameraLensDirection direction = CameraLensDirection.back,
-  }) async {
-    await initialize();
 
-    final camera = _cameras.firstWhere(
-      (c) => c.lensDirection == direction,
-      orElse: () => _cameras.first,
-    );
-
-    final controller = CameraController(camera, ResolutionPreset.high, enableAudio: false);
-    await controller.initialize();
-
-    maxZoom = await controller.getMaxZoomLevel();
-    minZoom = await controller.getMinZoomLevel();
-
-    return controller;
-  }
-
-  // Take picture
-  static Future<XFile?> takePicture(CameraController controller) async {
-    if (controller.value.isTakingPicture || !controller.value.isInitialized) {
-      return null;
-    }
+  /*static Future<void> initializeController({CameraLensDirection direction = CameraLensDirection.back,}) async {
+    if (_isInitializing) return; // Prevent concurrent initialization
+    _isInitializing = true;
 
     try {
-      final XFile file = await controller!.takePicture();
-      print('📸 Photo saved at: ${file.path}');
-      return file;
-    } on CameraException catch (e) {
-      print('⚠️ Error taking picture: $e');
-      return null;
+      if (_cameras.isEmpty) {
+        await initialize();
+      }
+
+      final selectedCamera = _cameras.firstWhere(
+        (camera) => camera.lensDirection == direction,
+        orElse: () => _cameras.first,
+      );
+
+      _controller = CameraController(
+        selectedCamera,
+        ResolutionPreset.high,
+        enableAudio: false,
+      );
+
+      await _controller!.initialize();
+
+      
+    } catch (e) {
+      print('Camera initialization error: $e');
+    } finally {
+      _isInitializing = false;
     }
+  } */
+
+  static Future<void> getAvailableZoom(CameraController controller) async {
+      maxZoom = await controller.getMaxZoomLevel();
+      minZoom = await controller.getMinZoomLevel();
+  }
+
+  static void getPreviewSize(CameraController controller) {
+      previewSize = controller.value.previewSize;
+  }
+
+
+  // Getters
+  static List<CameraDescription> get cameras => _cameras;
+
+  static CameraDescription get frontCamera => _cameras.firstWhere(
+    (camera) => camera.lensDirection == CameraLensDirection.front,
+    orElse: () => _cameras.first,
+  );
+
+  static CameraDescription get backCamera => _cameras.firstWhere(
+    (camera) => camera.lensDirection == CameraLensDirection.back,
+    orElse: () => _cameras.first,
+  );
+
+  // Switch between front and back camera
+  static Future<CameraLensDirection> switchCamera(CameraController controller) async {
+    final currentDirection = controller.description.lensDirection;
+    final newDirection = currentDirection == CameraLensDirection.back
+        ? CameraLensDirection.front
+        : CameraLensDirection.back;
+
+    return newDirection;
   }
 
 }

@@ -1,7 +1,6 @@
-import 'package:back_to_us/Services/camera_provider.dart';
+import 'package:back_to_us/Services/camera_service.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PhotoWidget extends StatefulWidget {
   const PhotoWidget({super.key});
@@ -10,51 +9,66 @@ class PhotoWidget extends StatefulWidget {
   State<PhotoWidget> createState() => _PhotoWidgetState();
 }
 
-class _PhotoWidgetState extends State<PhotoWidget> {
-  bool _isActive = true;
+class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver {
+  CameraController? _controller;
+  bool _isCameraInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_isActive) {
-        final cameraProvider = context.read<CameraProvider>();
-        if (!cameraProvider.isInitialized && !cameraProvider.isInitializing) {
-          cameraProvider.initializeController(direction: CameraLensDirection.back);
-        }
-      }
-    });
+    onNewCameraSelected(CameraService.backCamera);
   }
 
   @override
-  void deactivate() {
-    _isActive = false;
-    super.deactivate();
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+    final CameraController? cameraController = _controller;
+
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    }
+
+    else if (state == AppLifecycleState.resumed) {
+      onNewCameraSelected(cameraController.description);
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CameraProvider>(
-      builder: (context, cameraProvider, child) {
-        if (cameraProvider.isInitializing || cameraProvider.isDisposing) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    if (!_isCameraInitialized) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
-        final controller = cameraProvider.controller;
-        if (controller == null || !controller.value.isInitialized) {
-          return const Center(child: Text('Camera not available'));
-        }
+    if (_controller == null || !_controller!.value.isInitialized) {
+      return const Center(
+        child: Text('Camera not available'),
+      );
+    }
 
-        return Stack(
+    return Stack(
           children: [
             Center(
               child: SizedBox.expand(
                 child: FittedBox(
                   fit: BoxFit.cover,
                   child: SizedBox(
-                    width: controller.value.previewSize!.height,
-                    height: controller.value.previewSize!.width,
-                    child: CameraPreview(controller),
+                    width: _controller!.value.previewSize!.height,
+                    height: _controller!.value.previewSize!.width,
+                    child: CameraPreview(_controller!),
                   ),
                 ),
               ),
@@ -63,9 +77,16 @@ class _PhotoWidgetState extends State<PhotoWidget> {
               top: 20,
               right: 20,
               child: IconButton(
-                onPressed: (cameraProvider.isInitializing || cameraProvider.isDisposing)
-                  ? null 
-                  : () => cameraProvider.switchCamera(),
+                onPressed: () {
+                  setState(() {
+                    _isCameraInitialized = false;
+                  });
+                  onNewCameraSelected(
+                    _controller!.description == CameraService.backCamera
+                    ? CameraService.frontCamera 
+                    : CameraService.backCamera
+                  );
+                },
                 icon: Icon(
                   Icons.flip_camera_ios_outlined,
                   color: Colors.white,
@@ -75,7 +96,54 @@ class _PhotoWidgetState extends State<PhotoWidget> {
             ),
           ],
         );
-      },
-    );
+  }
+
+  void onNewCameraSelected(CameraDescription cameraDescription) async {
+      final previousCameraController = _controller;
+      final CameraController cameraController = CameraController(
+        cameraDescription,
+        ResolutionPreset.high,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+
+      await previousCameraController?.dispose();
+
+      if (mounted) {
+         setState(() {
+           _controller = cameraController;
+        });
+      }
+
+      cameraController.addListener(() {
+        if (mounted) setState(() {});
+      });
+
+      try {
+        await cameraController.initialize();
+      } on CameraException catch (e) {
+        print('Error initializing camera: $e');
+      }
+
+      if (mounted) {
+        setState(() {
+           _isCameraInitialized = _controller!.value.isInitialized;
+        });
+      }
+   }
+
+   Future<XFile?> takePhoto() async {
+    if (_controller == null || !_controller!.value.isInitialized) return null;
+
+    if (_controller!.value.isTakingPicture) {
+      return null;
+    }
+
+    try {
+      XFile file = await _controller!.takePicture();
+      return file;
+    } catch(e) {
+      print(e);
+      return null;
+    }
   }
 }

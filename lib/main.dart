@@ -1,5 +1,4 @@
 
-import 'package:back_to_us/Screens/AlbumRelated/save_item_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/capture_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/navigation_bar_screen.dart';
 import 'package:back_to_us/Screens/Profile/Friends/added_friends_screen.dart';
@@ -9,7 +8,6 @@ import 'package:back_to_us/Screens/Profile/Settings/account_settings_screen.dart
 import 'package:back_to_us/Screens/Profile/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/Profile/Friends/friends_screen.dart';
 import 'package:back_to_us/Screens/Profile/profile_screen.dart';
-import 'package:back_to_us/Services/camera_provider.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Screens/AlbumRelated/create_album_screen.dart';
@@ -24,7 +22,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:back_to_us/Screens/Authentication/log_in_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /*
@@ -42,7 +39,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await CameraService.initialize();
+  CameraService.initialize();
 
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions()
@@ -51,12 +48,7 @@ Future<void> main() async {
   
   runApp(
     
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CameraProvider())
-      ],
-      child: const MyApp()
-    )
+    const MyApp()
   );
 }
 
@@ -93,7 +85,6 @@ class MyApp extends StatelessWidget {
             Routes.addedFriends : (context) => AddedFriendsScreen(),
             Routes.pendingInvites : (context) => PendingInvitesScreen(),
             Routes.capture : (context) => CaptureScreen(),
-            Routes.saveItem : (context) => SaveItemScreen(),
           },
         
           theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,
