@@ -8,6 +8,7 @@ import 'package:back_to_us/Screens/Profile/Settings/account_settings_screen.dart
 import 'package:back_to_us/Screens/Profile/Settings/profile_settings_screen.dart';
 import 'package:back_to_us/Screens/Profile/Friends/friends_screen.dart';
 import 'package:back_to_us/Screens/Profile/profile_screen.dart';
+import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Screens/AlbumRelated/create_album_screen.dart';
@@ -32,6 +33,8 @@ import 'package:shared_preferences/shared_preferences.dart';
   labelLarge => buttons
 */
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +50,6 @@ Future<void> main() async {
   darkModeNotifier.value = prefs.getBool('darkMode') ?? true;
   
   runApp(
-    
     const MyApp()
   );
 }
@@ -66,7 +68,8 @@ class MyApp extends StatelessWidget {
       builder: (context, value, child) {
         return MaterialApp(
           title: 'Back To Us Demo',
-        
+
+          navigatorObservers: [routeObserver], 
           initialRoute: currentUser != null ? Routes.navigationBar : Routes.welcome,
         
           routes: {

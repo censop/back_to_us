@@ -1,23 +1,27 @@
+
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/main.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-class PhotoWidget extends StatefulWidget {
-  const PhotoWidget({
+class VideoWidget extends StatefulWidget {
+  const VideoWidget({
     super.key,
-    required this.onCaptureReady,
+    required this.onStartRecordingReady,
+    required this.onStopRecordingReady,
   });
 
-  final void Function(Future<XFile?> Function()?) onCaptureReady;
+  final void Function(Future<void> Function()?) onStartRecordingReady;
+  final void Function(Future<XFile?> Function()?) onStopRecordingReady;
 
   @override
-  State<PhotoWidget> createState() => _PhotoWidgetState();
+  State<VideoWidget> createState() => _VideoWidgetState();
 }
 
-class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, RouteAware {
+class _VideoWidgetState extends State<VideoWidget> with WidgetsBindingObserver, RouteAware {
   CameraController? _controller;
   bool _isCameraInitialized = false;
+  bool _isRecording = false;
 
   @override
   void initState() {
@@ -77,16 +81,13 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
 
   @override
   Widget build(BuildContext context) {
+
     if (!_isCameraInitialized) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_controller == null || !_controller!.value.isInitialized) {
-      return const Center(
-        child: Text('Camera not available'),
-      );
+      return const Center(child: Text("Camera not available"));
     }
 
     return Stack(
@@ -159,22 +160,32 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
           _isCameraInitialized = _controller!.value.isInitialized;
       });
 
-      widget.onCaptureReady.call(takePhoto);
+      widget.onStartRecordingReady?.call(startRecording);
+      widget.onStopRecordingReady?.call(stopRecording);
     }
   }
 
-  Future<XFile?> takePhoto() async {
-    if (_controller == null || !_controller!.value.isInitialized) return null;
-
-    if (_controller!.value.isTakingPicture) {
-      return null;
+  Future<void> startRecording() async {
+    if (_controller == null || !_controller!.value.isInitialized || _controller!.value.isRecordingVideo) return;
+    try {
+      await _controller!.startVideoRecording();
+      setState(() => _isRecording = true);
+    } catch (e) {
+      debugPrint(e.toString());
     }
+  }
+
+  Future<XFile?> stopRecording() async {
+    if (_controller == null || !_controller!.value.isInitialized || !_isRecording|| !_controller!.value.isRecordingVideo) return null;
 
     try {
-      XFile file = await _controller!.takePicture();
+      final XFile file = await _controller!.stopVideoRecording();
+      setState(() {
+        _isRecording = false;
+      });
       return file;
-    } catch(e) {
-      print(e);
+    } catch (e) {
+      debugPrint(e.toString());
       return null;
     }
   }

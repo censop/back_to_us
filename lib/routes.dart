@@ -14,6 +14,5 @@ class Routes {
   static String pendingInvites = "/pendingInvites";
   static String addedFriends = "/addedFriends";
   static String capture = "/capture";
-  static String saveItem = "/saveItem";
 
 } 

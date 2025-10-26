@@ -8,42 +8,13 @@ class CameraService {
   static double minZoom = 1.0;
   static String? displayItemPath;
   static Size? previewSize;
+  static XFile? imageFile;
+  static XFile? videoFile;
 
   // Initialize cameras on app start
   static Future<void> initialize() async {
     _cameras = await availableCameras();
   }
-
-
-  /*static Future<void> initializeController({CameraLensDirection direction = CameraLensDirection.back,}) async {
-    if (_isInitializing) return; // Prevent concurrent initialization
-    _isInitializing = true;
-
-    try {
-      if (_cameras.isEmpty) {
-        await initialize();
-      }
-
-      final selectedCamera = _cameras.firstWhere(
-        (camera) => camera.lensDirection == direction,
-        orElse: () => _cameras.first,
-      );
-
-      _controller = CameraController(
-        selectedCamera,
-        ResolutionPreset.high,
-        enableAudio: false,
-      );
-
-      await _controller!.initialize();
-
-      
-    } catch (e) {
-      print('Camera initialization error: $e');
-    } finally {
-      _isInitializing = false;
-    }
-  } */
 
   static Future<void> getAvailableZoom(CameraController controller) async {
       maxZoom = await controller.getMaxZoomLevel();
