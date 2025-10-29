@@ -7,9 +7,11 @@ class PhotoWidget extends StatefulWidget {
   const PhotoWidget({
     super.key,
     required this.onCaptureReady,
+    this.isVisible = true,
   });
 
   final void Function(Future<XFile?> Function()?) onCaptureReady;
+  final bool isVisible;
 
   @override
   State<PhotoWidget> createState() => _PhotoWidgetState();
@@ -23,7 +25,32 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    onNewCameraSelected(CameraService.backCamera);
+    if (widget.isVisible) {
+      onNewCameraSelected(CameraService.backCamera);
+    }
+  }
+
+  @override
+  void didUpdateWidget(PhotoWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Handle visibility changes
+    if (widget.isVisible != oldWidget.isVisible) {
+      if (widget.isVisible) {
+        // Page became visible, reinitialize camera
+        onNewCameraSelected(CameraService.backCamera);
+      } else {
+        // Page became invisible, dispose camera
+        _controller?.dispose();
+        _controller = null;
+        if (mounted) {
+          setState(() {
+            _isCameraInitialized = false;
+          });
+        }
+        widget.onCaptureReady(null);
+      }
+    }
   }
 
   @override
@@ -52,7 +79,9 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
 
   @override
   void didPopNext() {
-    onNewCameraSelected(CameraService.backCamera);
+    if (widget.isVisible) {
+      onNewCameraSelected(CameraService.backCamera);
+    }
   }
 
   @override
@@ -159,7 +188,7 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
           _isCameraInitialized = _controller!.value.isInitialized;
       });
 
-      widget.onCaptureReady.call(takePhoto);
+      widget.onCaptureReady(takePhoto);
     }
   }
 

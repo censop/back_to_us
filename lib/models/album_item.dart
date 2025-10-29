@@ -1,15 +1,21 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 //will be improved
-enum AlbumItemType { photo, video, audio, note }
+enum AlbumItemType { 
+    photo,
+    video,
+    voice,
+    text,
+    drawing, 
+}
 
 class AlbumItem {
-  final String id;               // Firestore doc ID
-  final String storagePath;      // Firebase Storage path
+  final String id;               
+  final String storagePath;      
   final AlbumItemType type;
-  final String createdBy;        // uid of uploader
+  final String createdBy;        
   final DateTime createdAt;
-  final String? caption;         // optional
+  final String? caption;         
 
   AlbumItem({
     required this.id,

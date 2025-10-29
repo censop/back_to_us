@@ -6,8 +6,6 @@ class CameraService {
 
   static double maxZoom = 1.0;
   static double minZoom = 1.0;
-  static String? displayItemPath;
-  static Size? previewSize;
   static XFile? imageFile;
   static XFile? videoFile;
 
@@ -20,12 +18,6 @@ class CameraService {
       maxZoom = await controller.getMaxZoomLevel();
       minZoom = await controller.getMinZoomLevel();
   }
-
-  static void getPreviewSize(CameraController controller) {
-      previewSize = controller.value.previewSize;
-  }
-
-
   // Getters
   static List<CameraDescription> get cameras => _cameras;
 

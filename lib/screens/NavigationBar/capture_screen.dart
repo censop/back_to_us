@@ -1,7 +1,8 @@
-
+import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
+import 'package:back_to_us/Widgets/CaptureScreenButtons/capture_button.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/photo_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/video_widget.dart';
 import 'package:back_to_us/routes.dart';
@@ -23,6 +24,8 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   Future<void> Function()? _startRecordingCallback;
   Future<XFile?> Function()? _stopRecordingCallback;
 
+  bool _isRecording = false;
+
   final List<String> modes = [
     "Photo",
     "Video",
@@ -30,7 +33,6 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
     "Text",
     "Drawing",
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +51,18 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
             child: PageView.builder(
               controller: _pageController,
               onPageChanged: (value) {
+                // Check if transitioning between camera and non-camera modes
+                final oldUsesCamera = _usesCamera(modes[_currentPage]);
+                final newUsesCamera = _usesCamera(modes[value]);
+                
                 setState(() {
                   _currentPage = value;
+                  
+                  if (oldUsesCamera && !newUsesCamera) {
+                    _photoCallback = null;
+                    _startRecordingCallback = null;
+                    _stopRecordingCallback = null;
+                  }
                 });
               },
               itemCount: modes.length,
@@ -60,7 +72,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
             child: Column(
               children: [
                 ValueListenableBuilder(
@@ -96,7 +108,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                     );
                   }
                 ),
-                SizedBox(height: 20),               
+                SizedBox(height: 5),               
                 _buildModeButton(_currentPage),
               ],
             ),
@@ -107,22 +119,34 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   }
 
   Widget _buildModePage(int index) {
+    final isVisible = index == _currentPage;
+    
     switch (modes[index]) {
       case "Photo":
         return PhotoWidget(
+          key: ValueKey('photo-$isVisible'),
+          isVisible: isVisible,
           onCaptureReady: (callback) {
-            setState(() {
-              _photoCallback = callback;
-            });
+            if (mounted) {
+              setState(() {
+                _photoCallback = callback;
+              });
+            }
           },
         );
       case "Video":
         return VideoWidget(
+          key: ValueKey('video-$isVisible'),
+          isVisible: isVisible,
           onStartRecordingReady: (callback) {
-            _startRecordingCallback = callback;
+            if (mounted) {
+              _startRecordingCallback = callback;
+            }
           },
           onStopRecordingReady: (callback) {
-            _stopRecordingCallback = callback;
+            if (mounted) {
+              _stopRecordingCallback = callback;
+            }
           },
         );
       case "Voice":
@@ -139,9 +163,10 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   Widget _buildModeButton(int index) {
     switch (modes[index]) {
       case "Photo":
-        return GestureDetector(
+        return CaptureButton(
+          innerCircleColor: Theme.of(context).colorScheme.primary,
           onTap: _photoCallback == null
-          ? null // disables tap if camera not ready
+          ? null 
           : () async {
               final file = await _photoCallback!();
               if (file != null) {
@@ -149,72 +174,40 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                 CameraService.imageFile = file;
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SaveItemScreen(file: file)
+                    builder: (context) => SaveItemScreen(
+                      type: AlbumItemType.photo
+                    )
                   )
                 );
               } else {
                 print("⚠️ Failed to capture photo.");
               }
             },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(
-                Icons.circle,
-                color: Theme.of(context).colorScheme.primary,
-                size: 70
-              ),
-              Icon(
-                Icons.circle,
-                color: Theme.of(context).colorScheme.surface,
-                size: 60
-              ),
-            ],
-          ),
         );
       case "Video":
-        return GestureDetector(
-          onTapDown: (_) async {
-            await _startRecordingCallback?.call();
-          },
-          onTapUp: (_) async {
-            final file = await _stopRecordingCallback?.call();
-            if (file != null && context.mounted) {
-              CameraService.videoFile = file;
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SaveItemScreen(file: file)
-                )
-              );
+        return CaptureButton(
+          innerCircleColor: const Color.fromARGB(255, 155, 37, 29),
+          onTap: () async {
+            if (!_isRecording) {
+              print("▶️ Start recording...");
+              await _startRecordingCallback?.call();
+              setState(() => _isRecording = true);
+            } else {
+              print("⏹️ Stop recording...");
+              final file = await _stopRecordingCallback?.call();
+              if (file != null && context.mounted) {
+                CameraService.videoFile = file;
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SaveItemScreen(
+                      type: AlbumItemType.video,
+                    ),
+                  ),
+                );
+                setState(() => _isRecording = false);
+              }
             }
           },
-          onTapCancel: () async {
-            final file = await _stopRecordingCallback?.call();
-            if (file != null && context.mounted) {
-              CameraService.videoFile = file;
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SaveItemScreen(file: file)
-                )
-              );
-            }
-          },
-
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(
-                Icons.circle,
-                color: Theme.of(context).colorScheme.primary,
-                size: 70
-              ),
-              Icon(
-                Icons.circle,
-                color: const Color.fromARGB(255, 174, 42, 32),
-                size: 60
-              ),
-            ],
-          ),
         );
       case "Voice":
         return _buildPlaceholder("🎙️ Voice Mode");
@@ -226,6 +219,11 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
         return const SizedBox();
     }
   }
+
+  bool _usesCamera(String mode) {
+    return mode == "Photo" || mode == "Video";
+  }
+
 
   Widget _buildPlaceholder(String label) {
     return Center(

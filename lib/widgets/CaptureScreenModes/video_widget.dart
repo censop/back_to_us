@@ -1,4 +1,3 @@
-
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/main.dart';
 import 'package:camera/camera.dart';
@@ -9,10 +8,12 @@ class VideoWidget extends StatefulWidget {
     super.key,
     required this.onStartRecordingReady,
     required this.onStopRecordingReady,
+    this.isVisible = true,
   });
 
   final void Function(Future<void> Function()?) onStartRecordingReady;
   final void Function(Future<XFile?> Function()?) onStopRecordingReady;
+  final bool isVisible;
 
   @override
   State<VideoWidget> createState() => _VideoWidgetState();
@@ -27,7 +28,34 @@ class _VideoWidgetState extends State<VideoWidget> with WidgetsBindingObserver, 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    onNewCameraSelected(CameraService.backCamera);
+    if (widget.isVisible) {
+      onNewCameraSelected(CameraService.backCamera);
+    }
+  }
+
+  @override
+  void didUpdateWidget(VideoWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Handle visibility changes
+    if (widget.isVisible != oldWidget.isVisible) {
+      if (widget.isVisible) {
+        // Page became visible, reinitialize camera
+        onNewCameraSelected(CameraService.backCamera);
+      } else {
+        // Page became invisible, dispose camera
+        _controller?.dispose();
+        _controller = null;
+        if (mounted) {
+          setState(() {
+            _isCameraInitialized = false;
+            _isRecording = false;
+          });
+        }
+        widget.onStartRecordingReady(null);
+        widget.onStopRecordingReady(null);
+      }
+    }
   }
 
   @override
@@ -56,7 +84,9 @@ class _VideoWidgetState extends State<VideoWidget> with WidgetsBindingObserver, 
 
   @override
   void didPopNext() {
-    onNewCameraSelected(CameraService.backCamera);
+    if (widget.isVisible) {
+      onNewCameraSelected(CameraService.backCamera);
+    }
   }
 
   @override
@@ -74,6 +104,11 @@ class _VideoWidgetState extends State<VideoWidget> with WidgetsBindingObserver, 
 
     else if (state == AppLifecycleState.resumed) {
       onNewCameraSelected(cameraController.description);
+    }
+
+    if (state == AppLifecycleState.inactive && _isRecording) {
+      _controller?.stopVideoRecording();
+      _isRecording = false;
     }
 
   }
@@ -134,7 +169,6 @@ class _VideoWidgetState extends State<VideoWidget> with WidgetsBindingObserver, 
     final CameraController cameraController = CameraController(
       cameraDescription,
       ResolutionPreset.high,
-      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     await previousCameraController?.dispose();
@@ -160,8 +194,8 @@ class _VideoWidgetState extends State<VideoWidget> with WidgetsBindingObserver, 
           _isCameraInitialized = _controller!.value.isInitialized;
       });
 
-      widget.onStartRecordingReady?.call(startRecording);
-      widget.onStopRecordingReady?.call(stopRecording);
+      widget.onStartRecordingReady(startRecording);
+      widget.onStopRecordingReady(stopRecording);
     }
   }
 
