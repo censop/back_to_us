@@ -14,8 +14,8 @@ class AlbumItem {
   final String storagePath;      
   final AlbumItemType type;
   final String createdBy;        
-  final DateTime createdAt;
-  final String? caption;         
+  final DateTime createdAt;       
+  final String downloadUrl;
 
   AlbumItem({
     required this.id,
@@ -23,7 +23,7 @@ class AlbumItem {
     required this.type,
     required this.createdBy,
     required this.createdAt,
-    this.caption,
+    required this.downloadUrl
   });
 
   factory AlbumItem.fromMap(String id, Map<String, dynamic> data) {
@@ -36,7 +36,7 @@ class AlbumItem {
       ),
       createdBy: data['createdBy'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      caption: data['caption'],
+      downloadUrl: data["downloadUrl"]
     );
   }
 
@@ -46,7 +46,7 @@ class AlbumItem {
       "type": type.name,
       "createdBy": createdBy,
       "createdAt": createdAt,
-      "caption": caption,
+      "downloadUrl": downloadUrl,
     };
   }
 }

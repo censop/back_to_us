@@ -212,7 +212,10 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
                 child: selectedMode != "Single" ?
                 CustomSettingsTiles(
                   key: ValueKey(selectedMode),
-                  leading: Text("Add Members"),
+                  leading: Text(
+                    "Add Members",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                   mainWidget: Row(
                     children: [
                       

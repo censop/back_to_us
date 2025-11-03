@@ -3,6 +3,7 @@ import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/CaptureScreenButtons/capture_button.dart';
+import 'package:back_to_us/Widgets/CaptureScreenModes/voice_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/photo_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/video_widget.dart';
 import 'package:back_to_us/routes.dart';
@@ -150,7 +151,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
           },
         );
       case "Voice":
-        return _buildPlaceholder("🎙️ Voice Mode");
+        return VoiceWidget();
       case "Text":
         return _buildPlaceholder("✏️ Text Mode");
       case "Drawing":
@@ -171,12 +172,11 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
               final file = await _photoCallback!();
               if (file != null) {
                 print("📸 Captured: ${file.path}");
-                CameraService.imageFile = file;
+                CameraService.file = file;
+                CameraService.type = AlbumItemType.photo;
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SaveItemScreen(
-                      type: AlbumItemType.photo
-                    )
+                    builder: (context) => SaveItemScreen()
                   )
                 );
               } else {
@@ -184,7 +184,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
               }
             },
         );
-      case "Video":
+      case "Video": //make this like snapchat, it records as you press
         return CaptureButton(
           innerCircleColor: const Color.fromARGB(255, 155, 37, 29),
           onTap: () async {
@@ -196,12 +196,11 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
               print("⏹️ Stop recording...");
               final file = await _stopRecordingCallback?.call();
               if (file != null && context.mounted) {
-                CameraService.videoFile = file;
+                CameraService.file = file;
+                CameraService.type = AlbumItemType.video;
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SaveItemScreen(
-                      type: AlbumItemType.video,
-                    ),
+                    builder: (context) => SaveItemScreen(),
                   ),
                 );
                 setState(() => _isRecording = false);
@@ -210,7 +209,9 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
           },
         );
       case "Voice":
-        return _buildPlaceholder("🎙️ Voice Mode");
+        return CaptureButton(
+          innerCircleColor: Theme.of(context).colorScheme.primary
+        );
       case "Text":
         return _buildPlaceholder("✏️ Text Mode");
       case "Drawing":

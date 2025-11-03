@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:back_to_us/Models/album_item.dart';
 import 'package:camera/camera.dart';
 
 class CameraService {
@@ -6,8 +7,8 @@ class CameraService {
 
   static double maxZoom = 1.0;
   static double minZoom = 1.0;
-  static XFile? imageFile;
-  static XFile? videoFile;
+  static XFile? file;
+  static AlbumItemType? type;
 
   // Initialize cameras on app start
   static Future<void> initialize() async {

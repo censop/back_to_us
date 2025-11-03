@@ -1,16 +1,15 @@
 
 import 'package:back_to_us/Models/album_item.dart';
+import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/photo_save_display.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/video_save_display.dart';
+import 'package:back_to_us/Widgets/Sheets/select_album_sheet.dart';
 import 'package:flutter/material.dart';
 
 class SaveItemScreen extends StatefulWidget {
   const SaveItemScreen({
     super.key,
-    required this.type
   });
-
-  final AlbumItemType type;
 
   @override
   State<SaveItemScreen> createState() => _SaveItemScreenState();
@@ -20,7 +19,7 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AlbumItemType type = widget.type;
+    AlbumItemType type = CameraService.type!;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +31,29 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
         title: Text("Back\nTo\nUs"),
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
-      body: _editWidget(type)
+      body: Column(
+        children: [
+          Expanded(
+            child: _editWidget(type)
+          ),
+          Padding(
+          padding: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () {}, 
+                icon: Icon(Icons.download)
+              ),
+              Spacer(),
+              IconButton(
+                onPressed: _onTapSend, 
+                icon: Icon(Icons.send)
+              ),
+            ],
+          )
+        ),
+        ],
+      )
     );
   }
 
@@ -51,5 +72,18 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
       default:
         return Text("Image not loading");
     }
+  }
+
+  void _onTapSend() {
+    showModalBottomSheet(
+      context: context, 
+      isScrollControlled: true,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.85,
+          child: SelectAlbumSheet(),
+        );
+      },
+    );
   }
 }

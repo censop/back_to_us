@@ -3,7 +3,10 @@ import 'package:back_to_us/Models/album_mode.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
+import 'package:back_to_us/Widgets/stacked_member_display.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+
 
 class AlbumGridItem extends StatefulWidget {
   const AlbumGridItem({
@@ -71,23 +74,7 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
               
               final users = snapshot.data!;
               final displayUsers = users.take(3).toList();
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...displayUsers.map((user) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: CustomProfilePictureDisplayer(
-                        radius: 15,
-                        profileUrl: user.profilePic ?? "",
-                      ),
-                    );
-                  }).toList(),
-                  if (users.length >3) 
-                    Text("+${users.length - 3}")
-                ]
-              );
+              return StackedMemberDisplay(displayUsers: displayUsers, userLength: users.length,);
             }
           ),
         ],

@@ -1,5 +1,7 @@
 
+import 'dart:io';
 import 'package:back_to_us/Models/album.dart';
+import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,6 +56,26 @@ class FirebaseService {
     
   }
 
+  static Future<void> addItemToAlbum(String albumId, AlbumItemType type, File file, String createdBy, {String? caption}) async {
+    final docRef = FirebaseFirestore.instance.collection('albums').doc(albumId).collection('items').doc();
+
+    final storagePath = 'albums/$albumId/items/${docRef.id}/file.${_getExtension(type)}';
+
+    final uploadTask = await FirebaseStorage.instance.ref(storagePath).putFile(file);
+
+    final downloadUrl = await uploadTask.ref.getDownloadURL();
+
+    final newItem = AlbumItem(
+      id: docRef.id,
+      storagePath: storagePath, 
+      type: type,
+      createdBy: createdBy,
+      createdAt: DateTime.now(),
+      downloadUrl: downloadUrl
+    );
+    await docRef.set(newItem.toMap());
+  }
+
   /// STREAMS
   static Stream<String?> profilePicStream() {
   if (currentUser == null) {
@@ -71,7 +93,7 @@ class FirebaseService {
       });
 }
 
-  static Stream<List<Album>> getUserAlbums() {
+  static Stream<List<Album>> albumStream() {
 
     if (currentUser == null) {
       return const Stream.empty();
@@ -226,4 +248,20 @@ class FirebaseService {
 
     await inviteDoc.delete();
   }
+
+  static String _getExtension(AlbumItemType type) {
+    switch (type) {
+      case AlbumItemType.photo:
+        return 'jpg';
+      case AlbumItemType.video:
+        return 'mp4';
+      case AlbumItemType.voice:
+        return 'm4a';
+      case AlbumItemType.text:
+        return 'txt';
+      case AlbumItemType.drawing:
+        return 'png';
+    }
+  }
+
 }

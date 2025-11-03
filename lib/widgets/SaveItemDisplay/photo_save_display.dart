@@ -12,7 +12,7 @@ class PhotoSaveDisplay extends StatefulWidget {
 }
 
 class _PhotoSaveDisplayState extends State<PhotoSaveDisplay> {
-  XFile? imageFile = CameraService.imageFile;
+  XFile? imageFile = CameraService.file;
 
   @override
   Widget build(BuildContext context) {
@@ -46,32 +46,7 @@ class _PhotoSaveDisplayState extends State<PhotoSaveDisplay> {
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Text(
-                "Add to album",
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // add save logic and snackbar
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                ),
-                child: Text(
-                  "Save",
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
-        ),
+        
       ],
     );
   }

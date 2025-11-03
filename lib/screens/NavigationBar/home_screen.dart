@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: StreamBuilder(
-        stream: FirebaseService.getUserAlbums(), 
+        stream: FirebaseService.albumStream(), 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

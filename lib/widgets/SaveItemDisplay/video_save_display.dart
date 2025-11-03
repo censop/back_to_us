@@ -5,6 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+//DOESNT WORKKKK NEED TO DEBUG
+
 class VideoSaveDisplay extends StatefulWidget {
   const VideoSaveDisplay({super.key});
 
@@ -13,23 +15,14 @@ class VideoSaveDisplay extends StatefulWidget {
 }
 
 class _VideoSaveDisplayState extends State<VideoSaveDisplay> {
-  final XFile? _videoFile = CameraService.videoFile; 
+  late XFile? _videoFile;
   VideoPlayerController? _videoController;
-  late Future<void> _initializeVideoPlayerFuture;
+  late Future<void> _initializeVideoPlayerFuture = Future.value();
 
   @override
   void initState() {
     super.initState();
-
-    if (_videoFile != null) {
-      _videoController = VideoPlayerController.file(
-        File(_videoFile.path)
-      );
-
-      _initializeVideoPlayerFuture = _videoController!.initialize();
-      _videoController!.setLooping(true);
-      
-    }
+    _initVideo();
   }
 
   @override
@@ -91,5 +84,21 @@ class _VideoSaveDisplayState extends State<VideoSaveDisplay> {
         );
       }
     );
+  }
+
+  Future<void> _initVideo() async {
+    _videoFile = CameraService.file;
+    if (_videoFile == null) return;
+
+    final controller = VideoPlayerController.file(File(_videoFile!.path));
+    await controller.initialize();
+    controller.setLooping(true);
+
+    setState(() {
+      _videoController = controller;
+      _initializeVideoPlayerFuture = Future.value();
+    });
+
+    _videoController!.play(); 
   }
 }

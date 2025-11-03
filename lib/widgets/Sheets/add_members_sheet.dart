@@ -2,7 +2,6 @@ import 'package:back_to_us/Models/album_mode.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
-import 'package:back_to_us/Widgets/Sheets/friend_invite_sheet.dart';
 import 'package:flutter/material.dart';
 
 class AddMembersSheet extends StatefulWidget {
@@ -31,7 +30,7 @@ class _AddMembersSheetState extends State<AddMembersSheet> {
         children: [
           Text(
             "Add Members",
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Theme.of(context).colorScheme.primary,
             ),
             textAlign: TextAlign.center,
