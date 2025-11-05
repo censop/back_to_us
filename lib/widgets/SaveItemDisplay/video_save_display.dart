@@ -45,17 +45,6 @@ class _VideoSaveDisplayState extends State<VideoSaveDisplay> {
         if (_videoController != null && snapshot.connectionState == ConnectionState.done) {
           return Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.close),
-                  ),
-                ],
-              ),
               SizedBox(height: 10),
               Expanded(
                 child: Center(

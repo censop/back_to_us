@@ -1,12 +1,13 @@
+import 'dart:io';
 import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/CaptureScreenButtons/capture_button.dart';
+import 'package:back_to_us/Widgets/CaptureScreenModes/text_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/voice_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/photo_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/video_widget.dart';
-import 'package:back_to_us/routes.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
@@ -20,12 +21,21 @@ class CaptureScreen extends StatefulWidget {
 class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserver {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  File? capturedFile;
+  AlbumItemType? capturedType;
 
   Future<XFile?> Function()? _photoCallback;
-  Future<void> Function()? _startRecordingCallback;
-  Future<XFile?> Function()? _stopRecordingCallback;
+  Future<void> Function()? _startVideoRecordingCallback;
+  Future<XFile?> Function()? _stopVideoRecordingCallback;
 
-  bool _isRecording = false;
+  Future<void> Function()? _startVoiceRecordingCallback;
+  Future<File?> Function()? _stopVoiceRecordingCallback;
+
+  Future<File?> Function()? _saveTextFileCallback;
+
+
+  bool _isRecordingVideo = false;
+  bool _isRecordingVoice = false;
 
   final List<String> modes = [
     "Photo",
@@ -61,8 +71,8 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                   
                   if (oldUsesCamera && !newUsesCamera) {
                     _photoCallback = null;
-                    _startRecordingCallback = null;
-                    _stopRecordingCallback = null;
+                    _startVideoRecordingCallback = null;
+                    _stopVideoRecordingCallback = null;
                   }
                 });
               },
@@ -141,19 +151,30 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
           isVisible: isVisible,
           onStartRecordingReady: (callback) {
             if (mounted) {
-              _startRecordingCallback = callback;
+              _startVideoRecordingCallback = callback;
             }
           },
           onStopRecordingReady: (callback) {
             if (mounted) {
-              _stopRecordingCallback = callback;
+              _stopVideoRecordingCallback = callback;
             }
           },
         );
       case "Voice":
-        return VoiceWidget();
+        return VoiceWidget(
+          onStartRecordingReady: (callback) {
+            _startVoiceRecordingCallback = callback;
+          },
+          onStopRecordingReady: (callback) {
+            _stopVoiceRecordingCallback = callback;
+          },
+        );
       case "Text":
-        return _buildPlaceholder("✏️ Text Mode");
+        return TextWidget(
+          onSaveReady: (callback) {
+            _saveTextFileCallback = callback;
+          },
+        );
       case "Drawing":
         return _buildPlaceholder("🎨 Drawing Mode");
       default:
@@ -173,10 +194,14 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
               if (file != null) {
                 print("📸 Captured: ${file.path}");
                 CameraService.file = file;
+                capturedFile = File(file.path);
                 CameraService.type = AlbumItemType.photo;
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SaveItemScreen()
+                    builder: (context) => SaveItemScreen(
+                      type: AlbumItemType.photo,
+                      file: capturedFile!
+                    )
                   )
                 );
               } else {
@@ -188,32 +213,79 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
         return CaptureButton(
           innerCircleColor: const Color.fromARGB(255, 155, 37, 29),
           onTap: () async {
-            if (!_isRecording) {
-              print("▶️ Start recording...");
-              await _startRecordingCallback?.call();
-              setState(() => _isRecording = true);
+            if (!_isRecordingVideo) {
+              print("Start recording video...");
+              await _startVideoRecordingCallback?.call();
+              setState(() => _isRecordingVideo = true);
             } else {
-              print("⏹️ Stop recording...");
-              final file = await _stopRecordingCallback?.call();
+              print("Stop recording video...");
+              final file = await _stopVideoRecordingCallback?.call();
               if (file != null && context.mounted) {
                 CameraService.file = file;
+                capturedFile = File(file.path);
                 CameraService.type = AlbumItemType.video;
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SaveItemScreen(),
+                    builder: (context) => SaveItemScreen(
+                      type: AlbumItemType.video,
+                      file: capturedFile!,
+                    ),
                   ),
                 );
-                setState(() => _isRecording = false);
+                setState(() => _isRecordingVideo = false);
               }
             }
           },
         );
       case "Voice":
         return CaptureButton(
-          innerCircleColor: Theme.of(context).colorScheme.primary
+          innerCircleColor: const Color.fromARGB(255, 155, 37, 29),
+          onTap: () async {
+            if (!_isRecordingVoice) {
+              print("Start recording voice...");
+              await _startVoiceRecordingCallback?.call();
+              setState(() => _isRecordingVoice = true);
+            } else {
+              print("Stop recording voice...");
+              final file = await _stopVoiceRecordingCallback?.call();
+              if (file != null && context.mounted) {
+                capturedFile = file;
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SaveItemScreen(
+                      type: AlbumItemType.voice,
+                      file: capturedFile!,
+                    ),
+                  ),
+                );
+                setState(() => _isRecordingVoice = false);
+              }
+            }
+          },
         );
       case "Text":
-        return _buildPlaceholder("✏️ Text Mode");
+        return CaptureButton(
+          innerCircleColor: Theme.of(context).colorScheme.primary,
+          onTap: () async {
+            if (_saveTextFileCallback == null) return;
+
+            final file = await _saveTextFileCallback!.call();
+            if (file != null && context.mounted) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SaveItemScreen(
+                    type: AlbumItemType.text,
+                    file: file,
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Write something before saving.")),
+              );
+            }
+          },
+        );
       case "Drawing":
         return _buildPlaceholder("🎨 Drawing Mode");
       default:
@@ -224,7 +296,6 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   bool _usesCamera(String mode) {
     return mode == "Photo" || mode == "Video";
   }
-
 
   Widget _buildPlaceholder(String label) {
     return Center(

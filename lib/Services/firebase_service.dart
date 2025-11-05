@@ -73,6 +73,7 @@ class FirebaseService {
       createdAt: DateTime.now(),
       downloadUrl: downloadUrl
     );
+    
     await docRef.set(newItem.toMap());
   }
 

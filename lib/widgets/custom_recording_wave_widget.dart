@@ -2,7 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class CustomRecordingWaveWidget extends StatefulWidget {
-  const CustomRecordingWaveWidget({super.key});
+  const CustomRecordingWaveWidget({
+    super.key,
+    required this.isAnimating,
+  });
+
+  final bool isAnimating; // 🔹 New property to control animation state
 
   @override
   State<CustomRecordingWaveWidget> createState() => _RecordingWaveWidgetState();
@@ -14,22 +19,36 @@ class _RecordingWaveWidgetState extends State<CustomRecordingWaveWidget> {
 
   @override
   void initState() {
-    _startAnimating();
     super.initState();
+    _updateAnimationState();
+  }
+
+  @override
+  void didUpdateWidget(CustomRecordingWaveWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // 🔹 Restart or stop animation when property changes
+    if (oldWidget.isAnimating != widget.isAnimating) {
+      _updateAnimationState();
+    }
+  }
+
+  void _updateAnimationState() {
+    _timer?.cancel();
+
+    if (widget.isAnimating) {
+      _timer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
+        setState(() {
+          _heights.add(_heights.removeAt(0));
+        });
+      });
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
-  }
-
-  void _startAnimating() {
-    _timer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
-      setState(() {
-        _heights.add(_heights.removeAt(0));
-      });
-    });
   }
 
   @override

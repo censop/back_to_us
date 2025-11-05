@@ -12,7 +12,12 @@ import 'package:flutter/material.dart';
 class SelectAlbumSheet extends StatefulWidget {
   const SelectAlbumSheet({
     super.key,
+    required this.type,
+    required this.file,
   });
+
+  final File file;
+  final AlbumItemType type;
 
 
   @override
@@ -120,10 +125,11 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
             padding: const EdgeInsets.all(20),
             child: ElevatedButton(
               onPressed: () async {
-                if (selectedAlbumId != null && FirebaseService.currentUser != null && CameraService.file != null && CameraService.type != null) {
+                if (selectedAlbumId != null && FirebaseService.currentUser != null) {
                   await FirebaseService.addItemToAlbum(
-                    selectedAlbumId!, CameraService.type!, 
-                    File(CameraService.file!.path), 
+                    selectedAlbumId!, 
+                    widget.type, 
+                    widget.file, 
                     FirebaseService.currentUser!.uid
                   );
                   Navigator.of(context).pop(); //you need to perfect this, this is not a good solution you want to pup until the home screen

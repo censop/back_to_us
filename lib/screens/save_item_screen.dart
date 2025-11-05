@@ -1,15 +1,21 @@
 
+import 'dart:io';
 import 'package:back_to_us/Models/album_item.dart';
-import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/photo_save_display.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/video_save_display.dart';
+import 'package:back_to_us/Widgets/SaveItemDisplay/voice_save_display.dart';
 import 'package:back_to_us/Widgets/Sheets/select_album_sheet.dart';
 import 'package:flutter/material.dart';
 
 class SaveItemScreen extends StatefulWidget {
   const SaveItemScreen({
     super.key,
+    required this.file,
+    required this.type,
   });
+
+  final File file;
+  final AlbumItemType type;
 
   @override
   State<SaveItemScreen> createState() => _SaveItemScreenState();
@@ -19,7 +25,8 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AlbumItemType type = CameraService.type!;
+    AlbumItemType type = widget.type;
+    File file = widget.file;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,6 +40,17 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
       ),
       body: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.close),
+              ),
+            ],
+          ),
           Expanded(
             child: _editWidget(type)
           ),
@@ -63,9 +81,9 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
         return PhotoSaveDisplay();
       case AlbumItemType.video:
         return VideoSaveDisplay();
-      case AlbumItemType.drawing:
-        return Text("Placeholder");
       case AlbumItemType.voice:
+        return VoiceSaveDisplay(file: widget.file);
+      case AlbumItemType.drawing:
         return Text("Placeholder");
       case AlbumItemType.text:
         return Text("Placeholder");
@@ -81,7 +99,10 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
       builder: (context) {
         return FractionallySizedBox(
           heightFactor: 0.85,
-          child: SelectAlbumSheet(),
+          child: SelectAlbumSheet(
+            type: widget.type,
+            file: widget.file
+          ),
         );
       },
     );

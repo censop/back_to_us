@@ -1,12 +1,18 @@
 import 'dart:io';
-
-import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Widgets/custom_recording_wave_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
+import 'package:path_provider/path_provider.dart';
 
 class VoiceWidget extends StatefulWidget {
-  const VoiceWidget({super.key});
+  const VoiceWidget({
+    super.key,
+    this.onStartRecordingReady,
+    this.onStopRecordingReady,
+  });
+
+  final Function(Future<void> Function()?)? onStartRecordingReady;
+  final Function(Future<File?> Function()?)? onStopRecordingReady;
 
   @override
   State<VoiceWidget> createState() => _VoiceWidgetState();
@@ -21,6 +27,9 @@ class _VoiceWidgetState extends State<VoiceWidget> {
   void initState() {
     _audioRecorder = AudioRecorder();
     super.initState();
+
+    widget.onStartRecordingReady?.call(_startRecording);
+    widget.onStopRecordingReady?.call(_stopRecording);
   }
 
   @override
@@ -33,13 +42,13 @@ class _VoiceWidgetState extends State<VoiceWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: CustomRecordingWaveWidget(),
+      child: CustomRecordingWaveWidget(isAnimating: isRecording,),
     );
   }
 
   Future<void> _startRecording() async {
     if (!await _audioRecorder.hasPermission()) {
-      debugPrint("❌ Microphone permission not granted.");
+      debugPrint("Microphone permission not granted.");
       return;
     }
 
@@ -60,31 +69,30 @@ class _VoiceWidgetState extends State<VoiceWidget> {
       _audioPath = path;
     });
 
-    debugPrint("🎙️ Recording started → $path");
+    debugPrint("Recording started → $path");
   }
 
-  Future<void> _stopRecording() async {
+  Future<File?> _stopRecording() async {
     final path = await _audioRecorder.stop();
-    if (path == null) return;
+    if (path == null) return null;
 
     setState(() {
       isRecording = false;
       _audioPath = path;
     });
 
-    debugPrint("✅ Recording saved locally: $path");
+    debugPrint("Recording saved locally: $path");
 
-    final file = File(path);
-    
-
-    // optional cleanup
-    try {
-      await file.delete();
-      debugPrint("🧹 Deleted temp audio file");
-    } catch (e) {
-      debugPrint("⚠️ Failed to delete temp file: $e");
-    }
+    return File(path);
   }
-  
-  Future getTemporaryDirectory() async {}
 }
+
+/*
+try {
+      await file.delete();
+      debugPrint("Deleted temp audio file");
+    } catch (e) {
+      debugPrint("Failed to delete temp file: $e");
+    }
+
+*/

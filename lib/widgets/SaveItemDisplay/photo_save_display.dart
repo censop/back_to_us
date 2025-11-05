@@ -18,17 +18,6 @@ class _PhotoSaveDisplayState extends State<PhotoSaveDisplay> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Icon(Icons.close),
-            ),
-          ],
-        ),
         SizedBox(height: 10),
         Expanded(
           child: Center(
