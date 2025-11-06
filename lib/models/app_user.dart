@@ -1,6 +1,5 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/v4.dart';
  //TODO hash password
 class AppUser {
   AppUser({

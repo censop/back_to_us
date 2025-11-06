@@ -34,10 +34,8 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
   void didUpdateWidget(PhotoWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     
-    // Handle visibility changes
     if (widget.isVisible != oldWidget.isVisible) {
       if (widget.isVisible) {
-        // Page became visible, reinitialize camera
         onNewCameraSelected(CameraService.backCamera);
       } else {
         // Page became invisible, dispose camera

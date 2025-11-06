@@ -2,10 +2,8 @@
 import 'package:back_to_us/Models/album_mode.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:back_to_us/Widgets/stacked_member_display.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 
 
 class AlbumGridItem extends StatefulWidget {
@@ -95,7 +93,7 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
             textAlign: TextAlign.center,
           ),
           contentPadding: EdgeInsets.all(20),
-          contentTextStyle: Theme.of(context).textTheme!.bodyLarge,
+          contentTextStyle: Theme.of(context).textTheme.bodyLarge,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

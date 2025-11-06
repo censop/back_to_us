@@ -41,9 +41,7 @@ class _VoiceWidgetState extends State<VoiceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: CustomRecordingWaveWidget(isAnimating: isRecording,),
-    );
+    return CustomRecordingWaveWidget(isAnimating: isRecording,);
   }
 
   Future<void> _startRecording() async {

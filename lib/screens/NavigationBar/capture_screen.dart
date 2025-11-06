@@ -4,6 +4,7 @@ import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Widgets/CaptureScreenButtons/capture_button.dart';
+import 'package:back_to_us/Widgets/CaptureScreenModes/drawing_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/text_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/voice_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/photo_widget.dart';
@@ -32,6 +33,8 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   Future<File?> Function()? _stopVoiceRecordingCallback;
 
   Future<File?> Function()? _saveTextFileCallback;
+
+  Future<File?> Function()? _saveDrawingCallback; 
 
 
   bool _isRecordingVideo = false;
@@ -176,7 +179,11 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
           },
         );
       case "Drawing":
-        return _buildPlaceholder("🎨 Drawing Mode");
+        return DrawingWidget(
+          onSaveReady: (callback) {
+            _saveDrawingCallback = callback;
+          },
+        );
       default:
         return const SizedBox();
     }
@@ -280,14 +287,32 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                 ),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Write something before saving.")),
-              );
+              print("There should be a snackbar regarding this.");
+              //add custom snackbar here and to drawing in case there is no content
             }
           },
         );
       case "Drawing":
-        return _buildPlaceholder("🎨 Drawing Mode");
+      return CaptureButton(
+        innerCircleColor: Theme.of(context).colorScheme.primary,
+        onTap: () async {
+          if (_saveDrawingCallback == null) return;
+
+          final file = await _saveDrawingCallback!.call();
+          if (file != null && context.mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SaveItemScreen(
+                  type: AlbumItemType.drawing, 
+                  file: file,
+                ),
+              ),
+            );
+          } else {
+            print("There should be a snackbar regarding this.");
+          }
+        },
+      );
       default:
         return const SizedBox();
     }
@@ -295,14 +320,5 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
 
   bool _usesCamera(String mode) {
     return mode == "Photo" || mode == "Video";
-  }
-
-  Widget _buildPlaceholder(String label) {
-    return Center(
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 28),
-      ),
-    );
   }
 }

@@ -51,7 +51,7 @@ class _TextWidgetState extends State<TextWidget> {
                 onPressed: () {
                   //will add stuff to choose font, color etc,
                 }, 
-                icon: Icon(Icons.colorize)
+                icon: Icon(Icons.color_lens)
               ),
             ],
           ),
