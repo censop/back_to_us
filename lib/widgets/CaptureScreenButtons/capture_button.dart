@@ -24,27 +24,22 @@ class _CaptureButtonState extends State<CaptureButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-          onTap: widget.onTap,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(
-                Icons.circle,
-                color: Theme.of(context).colorScheme.primary,
-                size: 70
-              ),
-              Icon(
-                Icons.circle,
-                color: Theme.of(context).colorScheme.surface,
-                size: 60
-              ),
-              Icon(
-                Icons.circle,
-                color: widget.innerCircleColor,
-                size: 55
-              ),
-            ],
+      onTap: widget.onTap,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Icon(
+            Icons.circle,
+            color: const Color.fromARGB(118, 255, 255, 255),
+            size: 70
           ),
-        );
+          Icon(
+            Icons.circle,
+            color: widget.innerCircleColor,
+            size: 60
+          ),
+        ],
+      ),
+    );
   }
 }

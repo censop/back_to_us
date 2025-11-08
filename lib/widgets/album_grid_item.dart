@@ -1,7 +1,9 @@
 
+import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/album_mode.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/album_info_dialog.dart';
 import 'package:back_to_us/Widgets/stacked_member_display.dart';
 import 'package:flutter/material.dart';
 
@@ -9,22 +11,10 @@ import 'package:flutter/material.dart';
 class AlbumGridItem extends StatefulWidget {
   const AlbumGridItem({
     super.key,
-    required this.coverPath,
-    required this.id,
-    required this.members,
-    required this.mode,
-    required this.name,
-    required this.notificationsEnabled,
-    required this.openAt
+    required this.album,
   });
 
-  final String? coverPath;
-  final String id;
-  final List<String> members;
-  final AlbumMode mode;
-  final String name;
-  final bool notificationsEnabled;
-  final DateTime openAt;
+  final Album album;
 
   @override
   State<AlbumGridItem> createState() => _AlbumGridItemState();
@@ -46,9 +36,9 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: widget.coverPath != null && widget.coverPath != ""
+                child: widget.album.coverPath != null && widget.album.coverPath != ""
                 ? Image.network(
-                  widget.coverPath!,
+                  widget.album.coverPath,
                   fit: BoxFit.cover,
                 )
                 : Icon(
@@ -60,11 +50,11 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
           ),
           SizedBox(height:5),
           Text(
-            widget.name,
+            widget.album.name,
             overflow: TextOverflow.ellipsis,
           ),
           StreamBuilder<List<AppUser>>(
-            stream: FirebaseService.albumMembersStream(widget.members), 
+            stream: FirebaseService.albumMembersStream(widget.album.members), 
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return SizedBox();
@@ -84,48 +74,8 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
     showDialog(
       context: context, 
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            "Album Info",
-            style: Theme.of(context).textTheme.displayMedium!.copyWith(
-              fontSize: 20
-            ),
-            textAlign: TextAlign.center,
-          ),
-          contentPadding: EdgeInsets.all(20),
-          contentTextStyle: Theme.of(context).textTheme.bodyLarge,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Name: ${widget.name}",
-                textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 8),
-              Text(
-                "Mode: ${widget.mode.name}",
-                textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 8),
-              //to be added here
-              Text(
-                "Members: ",
-                textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 8),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {}, 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                  child: Text("Edit Album"),
-                ),
-              ),
-            ],
-          ),
+        return AlbumInfoDialog(
+          album: widget.album,
         );
       }
     );

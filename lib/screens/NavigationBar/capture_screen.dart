@@ -62,33 +62,41 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
       body: Column(
         children: [
           Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (value) {
-                // Check if transitioning between camera and non-camera modes
-                final oldUsesCamera = _usesCamera(modes[_currentPage]);
-                final newUsesCamera = _usesCamera(modes[value]);
-                
-                setState(() {
-                  _currentPage = value;
-                  
-                  if (oldUsesCamera && !newUsesCamera) {
-                    _photoCallback = null;
-                    _startVideoRecordingCallback = null;
-                    _stopVideoRecordingCallback = null;
-                  }
-                });
-              },
-              itemCount: modes.length,
-              itemBuilder: (context, index) {
-                return _buildModePage(index);
-              },
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (value) {
+                    // Check if transitioning between camera and non-camera modes
+                    final oldUsesCamera = _usesCamera(modes[_currentPage]);
+                    final newUsesCamera = _usesCamera(modes[value]);
+                    
+                    setState(() {
+                      _currentPage = value;
+                      
+                      if (oldUsesCamera && !newUsesCamera) {
+                        _photoCallback = null;
+                        _startVideoRecordingCallback = null;
+                        _stopVideoRecordingCallback = null;
+                      }
+                    });
+                  },
+                  itemCount: modes.length,
+                  itemBuilder: (context, index) {
+                    return _buildModePage(index);
+                  },
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _buildModeButton(_currentPage)
+                ),
+              ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+            padding: EdgeInsets.all(10),
             child: Column(
-              children: [
+              children: [               
                 ValueListenableBuilder(
                   valueListenable: darkModeNotifier,
                   builder: (context, value, child) {
@@ -122,8 +130,6 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                     );
                   }
                 ),
-                SizedBox(height: 5),               
-                _buildModeButton(_currentPage),
               ],
             ),
           ),

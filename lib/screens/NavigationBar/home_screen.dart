@@ -101,13 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     final album = albums[index];
                 
                     return AlbumGridItem(
-                      coverPath: album.coverPath, 
-                      id: album.id, 
-                      members: album.members, 
-                      mode: album.mode, 
-                      name: album.name, 
-                      notificationsEnabled: album.notificationsEnabled, 
-                      openAt: album.openAt
+                      album: album
                     );
                   }
                 ),
