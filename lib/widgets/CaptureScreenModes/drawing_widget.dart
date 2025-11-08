@@ -63,12 +63,15 @@ class _DrawingWidgetState extends State<DrawingWidget> {
                 _paths.last.add(details.localPosition);
               });
             },
-            child: CustomPaint(
-              painter: DrawingPainter(
-                paths: _paths, 
-                colors: _colors
+            child: RepaintBoundary(
+              key: _canvasKey,
+              child: CustomPaint(
+                painter: DrawingPainter(
+                  paths: _paths, 
+                  colors: _colors
+                ),
+                size: Size.infinite,
               ),
-              size: Size.infinite,
             ),
           ),
         )

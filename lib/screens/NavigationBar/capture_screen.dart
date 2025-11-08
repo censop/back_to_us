@@ -293,26 +293,26 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
           },
         );
       case "Drawing":
-      return CaptureButton(
-        innerCircleColor: Theme.of(context).colorScheme.primary,
-        onTap: () async {
-          if (_saveDrawingCallback == null) return;
+        return CaptureButton(
+          innerCircleColor: Theme.of(context).colorScheme.primary,
+          onTap: () async {
+            if (_saveDrawingCallback == null) return;
 
-          final file = await _saveDrawingCallback!.call();
-          if (file != null && context.mounted) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SaveItemScreen(
-                  type: AlbumItemType.drawing, 
-                  file: file,
+            final file = await _saveDrawingCallback!.call();
+            if (file != null && context.mounted) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SaveItemScreen(
+                    type: AlbumItemType.drawing, 
+                    file: file,
+                  ),
                 ),
-              ),
-            );
-          } else {
-            print("There should be a snackbar regarding this.");
-          }
-        },
-      );
+              );
+            } else {
+              print("There should be a snackbar regarding this.");
+            }
+          },
+        );  
       default:
         return const SizedBox();
     }

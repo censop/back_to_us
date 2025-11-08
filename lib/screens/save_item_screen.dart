@@ -1,7 +1,9 @@
 
 import 'dart:io';
 import 'package:back_to_us/Models/album_item.dart';
+import 'package:back_to_us/Widgets/SaveItemDisplay/drawing_save_display.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/photo_save_display.dart';
+import 'package:back_to_us/Widgets/SaveItemDisplay/text_save_display.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/video_save_display.dart';
 import 'package:back_to_us/Widgets/SaveItemDisplay/voice_save_display.dart';
 import 'package:back_to_us/Widgets/Sheets/select_album_sheet.dart';
@@ -55,21 +57,21 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
             child: _editWidget(type)
           ),
           Padding(
-          padding: EdgeInsets.all(20),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {}, 
-                icon: Icon(Icons.download)
-              ),
-              Spacer(),
-              IconButton(
-                onPressed: _onTapSend, 
-                icon: Icon(Icons.send)
-              ),
-            ],
-          )
-        ),
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {}, 
+                  icon: Icon(Icons.download)
+                ),
+                Spacer(),
+                IconButton(
+                  onPressed: _onTapSend, 
+                  icon: Icon(Icons.send)
+                ),
+              ],
+            )
+          ),
         ],
       )
     );
@@ -84,9 +86,9 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
       case AlbumItemType.voice:
         return VoiceSaveDisplay(file: widget.file);
       case AlbumItemType.drawing:
-        return Text("Placeholder");
+        return DrawingSaveDisplay(file: widget.file);
       case AlbumItemType.text:
-        return Text("Placeholder");
+        return TextSaveDisplay(file: widget.file);
       default:
         return Text("Image not loading");
     }
