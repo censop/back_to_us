@@ -1,6 +1,5 @@
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StackedMemberDisplay extends StatelessWidget {
@@ -15,7 +14,35 @@ class StackedMemberDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
+    
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: displayUsers.length * 30,
+          height: 40,
+          child: Stack(
+            children: displayUsers.asMap().entries.map((entry) {
+              final index = entry.key;
+              final user = entry.value;
+              return Positioned(
+                left: index * 15,
+                child: CustomProfilePictureDisplayer(
+                  radius: 15,
+                  profileUrl: user.profilePic ?? "",
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        if (userLength >3) 
+          Text("+${userLength - 3}")
+      ] 
+    );
+    
+    
+    
+    /*return Wrap(
       alignment: WrapAlignment.center,
       children: [
         ...displayUsers.map((user) {
@@ -30,7 +57,7 @@ class StackedMemberDisplay extends StatelessWidget {
         if (userLength >3) 
           Text("+${userLength - 3}")
       ]
-    );
+    );*/
   }
 }
 

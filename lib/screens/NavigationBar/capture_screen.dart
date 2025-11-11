@@ -67,7 +67,6 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                 PageView.builder(
                   controller: _pageController,
                   onPageChanged: (value) {
-                    // Check if transitioning between camera and non-camera modes
                     final oldUsesCamera = _usesCamera(modes[_currentPage]);
                     final newUsesCamera = _usesCamera(modes[value]);
                     

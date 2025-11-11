@@ -130,7 +130,7 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
                     selectedAlbumId!, 
                     widget.type, 
                     widget.file, 
-                    FirebaseService.currentUser!.uid
+                    FirebaseService.currentUser!
                   );
                   Navigator.of(context).pop(); //you need to perfect this, this is not a good solution you want to pup until the home screen
                   //add a snackbar here

@@ -169,7 +169,7 @@ class _LogInScreenState extends State<LogInScreen> {
         password: password
       );
       
-      loadAppData();
+      await loadAppData();
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home,

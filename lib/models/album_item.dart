@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //will be improved
 enum AlbumItemType { 
@@ -13,7 +14,7 @@ class AlbumItem {
   final String id;               
   final String storagePath;      
   final AlbumItemType type;
-  final String createdBy;        
+  final AppUser createdBy;        
   final DateTime createdAt;       
   final String downloadUrl;
 
@@ -34,7 +35,7 @@ class AlbumItem {
         (e) => e.name == data['type'],
         orElse: () => AlbumItemType.photo,
       ),
-      createdBy: data['createdBy'],
+      createdBy:  AppUser.fromJson(Map<String, dynamic>.from(data['createdBy'] as Map)),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       downloadUrl: data["downloadUrl"]
     );
@@ -44,7 +45,7 @@ class AlbumItem {
     return {
       "storagePath": storagePath,
       "type": type.name,
-      "createdBy": createdBy,
+      "createdBy": createdBy.toJson(),
       "createdAt": createdAt,
       "downloadUrl": downloadUrl,
     };

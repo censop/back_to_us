@@ -38,7 +38,6 @@ class _PhotoWidgetState extends State<PhotoWidget> with WidgetsBindingObserver, 
       if (widget.isVisible) {
         onNewCameraSelected(CameraService.backCamera);
       } else {
-        // Page became invisible, dispose camera
         _controller?.dispose();
         _controller = null;
         if (mounted) {

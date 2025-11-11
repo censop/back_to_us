@@ -251,7 +251,7 @@ class SignUpScreenState extends State<SignUpScreen> {
         isCreatingUser = false;
       });
 
-      loadAppData();
+      await loadAppData();
 
       Navigator.of(
         context,

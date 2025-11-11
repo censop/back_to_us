@@ -56,7 +56,17 @@ class FirebaseService {
     
   }
 
-  static Future<void> addItemToAlbum(String albumId, AlbumItemType type, File file, String createdBy, {String? caption}) async {
+  static Future<AppUser> getAppUserByUid(String uid) async {
+    final doc = await FirebaseFirestore.instance
+    .collection("users")
+    .doc(uid)
+    .get();
+
+    return AppUser.fromJson(doc.data() as Map<String, dynamic>);
+
+  }
+
+  static Future<void> addItemToAlbum(String albumId, AlbumItemType type, File file, AppUser createdBy, {String? caption}) async {
     final docRef = FirebaseFirestore.instance.collection('albums').doc(albumId).collection('items').doc();
 
     final storagePath = 'albums/$albumId/items/${docRef.id}/file.${_getExtension(type)}';
@@ -111,6 +121,22 @@ class FirebaseService {
         return Album.fromJson(doc.id, doc.data());
       }).toList();
     });
+  }
+
+  static Stream<List<AlbumItem>> albumItemsStream(String albumId, bool descending) {
+    if (albumId.isEmpty) {
+      return const Stream.empty();
+    }
+
+    return FirebaseFirestore.instance
+      .collection('albums')
+      .doc(albumId)
+      .collection('items')
+      .orderBy('createdAt', descending: descending)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => AlbumItem.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .toList());
   }
 
   static Stream<List<Map<String, dynamic>>> pendingInvitesStream() {

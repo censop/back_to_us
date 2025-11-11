@@ -21,7 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+
+    final padding = width * 0.05; 
 
     return Scaffold(
       appBar: AppBar(
@@ -84,17 +85,35 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 40),
+            padding: EdgeInsets.symmetric(horizontal: padding, vertical: 40),
             child: Column(
               children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {}, 
+                      icon: Icon(Icons.list)
+                    ),
+                    IconButton(
+                      onPressed: () {}, 
+                      icon: Icon(Icons.grid_view)
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {}, 
+                      icon: Icon(Icons.filter_alt)
+                    ),
+                  ],
+                ),
                 GridView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.65,
-                    crossAxisSpacing: width * 0.15,
-                    mainAxisSpacing: height * 0.01,
+                    childAspectRatio: 1,
+                    crossAxisSpacing: padding,
+                    mainAxisSpacing: padding,
                   ), 
                   itemCount: albums.length,
                   itemBuilder: (context, index) {
