@@ -33,6 +33,8 @@ class _VideoSaveDisplayState extends State<VideoSaveDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    Duration duration = _getDuration();
+
     return FutureBuilder(
       future: _initializeVideoPlayerFuture, 
       builder: (context, snapshot) {
@@ -89,5 +91,10 @@ class _VideoSaveDisplayState extends State<VideoSaveDisplay> {
     });
 
     _videoController!.play(); 
+  }
+
+  Duration _getDuration() {
+    CameraService.videoDuration = _videoController?.value.duration ?? Duration(seconds: 0);
+    return CameraService.videoDuration;
   }
 }

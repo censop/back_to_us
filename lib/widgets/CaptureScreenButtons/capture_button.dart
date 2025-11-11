@@ -21,10 +21,16 @@ class CaptureButton extends StatefulWidget {
 }
 
 class _CaptureButtonState extends State<CaptureButton> {
+  bool _isProcessing = false;
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
+      onTapDown: widget.onTapDown,
+      onTapUp: widget.onTapUp,
+      onTapCancel: widget.onTapCancel,
       child: Stack(
         alignment: Alignment.center,
         children: [

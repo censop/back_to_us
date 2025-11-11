@@ -9,6 +9,7 @@ class CameraService {
   static double minZoom = 1.0;
   static XFile? file;
   static AlbumItemType? type;
+  static Duration videoDuration = Duration(seconds: 0);
 
   // Initialize cameras on app start
   static Future<void> initialize() async {

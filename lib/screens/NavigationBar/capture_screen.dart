@@ -25,6 +25,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   File? capturedFile;
   AlbumItemType? capturedType;
 
+
   Future<XFile?> Function()? _photoCallback;
   Future<void> Function()? _startVideoRecordingCallback;
   Future<XFile?> Function()? _stopVideoRecordingCallback;
@@ -199,27 +200,25 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
       case "Photo":
         return CaptureButton(
           innerCircleColor: Theme.of(context).colorScheme.primary,
-          onTap: _photoCallback == null
-          ? null 
-          : () async {
-              final file = await _photoCallback!();
-              if (file != null) {
-                print("📸 Captured: ${file.path}");
-                CameraService.file = file;
-                capturedFile = File(file.path);
-                CameraService.type = AlbumItemType.photo;
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SaveItemScreen(
-                      type: AlbumItemType.photo,
-                      file: capturedFile!
-                    )
+          onTap: () async {
+            final file = await _photoCallback!();
+            if (file != null) {
+              print("📸 Captured: ${file.path}");
+              CameraService.file = file;
+              capturedFile = File(file.path);
+              CameraService.type = AlbumItemType.photo;
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SaveItemScreen(
+                    type: AlbumItemType.photo,
+                    file: capturedFile!
                   )
-                );
-              } else {
-                print("⚠️ Failed to capture photo.");
-              }
-            },
+                )
+              );
+            } else {
+              print("⚠️ Failed to capture photo.");
+            }
+          },
         );
       case "Video": //make this like snapchat, it records as you press
         return CaptureButton(

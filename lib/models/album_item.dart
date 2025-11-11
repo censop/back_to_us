@@ -17,6 +17,8 @@ class AlbumItem {
   final AppUser createdBy;        
   final DateTime createdAt;       
   final String downloadUrl;
+  final String? thumbnailUrl;
+  final Duration? duration;
 
   AlbumItem({
     required this.id,
@@ -24,7 +26,9 @@ class AlbumItem {
     required this.type,
     required this.createdBy,
     required this.createdAt,
-    required this.downloadUrl
+    required this.downloadUrl,
+    required this.thumbnailUrl,
+    required this.duration
   });
 
   factory AlbumItem.fromMap(String id, Map<String, dynamic> data) {
@@ -37,7 +41,9 @@ class AlbumItem {
       ),
       createdBy:  AppUser.fromJson(Map<String, dynamic>.from(data['createdBy'] as Map)),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      downloadUrl: data["downloadUrl"]
+      downloadUrl: data["downloadUrl"],
+      thumbnailUrl: data["thumbnailUrl"],
+      duration: data['duration'] != null ? Duration(seconds: data['duration']) : null,
     );
   }
 
@@ -48,6 +54,8 @@ class AlbumItem {
       "createdBy": createdBy.toJson(),
       "createdAt": createdAt,
       "downloadUrl": downloadUrl,
+      "thumbnailUrl": thumbnailUrl,
+      "duration" : duration?.inSeconds
     };
   }
 }

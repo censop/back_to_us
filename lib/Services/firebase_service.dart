@@ -66,7 +66,17 @@ class FirebaseService {
 
   }
 
-  static Future<void> addItemToAlbum(String albumId, AlbumItemType type, File file, AppUser createdBy, {String? caption}) async {
+  static Future<void> addItemToAlbum(
+    String albumId, 
+    AlbumItemType type, 
+    File file, 
+    AppUser createdBy, 
+    File? thumbnail,
+    Duration? duration,
+    {String? caption}
+  ) async {
+    String? thumbnailUrl;
+
     final docRef = FirebaseFirestore.instance.collection('albums').doc(albumId).collection('items').doc();
 
     final storagePath = 'albums/$albumId/items/${docRef.id}/file.${_getExtension(type)}';
@@ -75,13 +85,22 @@ class FirebaseService {
 
     final downloadUrl = await uploadTask.ref.getDownloadURL();
 
+    if (thumbnail != null) {
+      final thumbRef = FirebaseStorage.instance
+        .ref('albums/$albumId/items/${docRef.id}/thumb.jpg');
+      await thumbRef.putFile(thumbnail, SettableMetadata(contentType: 'image/jpeg'));
+      thumbnailUrl = await thumbRef.getDownloadURL();
+    }
+
     final newItem = AlbumItem(
       id: docRef.id,
       storagePath: storagePath, 
       type: type,
       createdBy: createdBy,
       createdAt: DateTime.now(),
-      downloadUrl: downloadUrl
+      downloadUrl: downloadUrl,
+      thumbnailUrl: thumbnailUrl,
+      duration: duration,
     );
     
     await docRef.set(newItem.toMap());

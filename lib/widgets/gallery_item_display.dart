@@ -34,6 +34,30 @@ class _GalleryItemDisplayState extends State<GalleryItemDisplay> {
             ),
           ),
         ),
+        widget.item.duration != 0 && widget.item.duration != null 
+        ? Padding(
+          padding: const EdgeInsets.all(5),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child:  Container(
+              height: 15,
+              width: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: const Color.fromARGB(146, 26, 26, 26),
+              ),
+              child: Center(
+                child: Text(
+                 "${widget.item.duration!.inMinutes.toString().padLeft(2, "0")}:${widget.item.duration!.inSeconds.toString().padLeft(2, "0")}",
+                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 10
+                 )
+                ),
+              ),
+            ),
+          ),
+        )
+        : SizedBox(),
         Padding(
           padding: const EdgeInsets.all(5),
           child: Align(
@@ -57,7 +81,12 @@ class _GalleryItemDisplayState extends State<GalleryItemDisplay> {
           fit: BoxFit.cover,
         );
       case AlbumItemType.video:
-        return Icon(Icons.video_camera_back);
+        return item.thumbnailUrl != null
+        ? Image.network(
+          item.thumbnailUrl!,
+          fit: BoxFit.cover,
+        )
+        : Icon(Icons.video_camera_back);
       case AlbumItemType.voice:
         return Icon(Icons.mic);
       case AlbumItemType.text:

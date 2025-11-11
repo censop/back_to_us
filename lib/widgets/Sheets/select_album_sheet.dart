@@ -1,13 +1,13 @@
 import 'dart:io';
-
 import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/custom_album_preview.dart';
-import 'package:back_to_us/routes.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart' as vt;
+
 
 class SelectAlbumSheet extends StatefulWidget {
   const SelectAlbumSheet({
@@ -126,11 +126,17 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
             child: ElevatedButton(
               onPressed: () async {
                 if (selectedAlbumId != null && FirebaseService.currentUser != null) {
+
+                  final File? thumbnail = await _getThumbnail();
+                  final Duration? duration = _getDuration();
+
                   await FirebaseService.addItemToAlbum(
                     selectedAlbumId!, 
                     widget.type, 
                     widget.file, 
-                    FirebaseService.currentUser!
+                    FirebaseService.currentUser!,
+                    thumbnail,
+                    duration,
                   );
                   Navigator.of(context).pop(); //you need to perfect this, this is not a good solution you want to pup until the home screen
                   //add a snackbar here
@@ -148,5 +154,35 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
         ],
       ),
     );
+  }
+
+  //FOR THESE GETS, THINK OF VOICE MEMO AS WELL
+  Future<File?> _getThumbnail() async {
+    if (widget.type == AlbumItemType.video) { 
+      try {
+      final tempDir = await getTemporaryDirectory();
+      final thumbPath = await vt.VideoThumbnail.thumbnailFile(
+        video: widget.file.path,
+        thumbnailPath: tempDir.path,
+        imageFormat: vt.ImageFormat.JPEG,
+        maxHeight: 200, 
+        quality: 80,
+      );
+
+      if (thumbPath == null) return null;
+      return File(thumbPath);
+      } catch (e) {
+        print('❌ Error generating thumbnail: $e');
+        return null;
+      }
+    }
+    return null;
+  }
+
+  Duration? _getDuration() {
+    if (widget.type == AlbumItemType.video) {
+      return CameraService.videoDuration;
+    }
+    return null;
   }
 }
