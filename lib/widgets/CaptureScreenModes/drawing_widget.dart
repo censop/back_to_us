@@ -65,12 +65,15 @@ class _DrawingWidgetState extends State<DrawingWidget> {
             },
             child: RepaintBoundary(
               key: _canvasKey,
-              child: CustomPaint(
-                painter: DrawingPainter(
-                  paths: _paths, 
-                  colors: _colors
+              child: Container(
+                color: Colors.white,
+                child: CustomPaint(
+                  painter: DrawingPainter(
+                    paths: _paths, 
+                    colors: _colors
+                  ),
+                  size: Size.infinite,
                 ),
-                size: Size.infinite,
               ),
             ),
           ),

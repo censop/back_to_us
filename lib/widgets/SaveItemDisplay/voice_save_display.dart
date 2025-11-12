@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:back_to_us/Services/voice_service.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -37,6 +38,8 @@ class _VoiceSaveDisplayState extends State<VoiceSaveDisplay> {
         _player.seek(Duration.zero);
       }
     });
+
+    _getDuration();
   }
 
   @override
@@ -67,4 +70,20 @@ class _VoiceSaveDisplayState extends State<VoiceSaveDisplay> {
       await _player.stop();
     }
   }
+
+  Future<void> _getDuration() async {
+    try {
+      await _player.setFilePath(widget.file.path);
+      final duration = _player.duration;
+      
+      if (duration != null) {
+        VoiceService.voiceDuration = duration;
+        debugPrint("Audio duration: ${duration.inSeconds} seconds");
+      }
+    } catch (e) {
+      debugPrint("Error getting audio duration: $e");
+    }
+  }
+
 }
+

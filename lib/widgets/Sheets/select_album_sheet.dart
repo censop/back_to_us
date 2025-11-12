@@ -3,6 +3,7 @@ import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Services/voice_service.dart';
 import 'package:back_to_us/Widgets/custom_album_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -183,6 +184,9 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
     if (widget.type == AlbumItemType.video) {
       return CameraService.videoDuration;
     }
+    else if (widget.type == AlbumItemType.voice) {
+      return VoiceService.voiceDuration;
+    } 
     return null;
   }
 }

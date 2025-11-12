@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
+Uuid uuid = Uuid();
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -16,24 +18,22 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class SignUpScreenState extends State<SignUpScreen> {
-  CollectionReference users = FirebaseFirestore.instance.collection("users");
+  final CollectionReference users = FirebaseFirestore.instance.collection("users");
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isCreatingUser = false;
-
-   bool isLoading = false;
+  bool isLoading = false;
 
   ValueNotifier<bool> seePassword = ValueNotifier(true);
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
+
   String? emailError;
   String? passwordError;
   String? usernameError;
-  
-  Uuid uuid = Uuid();
 
   @override
   void dispose() {
@@ -115,29 +115,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                    ),
-                    onPressed: () {
-                      if (isCreatingUser) {
-                      } else {
-                        if (_formKey.currentState!.validate()) {
-                          _signUp(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                            username: _usernameController.text,
-                          );
-                        }
-                      }
-                    },
-                    child: Text(
-                      "Sign Up",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelLarge,
-                    ),
-                  ),
+                  isCreatingUser
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _onSignUpPressed,
+                          child: Text(
+                            "Sign Up",
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
                   SizedBox(height: 10),
                   /*TODO add terms and conditions page, add checkbox
                   TextButton(
@@ -165,31 +151,69 @@ class SignUpScreenState extends State<SignUpScreen> {
   }
 
   String? validatePassword(value) {
-    if (value == null || value.isEmpty || value.length < 6) {
-      //TODO add uppercase and special char requirements
+    if (value == null || value.isEmpty) {
+      passwordError = "Password cannot be empty.";
+      return passwordError;
+    }
+    if (value.length < 6) {
       passwordError = "Password should have at least 6 characters.";
       return passwordError;
     }
+
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      passwordError = "Password must contain at least one uppercase letter.";
+      return passwordError;
+    }
+
+    if (!RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      passwordError = "Password must contain at least one special character.";
+      return passwordError;
+    }
+
     passwordError = null;
     return passwordError;
   }
 
-  String? validateEmail(value) {
-    if (value == null || value.isEmpty || !value.contains("@")) {
-      emailError = "Enter a valid e-mail.";
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      emailError = "E-mail cannot be empty.";
       return emailError;
     }
+
+    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) {
+      emailError = "Enter a valid e-mail address.";
+      return emailError;
+    }
+
     emailError = null;
-    return emailError;
+    return null;
   }
 
-  String? validateUsername(value) {
-    if (value.length == 0) {
+  String? validateUsername(String? value) {
+    if (value == null || value.trim().isEmpty) {
       usernameError = "Enter a valid username.";
       return usernameError;
     }
+
+    if (value.trim().length > 30) {
+      usernameError = "Username cannot exceed 30 characters.";
+      return usernameError;
+    }
+
     usernameError = null;
-    return usernameError;
+    return null;
+  }
+
+  void _onSignUpPressed() {
+    if (isCreatingUser) return;
+
+    if (_formKey.currentState!.validate()) {
+      _signUp(
+        email: _emailController.text.trim(), // ✅ trimmed
+        password: _passwordController.text.trim(),
+        username: _usernameController.text.trim(),
+      );
+    }
   }
 
   //signs up users when sign up button is pressed:
