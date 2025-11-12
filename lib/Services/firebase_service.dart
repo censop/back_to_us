@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 
 class FirebaseService {
@@ -27,6 +28,67 @@ class FirebaseService {
       }
     }
   }
+
+  static Future<AppUser?> signUpUser({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
+    try {
+      final userCreds = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      final codeRef = FirebaseFirestore.instance.collection('friendInviteIds');
+
+      String friendInviteId = await _generateUniqueId(codeRef);
+
+      final newUser = AppUser(
+        uid: userCreds.user!.uid,
+        email: email,
+        username: username,
+        createdAt: Timestamp.now(),
+        friendInviteId: friendInviteId,
+      );
+
+      await codeRef.doc(friendInviteId).set({
+        "uid": userCreds.user!.uid,
+        "active": true,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userCreds.user!.uid)
+          .set(newUser.toJson());
+
+      currentUser = newUser;
+
+      return newUser;
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth error: ${e.code}");
+      rethrow;
+    } catch (e) {
+      print("Signup error: $e");
+      rethrow;
+    }
+  }
+
+  static Future<String> _generateUniqueId(CollectionReference codeRef) async {
+    final uuid = Uuid();
+    String id = uuid.v4();
+    bool exists = true;
+
+    while (exists) {
+      final check = await codeRef.doc(id).get();
+      if (check.exists) {
+        id = uuid.v4();
+      } else {
+        exists = false;
+      }
+    }
+    return id;
+  }
+
 
   static void logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();

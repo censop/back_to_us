@@ -6,9 +6,6 @@ import 'package:back_to_us/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
-
-Uuid uuid = Uuid();
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -118,7 +115,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                   isCreatingUser
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
-                          onPressed: _onSignUpPressed,
+                          onPressed: () {
+                            setState(() {
+                              _onSignUpPressed();
+                            });
+                          },
                           child: Text(
                             "Sign Up",
                             style: Theme.of(context).textTheme.labelLarge,
@@ -209,127 +210,63 @@ class SignUpScreenState extends State<SignUpScreen> {
 
     if (_formKey.currentState!.validate()) {
       _signUp(
-        email: _emailController.text.trim(), // ✅ trimmed
+        email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
         username: _usernameController.text.trim(),
       );
     }
   }
 
-  //signs up users when sign up button is pressed:
   Future<void> _signUp({
-    required email,
-    required password,
-    required username,
+    required String email,
+    required String password,
+    required String username,
   }) async {
-    if (email == null || password == null) {
-      return;
-    }
-
     try {
-      //authenticate user
-      final userCreds = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      setState(() => isCreatingUser = true);
 
-      final codeRef = FirebaseFirestore.instance.collection('friendInviteIds');
-
-      await userCreds.user?.updateDisplayName(username);
-      await userCreds.user?.reload();
-
-      setState(() {
-        isCreatingUser = true;
-      });
-
-      String friendInviteId = uuid.v4();
-
-      bool exists = true;
-    while (exists) {
-      final check = await codeRef.doc(friendInviteId).get();
-      if (check.exists) {
-        friendInviteId = uuid.v4();
-      } else {
-        exists = false;
-      }
-    }
-
-      final newUser = AppUser(
-        uid: userCreds.user!.uid,
+      await FirebaseService.signUpUser(
         email: email,
+        password: password,
         username: username,
-        createdAt: Timestamp.now(),
-        friendInviteId: friendInviteId,
       );
-
-      
-
-      await codeRef.doc(friendInviteId).set({
-        "uid" : userCreds.user!.uid,
-        "active" : true,
-        "createdAt": FieldValue.serverTimestamp(),
-      });
-
-
-      //upload user to data base
-      users.doc(userCreds.user!.uid).set(newUser.toJson());
-      setState(() {
-        isCreatingUser = false;
-      });
 
       await loadAppData();
 
-      Navigator.of(
-        context,
-      ).pushNamedAndRemoveUntil(
-        Routes.home, (Route<dynamic> route) => false
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.home,
+        (route) => false,
       );
-
-      setState(() {
-        emailError = null;
-        passwordError = null;
-      });
     } on FirebaseAuthException catch (e) {
-      //TODO Exception Codes: email-already-in-use, invalid-email, operation-not-allowed ????, weak-password
-      setState(() {
-        isCreatingUser = false;
-      });
+      setState(() => isCreatingUser = false);
 
-      if (e.code == "email-already-in-use") {
-        setState(() {
-          emailError = "E-mail is already in use.";
-        });
-        return;
-      } else if (e.code == "invalid-email") {
-        setState(() {
-          emailError = "Enter a valid e-mail.";
-        });
-        return;
+      switch (e.code) {
+        case "email-already-in-use":
+          setState(() => emailError = "E-mail is already in use.");
+          break;
+        case "invalid-email":
+          setState(() => emailError = "Enter a valid e-mail.");
+          break;
+        case "weak-password":
+          setState(() => passwordError = "Password should have at least 6 characters.");
+          break;
+        default:
+          ScaffoldMessenger.of(context).showSnackBar(
+            customSnackbar(
+              content: const Text("Unexpected error. Please try again later."),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
       }
-      if (e.code == "weak-password") {
-        setState(() {
-          passwordError == "Password should have at least 6 characters.";
-        });
-        return;
-      } else {
-        //unexpected error veriyor
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackbar(
-            content: Text("Unexpected error. Please try again later."),
-            backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-          ),
-        );
-      }
+    } finally {
+      if (mounted) setState(() => isCreatingUser = false);
     }
   }
 
   Future<void> loadAppData() async {
-    setState(() {
-      isLoading = true;
-    });
-    //you should fix this
-    await Future.delayed(Duration(milliseconds: 500));
+    setState(() => isLoading = true);
     await FirebaseService.getAppUser();
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) setState(() => isLoading = false);
   }
 }

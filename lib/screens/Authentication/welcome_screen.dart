@@ -47,10 +47,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(height:20,),
               ElevatedButton(
                 onPressed: _onSelectLogIn, 
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  
-                ),
                 child: Text(
                   "Log In",
                   style: Theme.of(context).textTheme.labelLarge
