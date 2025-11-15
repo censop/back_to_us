@@ -130,6 +130,7 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
 
                   final File? thumbnail = await _getThumbnail();
                   final Duration? duration = _getDuration();
+                  final String? textContent = await _getTextContent();
 
                   await FirebaseService.addItemToAlbum(
                     selectedAlbumId!, 
@@ -138,6 +139,7 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
                     FirebaseService.currentUser!,
                     thumbnail,
                     duration,
+                    textContent
                   );
                   Navigator.of(context).pop(); //you need to perfect this, this is not a good solution you want to pup until the home screen
                   //add a snackbar here
@@ -188,5 +190,18 @@ class _SelectAlbumSheetState extends State<SelectAlbumSheet> {
       return VoiceService.voiceDuration;
     } 
     return null;
+  }
+
+  Future<String?> _getTextContent() async {
+    if (widget.type != AlbumItemType.text) {
+      return null;
+    }
+    try {
+      String content = await widget.file.readAsString();
+      return content.trim();
+    } catch (e) {
+      print('❌ Error reading text file content: $e');
+      return null;
+    }
   }
 }

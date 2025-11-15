@@ -18,13 +18,9 @@ class _AccountSettingsScreennState extends State<AccountSettingsScreenn> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text(
           "Account Settings",
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: ListView(
         children: [

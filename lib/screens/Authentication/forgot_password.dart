@@ -26,34 +26,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     super.dispose();
   }
 
-  Future<void> _sendEmail() async {
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
-      ScaffoldMessenger.of(context).showSnackBar(
-        customSnackbar(
-          content: Text("New password request is sent, Check your inbox."),
-          backgroundColor: Theme.of(context).colorScheme.secondary
-        ),
-      );
-      setState(() {
-        emailError = null;
-      });
-    }
-    on FirebaseAuthException catch (e) {
-      print(e.message);
-      setState(() {
-        emailError = "Try another e-mail.";
-      });
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Forgot Password"),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -71,28 +48,38 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             errorText: emailError,
           ),
           SizedBox(height: 10),
-          ValueListenableBuilder(
-            valueListenable: darkModeNotifier,
-            builder: (context, value, child) {
-              return ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: darkModeNotifier.value ? const Color.fromARGB(255, 130, 14, 42) : Theme.of(context).colorScheme.primary,
-                ),
-                onPressed: () async {
-                  await _sendEmail();
-                }, 
-                child: Text(
-                  "Reset Password",
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Colors.white
-                  ),
-                ),
-              );
-            }
+          ElevatedButton(
+            onPressed: () async {
+              await _sendEmail();
+            }, 
+            child: Text(
+              "Reset Password",
+            ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _sendEmail() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        customSnackbar(
+          content: Text("New password request is sent. Check your inbox."),
+          backgroundColor: Theme.of(context).colorScheme.secondary
+        ),
+      );
+      setState(() {
+        emailError = null;
+      });
+    }
+    on FirebaseAuthException catch (e) {
+      print(e.message);
+      setState(() {
+        emailError = "Try another e-mail.";
+      });
+    }
   }
 }
 

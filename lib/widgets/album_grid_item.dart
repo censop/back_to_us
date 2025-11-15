@@ -57,7 +57,7 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(_radius),
                   gradient: LinearGradient(
-                    colors: [const Color.fromARGB(255, 0, 0, 0), Colors.transparent],
+                    colors: [const Color.fromARGB(255, 27, 26, 26), Colors.transparent],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter
                   )
@@ -100,12 +100,14 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
                           if (!snapshot.hasData) {
                             return SizedBox();
                           }
-
-                          print(snapshot.data);
-
                           final itemlength = snapshot.data!.length;
 
-                          return Text("$itemlength memories");
+                          return Text(
+                            "$itemlength",
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 228, 223, 223)
+                            ),
+                          );
                         }
                       )
                     ],

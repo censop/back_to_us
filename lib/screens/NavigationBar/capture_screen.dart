@@ -54,11 +54,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text("Back\nTo\nUs"),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Column(
         children: [

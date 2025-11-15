@@ -33,12 +33,8 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         automaticallyImplyLeading: false,
         title: Text("Back\nTo\nUs"),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Column(
         children: [
@@ -54,7 +50,9 @@ class _SaveItemScreenState extends State<SaveItemScreen> {
             ],
           ),
           Expanded(
-            child: _editWidget(type)
+            child: Container(
+              child: _editWidget(type)
+            )
           ),
           Padding(
             padding: EdgeInsets.all(20),

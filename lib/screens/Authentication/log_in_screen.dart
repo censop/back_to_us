@@ -20,9 +20,11 @@ class _LogInScreenState extends State<LogInScreen> {
   ValueNotifier<bool> seePassword = ValueNotifier(true);
 
   bool isLoading = false;
+  bool isLoggingIn = false;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   String? emailError; 
   String? passwordError;
 
@@ -37,9 +39,7 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:isLoading 
-      ? Center(child: CircularProgressIndicator())
-      : SafeArea(
+      body:SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Form(
@@ -92,30 +92,29 @@ class _LogInScreenState extends State<LogInScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                    ),
-                    onPressed: () {
-                      //validating the form before attempting to login
-                    if (_formKey.currentState!.validate()){
-                      _logIn(email: _emailController.text, password: _passwordController.text);
-                    }
-                    }, 
-                    child: Text(
-                      "Log In",
-                      style: Theme.of(context).textTheme.labelLarge
-                    ),
-                  ),
-                  SizedBox(height:10),
                   TextButton(
                     onPressed: () {
                       FirebaseService.forgotPassword(context);
                     }, 
                     child: Text("Forgot password?")
                   ),
-                  SizedBox(height: 60),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()){
+                        _onLoginPressed();
+                      }
+                    }, 
+                    child: Text(
+                      "Log In",
+                      style: Theme.of(context).textTheme.labelLarge
+                    ),
+                  ),
+                  Divider(
+                    height: 40,
+                    indent: 50,
+                    endIndent: 50,
+                  ),
                   Text(
                     "Don't have an account yet?",
                     style: Theme.of(context).textTheme.bodyMedium,
@@ -138,86 +137,69 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   String? validatePassword(value) {
-    if (value == null || value.isEmpty || value.length <6) { //TODO add uppercase and special char requirements
-      passwordError = "Password should have at least 6 characters.";
-      return passwordError;
-    }
-    passwordError = null;
-    return passwordError;
+    if (value == null || value.isEmpty) return "Password cannot be empty.";
+    passwordError = null; 
+    return null;
   }
 
-  String? validateEmail(value) {
-    if (value == null || value.isEmpty || !value.contains("@")) {
-      emailError = "Enter a valid e-mail.";
-      return emailError;
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) return "E-mail cannot be empty.";
+    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) {
+      return "Enter a valid e-mail address.";
     }
+
     emailError = null;
-    return emailError;
-
+    return null;
   }
 
-    //signs up users when sign up button is pressed:
-  Future<void> _logIn({required email, required password}) async {
+  void _onLoginPressed() {
+    if (isLoggingIn) return;
+      _loginUser();
+  }
 
-    if (email == null || password == null ) {
-      return;
-    }
-
+  Future<void> _loginUser() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email, 
-        password: password
-      );
-      
-      await loadAppData();
+      setState(() => isLoggingIn = true);
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        Routes.home,
-        (Route<dynamic> route) => false,
+      await FirebaseService.loginUser(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
 
-      setState(() {
-        emailError = null;
-        passwordError = null;
-      });
-
-    }    
-
-    on FirebaseAuthException catch (e) {  //Exception Codes: wrong-password, invalid-email, user-disabled, user-not-found
-      if (e.code == "user-not-found") {
-        setState(() {
-          emailError = "User doesn't exist."; 
-        });
-        return;
-      } 
-      else if (e.code == "invalid-email") {
-        setState(() {
-          emailError = "Enter a valid e-mail.";
-        });
-        return;
-      }
-      if (e.code == "wrong-password") {
-        setState(() {
-          passwordError = "Password is wrong.";
-        });
-        return;
-      }
-      else { 
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackbar(
-            content: Text("Unexpected error. Please try again later."), 
-            backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer
-          ),
-        );  
-      }
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (r) => false);
+    } on FirebaseAuthException catch (e) {
+      setState(() => isLoggingIn = false);
+      switch (e.code) {
+        case "user-not-found":
+        case "wrong-password": 
+        case "invalid-credential":
+          final String genericError = "Please check your email and password.";
+          setState(() {
+          emailError = genericError;
+          passwordError = genericError;
+          });
+          break;
+        case "invalid-email":
+          setState(() => emailError = "Enter a valid e-mail.");
+          break;
+        default:
+          ScaffoldMessenger.of(context).showSnackBar(
+            customSnackbar(
+              content: const Text("Unexpected error. Please try again later."),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+    } finally {
+      if (mounted) setState(() => isLoggingIn = false);
     }
   }
+
   Future<void> loadAppData() async {
     setState(() {
       isLoading = true;
     });
-    //you should fix this
-    await Future.delayed(Duration(milliseconds: 500));
     await FirebaseService.getAppUser();
     setState(() {
       isLoading = false;

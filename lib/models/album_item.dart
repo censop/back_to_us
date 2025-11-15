@@ -10,6 +10,7 @@ enum AlbumItemType {
     drawing, 
 }
 
+
 class AlbumItem {
   final String id;               
   final String storagePath;      
@@ -19,6 +20,8 @@ class AlbumItem {
   final String downloadUrl;
   final String? thumbnailUrl;
   final Duration? duration;
+  final String? textContent;
+  //final String? caption;
 
   AlbumItem({
     required this.id,
@@ -28,7 +31,9 @@ class AlbumItem {
     required this.createdAt,
     required this.downloadUrl,
     required this.thumbnailUrl,
-    required this.duration
+    required this.duration,
+    required this.textContent,
+    //required this.caption,
   });
 
   factory AlbumItem.fromMap(String id, Map<String, dynamic> data) {
@@ -44,6 +49,8 @@ class AlbumItem {
       downloadUrl: data["downloadUrl"],
       thumbnailUrl: data["thumbnailUrl"],
       duration: data['duration'] != null ? Duration(seconds: data['duration']) : null,
+      textContent: data['textContent'] as String?,
+      //caption: data["caption"] as String?,
     );
   }
 
@@ -55,7 +62,9 @@ class AlbumItem {
       "createdAt": createdAt,
       "downloadUrl": downloadUrl,
       "thumbnailUrl": thumbnailUrl,
-      "duration" : duration?.inSeconds
+      "duration" : duration?.inSeconds,
+      "textContent": textContent,
+      //"caption": caption,
     };
   }
 }

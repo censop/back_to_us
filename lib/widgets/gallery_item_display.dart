@@ -1,10 +1,6 @@
-import 'dart:io';
-
 import 'package:back_to_us/Models/album_item.dart';
-import 'package:back_to_us/Services/cache_service.dart';
 import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 class GalleryItemDisplay extends StatefulWidget {
   const GalleryItemDisplay({
@@ -86,31 +82,20 @@ class _GalleryItemDisplayState extends State<GalleryItemDisplay> {
       case AlbumItemType.voice:
         return Icon(Icons.mic);
       case AlbumItemType.text:
-        return FutureBuilder(
-          future: CacheService.loadTextFromUrlWithCache(item.downloadUrl, item.id), 
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            }
-
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text("Empty note"));
-            }
-            final text = snapshot.data!;
-            return Container(
-              color: const Color.fromARGB(255, 20, 20, 20),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                text.length > 100 ? "${text.substring(0, 100)}..." : text,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                  height: 1.3,
-                ),
-                overflow: TextOverflow.fade,
-              ),
-            );
-          }
+        return Container(
+          color: const Color.fromARGB(255, 20, 20, 20),
+          padding: const EdgeInsets.all(10),
+          child: item.textContent != null 
+          ? Text(
+            item.textContent!.length > 100 ? "${item.textContent!.substring(0, 100)}..." : item.textContent!,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+              height: 1.3,
+            ),
+            overflow: TextOverflow.fade,
+          )
+          : Icon(Icons.text_fields)
         );
       case AlbumItemType.drawing:
         return Image.network(

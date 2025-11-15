@@ -35,13 +35,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text(
           "Edit Profile",
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
 
       body: ListView(

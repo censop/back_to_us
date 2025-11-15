@@ -1,6 +1,7 @@
 import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Models/app_user.dart';
+import 'package:back_to_us/Screens/AlbumRelated/fullscreen_viewer_screen.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/gallery_item_display.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,9 @@ class _AlbumGalleryScreenState extends State<AlbumGalleryScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text(
           "Back\nTo\nUs",
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Column(
         children: [
@@ -75,7 +72,20 @@ class _AlbumGalleryScreenState extends State<AlbumGalleryScreen> {
                   itemBuilder: (context, index) {
                     AlbumItem item = items[index];
 
-                    return GalleryItemDisplay(item: item);
+                    return GestureDetector(
+                      onTap:() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FullscreenViewerScreen(
+                                items: items,
+                                initialIndex: index, 
+                              ),
+                            ),
+                          );
+                        },
+                      child: GalleryItemDisplay(item: item),
+                    );
                   }
                 );
 

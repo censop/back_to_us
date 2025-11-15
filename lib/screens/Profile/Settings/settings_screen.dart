@@ -18,13 +18,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text(
           "Settings",
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),

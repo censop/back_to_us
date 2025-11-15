@@ -79,13 +79,9 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text(
           "Create an Album",
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           CustomProfilePictureDisplayer(
             radius: 30,
@@ -383,13 +379,16 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         "createdAt": FieldValue.serverTimestamp(),
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        customSnackbar(
-          content: Text("Album is created successfully."), 
-          backgroundColor: Theme.of(context).colorScheme.primary
-        )
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          customSnackbar(
+            content: Text("Album is created successfully."), 
+            backgroundColor: Theme.of(context).colorScheme.primary
+          )
+        );
+      }
 
+      
       Navigator.of(context).pop();
     }
   }

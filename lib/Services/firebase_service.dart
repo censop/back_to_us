@@ -89,6 +89,24 @@ class FirebaseService {
     return id;
   }
 
+  static Future<void> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      await getAppUser(); 
+    } on FirebaseAuthException {
+      rethrow;
+    } catch (e) {
+      print("Login error: $e");
+      rethrow;
+    }
+  }
+
 
   static void logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
@@ -135,6 +153,7 @@ class FirebaseService {
     AppUser createdBy, 
     File? thumbnail,
     Duration? duration,
+    String? textContent,
     {String? caption}
   ) async {
     String? thumbnailUrl;
@@ -163,6 +182,7 @@ class FirebaseService {
       downloadUrl: downloadUrl,
       thumbnailUrl: thumbnailUrl,
       duration: duration,
+      textContent: textContent,
     );
     
     await docRef.set(newItem.toMap());

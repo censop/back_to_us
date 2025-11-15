@@ -1,4 +1,5 @@
 
+import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/app_user.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
 import 'package:back_to_us/Widgets/album_grid_item.dart';
@@ -27,13 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
         title: Text(
           "Back\nTo\nUs",
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           CustomProfilePictureDisplayer(
             radius: 30,
@@ -84,7 +81,84 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
 
-          return SingleChildScrollView(
+          final availableAlbums = albums.where((album) => album.isOpen).toList();
+          final unavailableAlbums = albums.where((album) => !album.isOpen).toList();
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {}, 
+                        icon: Icon(Icons.list)
+                      ),
+                      IconButton(
+                        onPressed: () {}, 
+                        icon: Icon(Icons.grid_view)
+                      ),
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {}, 
+                        icon: Icon(Icons.filter_alt)
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Unlocked Memories",
+                        style: Theme.of(context).textTheme.titleLarge
+                      ),
+                      Expanded(
+                        child: Divider(
+                          height: 40,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildGrid(availableAlbums, padding),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Locked Memories",
+                        style: Theme.of(context).textTheme.titleLarge
+                      ),
+                      Expanded(
+                        child: Divider(
+                          height: 40,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildGrid(unavailableAlbums, padding)
+                ],
+              ),
+            ),
+          );
+
+
+
+          /*return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: padding, vertical: 40),
             child: Column(
               children: [
@@ -131,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-          );
+          ); */
         }
       ),
     );
@@ -140,6 +214,32 @@ class _HomeScreenState extends State<HomeScreen> {
   void _clickCreateIcon() {
     Navigator.of(context).pushNamed(
       Routes.createAlbum
+    );
+  }
+
+  Widget _buildGrid(List<Album> items, double padding) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.35,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1,
+            crossAxisSpacing: padding,
+            mainAxisSpacing: padding,
+          ), 
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            final album = items[index];
+        
+            return AlbumGridItem(
+              album: album
+            );
+          }
+        ),
+      ),
     );
   }
 }
