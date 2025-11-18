@@ -51,86 +51,80 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: Text("Back\nTo\nUs"),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (value) {
-                    final oldUsesCamera = _usesCamera(modes[_currentPage]);
-                    final newUsesCamera = _usesCamera(modes[value]);
+    return Column(
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              PageView.builder(
+                controller: _pageController,
+                onPageChanged: (value) {
+                  final oldUsesCamera = _usesCamera(modes[_currentPage]);
+                  final newUsesCamera = _usesCamera(modes[value]);
+                  
+                  setState(() {
+                    _currentPage = value;
                     
-                    setState(() {
-                      _currentPage = value;
-                      
-                      if (oldUsesCamera && !newUsesCamera) {
-                        _photoCallback = null;
-                        _startVideoRecordingCallback = null;
-                        _stopVideoRecordingCallback = null;
-                      }
-                    });
-                  },
-                  itemCount: modes.length,
-                  itemBuilder: (context, index) {
-                    return _buildModePage(index);
-                  },
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: _buildModeButton(_currentPage)
-                ),
-              ],
-            ),
+                    if (oldUsesCamera && !newUsesCamera) {
+                      _photoCallback = null;
+                      _startVideoRecordingCallback = null;
+                      _stopVideoRecordingCallback = null;
+                    }
+                  });
+                },
+                itemCount: modes.length,
+                itemBuilder: (context, index) {
+                  return _buildModePage(index);
+                },
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildModeButton(_currentPage)
+              ),
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [               
-                ValueListenableBuilder(
-                  valueListenable: darkModeNotifier,
-                  builder: (context, value, child) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(modes.length, (index) {
-                        final isActive = _currentPage == index;
-                        return GestureDetector(
-                          onTap: () {
-                            _pageController.animateToPage(
-                              index,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(
-                              modes[index].toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: value 
-                                  ? (isActive ? Colors.white : Colors.white54) 
-                                  : (isActive ? Colors.black : const Color.fromARGB(255, 123, 123, 123)),
-                                fontSize: isActive ? 18 : 14,
-                                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                              ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [               
+              ValueListenableBuilder(
+                valueListenable: darkModeNotifier,
+                builder: (context, value, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(modes.length, (index) {
+                      final isActive = _currentPage == index;
+                      return GestureDetector(
+                        onTap: () {
+                          _pageController.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            modes[index].toUpperCase(),
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: value 
+                                ? (isActive ? Colors.white : Colors.white54) 
+                                : (isActive ? Colors.black : const Color.fromARGB(255, 123, 123, 123)),
+                              fontSize: isActive ? 18 : 14,
+                              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                             ),
                           ),
-                        );
-                      }),
-                    );
-                  }
-                ),
-              ],
-            ),
+                        ),
+                      );
+                    }),
+                  );
+                }
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

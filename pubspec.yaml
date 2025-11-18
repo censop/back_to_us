@@ -104,6 +104,9 @@ flutter:
           weight: 500
         - asset: fonts/Poppins-SemiBold.ttf
           weight: 600
+    - family: Inter
+      fonts:
+        - asset: fonts/Inter-VariableFont_opsz,wght.ttf
 
   #   - family: Trajan Pro
   #     fonts:

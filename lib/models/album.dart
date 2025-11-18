@@ -3,12 +3,11 @@ import 'package:back_to_us/Models/album_mode.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-//to be improved
-
 class Album {
   final String id;                  // Firestore doc ID
   final String name;                // Album name
   final AlbumMode mode;             // Single / Couple / Friends / Friends+
+  final String owner;               // Owner UID (Added this)
   final List<String> members;       // List of UIDs who can access
   final String coverPath;           // Storage path to cover photo
   final DateTime openAt;            // When album unlocks
@@ -20,6 +19,7 @@ class Album {
     required this.id,
     required this.name,
     required this.mode,
+    required this.owner, // Required in constructor
     required this.members,
     required this.coverPath,
     required this.openAt,
@@ -71,16 +71,17 @@ class Album {
       parts.add("$minutes minute${minutes == 1 ? '' : 's'}");
     }
 
-    return parts.isEmpty ? "Less than a minute" : "${parts.join(', ')}";
+    return parts.isEmpty ? "Less than a minute" : parts.join(', ');
   }
 
   factory Album.fromJson(String id, Map<String, dynamic> data, [List<AlbumItem> items = const []]) {
     return Album(
       id: id,
-      name: data['name'],
-      mode: AlbumMode.fromName(data['mode']),
-      members: List<String>.from(data['members']),
-      coverPath: data['coverPath'],
+      name: data['name'] ?? '',
+      mode: AlbumMode.fromName(data['mode'] ?? 'single'),
+      owner: data['owner'] ?? '', // Added parsing
+      members: List<String>.from(data['members'] ?? []),
+      coverPath: data['coverPath'] ?? '',
       openAt: (data['openAt'] as Timestamp).toDate(),
       notificationsEnabled: data['notificationsEnabled'] ?? true,
       items: items,
@@ -93,6 +94,7 @@ class Album {
       "id": id,
       "name": name,
       "mode": mode.name,
+      "owner": owner, // Added to JSON
       "members": members,
       "coverPath": coverPath,
       "openAt": openAt,

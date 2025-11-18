@@ -125,7 +125,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
                   borderRadius: BorderRadius.circular(28),
                   child: Image.file(
                     _image!,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     
                   ),
                 )

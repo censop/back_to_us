@@ -6,29 +6,32 @@ class StackedMemberDisplay extends StatelessWidget {
   const StackedMemberDisplay({
     super.key,
     required this.displayUsers,
-    required this.userLength
+    required this.userLength,
+    this.radius = 15,
   });
 
+  final double radius;
   final int userLength;
   final List<AppUser> displayUsers;
 
   @override
   Widget build(BuildContext context) {
+
     
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           width: displayUsers.length * 30,
-          height: 40,
+          height: radius*2,
           child: Stack(
             children: displayUsers.asMap().entries.map((entry) {
               final index = entry.key;
               final user = entry.value;
               return Positioned(
-                left: index * 15,
+                left: index * radius,
                 child: CustomProfilePictureDisplayer(
-                  radius: 15,
+                  radius: radius,
                   profileUrl: user.profilePic ?? "",
                 ),
               );

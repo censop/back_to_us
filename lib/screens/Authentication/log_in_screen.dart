@@ -1,5 +1,6 @@
 
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/custom_primary_elevated_button.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
@@ -99,7 +100,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     child: Text("Forgot password?")
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
+                  CustomPrimaryElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()){
                         _onLoginPressed();
@@ -107,7 +108,6 @@ class _LogInScreenState extends State<LogInScreen> {
                     }, 
                     child: Text(
                       "Log In",
-                      style: Theme.of(context).textTheme.labelLarge
                     ),
                   ),
                   Divider(

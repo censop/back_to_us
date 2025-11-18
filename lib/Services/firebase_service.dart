@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Models/app_user.dart';
+import 'package:back_to_us/Services/user_cache_service.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -109,6 +110,7 @@ class FirebaseService {
 
 
   static void logOut(BuildContext context) async {
+    UserCacheService.clear();
     await FirebaseAuth.instance.signOut();
     FirebaseService.currentUser = null;
     Navigator.of(context).pushNamedAndRemoveUntil(

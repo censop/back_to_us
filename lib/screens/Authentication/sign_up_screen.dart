@@ -1,6 +1,7 @@
 import 'package:back_to_us/Screens/Terms_and_Policies/privacy_policy.dart';
 import 'package:back_to_us/Screens/Terms_and_Policies/terms_and_conditions.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Widgets/custom_primary_elevated_button.dart';
 import 'package:back_to_us/Widgets/custom_snackbar.dart';
 import 'package:back_to_us/routes.dart';
 import 'package:back_to_us/widgets/custom_text_form_field.dart';
@@ -114,7 +115,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 20),
                   isCreatingUser
                   ? const CircularProgressIndicator()
-                  : ElevatedButton(
+                  : CustomPrimaryElevatedButton(
                     onPressed: () {
                       setState(() {
                         _onSignUpPressed();

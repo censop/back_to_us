@@ -3,6 +3,9 @@ import 'package:back_to_us/Screens/NavigationBar/capture_screen.dart';
 import 'package:back_to_us/Screens/NavigationBar/home_screen.dart';
 import 'package:back_to_us/Screens/Profile/Settings/settings_screen.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Theme/my_app_theme.dart';
+import 'package:back_to_us/Widgets/custom_profile_picture_displayer.dart';
+import 'package:back_to_us/routes.dart';
 import 'package:flutter/material.dart';
 
 
@@ -34,6 +37,26 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+        title: Text(
+          "Back to Us",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            color: MyAppTheme.mainColor,
+          )
+        ),
+        centerTitle: true,
+        actions: [
+          CustomProfilePictureDisplayer(
+            radius: 24,
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                Routes.profile,
+              );
+            },
+          ),
+          SizedBox(width: 16,)
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         onDestinationSelected: (int index) {

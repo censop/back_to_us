@@ -11,7 +11,7 @@ import 'package:back_to_us/Screens/Profile/profile_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Screens/AlbumRelated/create_album_screen.dart';
-import 'package:back_to_us/Theme/app_theme.dart';
+import 'package:back_to_us/Theme/my_app_theme.dart';
 import 'package:back_to_us/Screens/Authentication/forgot_password.dart';
 import 'package:back_to_us/firebase_options.dart';
 import 'package:back_to_us/routes.dart';
@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
             Routes.capture : (context) => CaptureScreen(),
           },
         
-          theme: darkModeNotifier.value ? AppTheme.darkTheme : AppTheme.lightTheme,
+          theme: darkModeNotifier.value ? MyAppTheme.darkTheme : MyAppTheme.lightTheme,
         );
       }
     );

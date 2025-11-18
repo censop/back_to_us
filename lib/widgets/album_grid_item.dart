@@ -1,8 +1,11 @@
 
 import 'package:back_to_us/Models/album.dart';
-import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Models/app_user.dart';
+import 'package:back_to_us/Screens/AlbumRelated/locked_album_screen.dart';
 import 'package:back_to_us/Services/firebase_service.dart';
+import 'package:back_to_us/Services/notifiers.dart';
+import 'package:back_to_us/Services/user_cache_service.dart';
+import 'package:back_to_us/Widgets/album_cover.dart';
 import 'package:back_to_us/Widgets/album_info_dialog.dart';
 import 'package:back_to_us/Widgets/stacked_member_display.dart';
 import 'package:flutter/material.dart';
@@ -21,114 +24,69 @@ class AlbumGridItem extends StatefulWidget {
 }
 
 class _AlbumGridItemState extends State<AlbumGridItem> {
-
-  final _radius = 15.0;
+  final padding = 8.0;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      
       onTap:_onTap,
-      child: AspectRatio(
-        aspectRatio: 1.0,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(_radius),
-                  color: Theme.of(context).colorScheme.primary
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(_radius),
-                  child: widget.album.coverPath != null && widget.album.coverPath != ""
-                  ? Image.network(
-                    widget.album.coverPath,
-                    fit: BoxFit.cover,
-                  )
-                  : Icon(
-                    Icons.add_a_photo,
-                    color: Theme.of(context).colorScheme.surface,
-                  )
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(_radius),
-                  gradient: LinearGradient(
-                    colors: [const Color.fromARGB(255, 27, 26, 26), Colors.transparent],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter
-                  )
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 8, 
-              left: 8,
-              right: 8,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: AlbumCover(album: widget.album),
+          ),
+          SizedBox(height: padding),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: padding),
+              Row(
                 children: [
-                  Text(
-                    widget.album.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 228, 223, 223)
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      StreamBuilder<List<AppUser>>(
-                        stream: FirebaseService.albumMembersStream(widget.album.members), 
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return SizedBox();
-                          }
-                          
-                          final users = snapshot.data!;
-                          final displayUsers = users.take(3).toList();
-                          return StackedMemberDisplay(displayUsers: displayUsers, userLength: users.length,);
-                        }
-                      ),
-                      Spacer(),
-                      StreamBuilder<List<AlbumItem>>(
-                        stream: FirebaseService.albumItemsStream(widget.album.id, true),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return SizedBox();
-                          }
-                          final itemlength = snapshot.data!.length;
-
-                          return Text(
-                            "$itemlength",
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 228, 223, 223)
-                            ),
-                          );
-                        }
-                      )
-                    ],
+                  FutureBuilder<List<AppUser>>(
+                    future: UserCacheService.getUsers(widget.album.members.take(3).toList()),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const SizedBox(height: 24); 
+                      }
+                      
+                      final users = snapshot.data!;
+                      
+                      return StackedMemberDisplay(
+                        displayUsers: users, 
+                        userLength: widget.album.members.length, 
+                      );
+                    },
                   ),
                 ],
               ),
-            )
-          ],
-        ),
+              SizedBox(height: padding * (3/2)),
+              Text(
+                "Opens at: ${widget.album.readableOpenAt}",
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
+                ),
+              ),
+              SizedBox(height: padding * 0.5),
+              Text(
+                widget.album.name,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
 
   void _onTap() {
-    showDialog(
-      context: context, 
-      builder: (context) {
-        return AlbumInfoDialog(
-          album: widget.album,
-        );
-      }
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => LockedAlbumScreen(album: widget.album))
     );
   }
 }
