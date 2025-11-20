@@ -1,12 +1,10 @@
 
 import 'package:back_to_us/Models/album.dart';
 import 'package:back_to_us/Models/app_user.dart';
-import 'package:back_to_us/Screens/AlbumRelated/locked_album_screen.dart';
-import 'package:back_to_us/Services/firebase_service.dart';
-import 'package:back_to_us/Services/notifiers.dart';
+import 'package:back_to_us/Screens/AlbumRelated/album_screen.dart';
+
 import 'package:back_to_us/Services/user_cache_service.dart';
 import 'package:back_to_us/Widgets/album_cover.dart';
-import 'package:back_to_us/Widgets/album_info_dialog.dart';
 import 'package:back_to_us/Widgets/stacked_member_display.dart';
 import 'package:flutter/material.dart';
 
@@ -85,8 +83,9 @@ class _AlbumGridItemState extends State<AlbumGridItem> {
   }
 
   void _onTap() {
+
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => LockedAlbumScreen(album: widget.album))
+      MaterialPageRoute(builder: (context) => AlbumScreen(album: widget.album))
     );
   }
 }

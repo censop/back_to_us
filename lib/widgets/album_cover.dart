@@ -34,7 +34,6 @@ class _AlbumCoverState extends State<AlbumCover> {
         )
         : Icon(
           Icons.add_a_photo,
-          color: Color.fromARGB(255, 243, 241, 241),
         )
       ),
     );

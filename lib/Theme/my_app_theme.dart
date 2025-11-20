@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyAppTheme {
   static const String poppinsFont = "Poppins";
   static const String interFont = "Inter";
-  static const Color mainColor = Color.fromARGB(255, 130, 14, 42);
+  static const Color mainColor = Color.fromARGB(255, 116, 13, 13);
   static const Color darkContainerColor = const Color.fromARGB(255, 75, 69, 69);
   static const Color lightContainerColor = const Color.fromARGB(255, 206, 203, 203);
 
@@ -74,7 +74,6 @@ class MyAppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: mainColor,
     ).copyWith(
-      surfaceContainer: const Color.fromARGB(255, 219, 216, 216)
     ),
     fontFamily: interFont,
     brightness: Brightness.light,
@@ -87,7 +86,6 @@ class MyAppTheme {
       brightness: Brightness.dark,
       seedColor: mainColor,
     ).copyWith(
-      surfaceContainer: const Color.fromARGB(255, 44, 40, 40)
     ),
     fontFamily: interFont,
     textTheme: _baseTextTheme,

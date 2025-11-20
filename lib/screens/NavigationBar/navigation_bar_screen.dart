@@ -23,7 +23,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   List<Widget> screens = [
     HomeScreen(),
-    CaptureScreen(),  //Camera(),
+    CaptureScreen(), 
     SettingsScreen(),
   ];
 
@@ -36,6 +36,8 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isCaptureScreen = currentPageIndex == 1;
+
     return Scaffold(
        appBar: AppBar(
         title: Text(
@@ -57,15 +59,16 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           SizedBox(width: 16,)
         ],
       ),
+      extendBody: isCaptureScreen,
       bottomNavigationBar: NavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: currentPageIndex == 1 ? Theme.of(context).colorScheme.surface.withAlpha(0) :Theme.of(context).colorScheme.surface,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
         selectedIndex: currentPageIndex,
-        indicatorColor: Theme.of(context).colorScheme.surface,
+        indicatorColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: [ 
           NavigationDestination(
