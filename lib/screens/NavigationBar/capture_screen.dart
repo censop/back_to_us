@@ -3,6 +3,7 @@ import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
 import 'package:back_to_us/Services/notifiers.dart';
+import 'package:back_to_us/Theme/my_app_theme.dart';
 import 'package:back_to_us/Widgets/CaptureScreenButtons/capture_button.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/drawing_widget.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/text_widget.dart';
@@ -52,75 +53,71 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
+      child: Stack(
         children: [
-          Expanded(
-            child: Stack(
-              children: [
-                PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (value) {
-                    final oldUsesCamera = _usesCamera(modes[_currentPage]);
-                    final newUsesCamera = _usesCamera(modes[value]);
-                    
-                    setState(() {
-                      _currentPage = value;
-                      
-                      if (oldUsesCamera && !newUsesCamera) {
-                        _photoCallback = null;
-                        _startVideoRecordingCallback = null;
-                        _stopVideoRecordingCallback = null;
-                      }
-                    });
-                  },
-                  itemCount: modes.length,
-                  itemBuilder: (context, index) {
-                    return _buildModePage(index);
-                  },
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: _buildModeButton(_currentPage)
-                ),
-              ],
-            ),
+          PageView.builder(
+            controller: _pageController,
+            onPageChanged: (value) {
+              final oldUsesCamera = _usesCamera(modes[_currentPage]);
+              final newUsesCamera = _usesCamera(modes[value]);
+              
+              setState(() {
+                _currentPage = value;
+                
+                if (oldUsesCamera && !newUsesCamera) {
+                  _photoCallback = null;
+                  _startVideoRecordingCallback = null;
+                  _stopVideoRecordingCallback = null;
+                }
+              });
+            },
+            itemCount: modes.length,
+            itemBuilder: (context, index) {
+              return _buildModePage(index);
+            },
           ),
-          Padding(
-            padding: EdgeInsets.all(10),
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Column(
-              children: [               
-                ValueListenableBuilder(
-                  valueListenable: darkModeNotifier,
-                  builder: (context, value, child) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(modes.length, (index) {
-                        final isActive = _currentPage == index;
-                        return GestureDetector(
-                          onTap: () {
-                            _pageController.animateToPage(
-                              index,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildModeButton(_currentPage),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(modes.length, (index) {
+                      final isActive = _currentPage == index;
+                      return GestureDetector(
+                        onTap: () {
+                          _pageController.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: isActive ? MyAppTheme.mainColor : MyAppTheme.mainColor.withAlpha(60),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
                             child: Text(
                               modes[index].toUpperCase(),
                               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: value 
-                                  ? (isActive ? Colors.white : Colors.white54) 
-                                  : (isActive ? Colors.black : const Color.fromARGB(255, 123, 123, 123)),
-                                fontSize: isActive ? 18 : 14,
+                                color: isActive ? Colors.white : Colors.white54,  
+                                fontSize: isActive ? 16 : 12,
                                 fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                               ),
                             ),
                           ),
-                        );
-                      }),
-                    );
-                  }
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ],
             ),
@@ -212,7 +209,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
             }
           },
         );
-      case "Video": //make this like snapchat, it records as you press
+      case "Video": 
         return CaptureButton(
           innerCircleColor: const Color.fromARGB(255, 155, 37, 29),
           onTap: () async {
@@ -317,4 +314,5 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   bool _usesCamera(String mode) {
     return mode == "Photo" || mode == "Video";
   }
+ 
 }

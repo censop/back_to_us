@@ -4,8 +4,8 @@ class MyAppTheme {
   static const String poppinsFont = "Poppins";
   static const String interFont = "Inter";
   static const Color mainColor = Color.fromARGB(255, 116, 13, 13);
-  static const Color darkContainerColor = const Color.fromARGB(255, 75, 69, 69);
-  static const Color lightContainerColor = const Color.fromARGB(255, 206, 203, 203);
+  static const Color darkContainerColor = Color.fromARGB(255, 55, 50, 50);
+  static const Color lightContainerColor = Color.fromARGB(255, 218, 214, 214);
 
   static final TextTheme _baseTextTheme = TextTheme().copyWith(
     displayLarge: TextStyle(
@@ -74,6 +74,7 @@ class MyAppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: mainColor,
     ).copyWith(
+      //surfaceContainer: lightContainerColor
     ),
     fontFamily: interFont,
     brightness: Brightness.light,
@@ -86,6 +87,7 @@ class MyAppTheme {
       brightness: Brightness.dark,
       seedColor: mainColor,
     ).copyWith(
+      //surfaceContainer: darkContainerColor
     ),
     fontFamily: interFont,
     textTheme: _baseTextTheme,

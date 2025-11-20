@@ -1,6 +1,4 @@
 import 'package:back_to_us/Models/album.dart';
-import 'package:back_to_us/Services/notifiers.dart';
-import 'package:back_to_us/Theme/my_app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AlbumCover extends StatefulWidget {
@@ -20,11 +18,11 @@ class _AlbumCoverState extends State<AlbumCover> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
+    return Card(
+      /*decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(_radius),
         color: Theme.of(context).colorScheme.surfaceContainer
-      ),
+      ),*/
       child: ClipRRect(
         borderRadius: BorderRadius.circular(_radius),
         child: widget.album.coverPath != null && widget.album.coverPath != ""

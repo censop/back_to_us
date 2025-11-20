@@ -24,6 +24,7 @@ class _CustomPrimaryElevatedButtonState extends State<CustomPrimaryElevatedButto
       style: ElevatedButton.styleFrom(
         backgroundColor: MyAppTheme.mainColor,
         foregroundColor: Theme.of(context).colorScheme.onPrimary
+        
       ),
       child: widget.child,
     );

@@ -23,7 +23,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   List<Widget> screens = [
     HomeScreen(),
-    CaptureScreen(), 
+    CaptureScreen(),  //Camera(),
     SettingsScreen(),
   ];
 
@@ -36,8 +36,6 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isCaptureScreen = currentPageIndex == 1;
-
     return Scaffold(
        appBar: AppBar(
         title: Text(
@@ -59,34 +57,43 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           SizedBox(width: 16,)
         ],
       ),
-      extendBody: isCaptureScreen,
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: currentPageIndex == 1 ? Theme.of(context).colorScheme.surface.withAlpha(0) :Theme.of(context).colorScheme.surface,
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        indicatorColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        destinations: [ 
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined), 
-            selectedIcon: Icon(Icons.home),
-            label: "Home",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.add_circle_outline),
-            selectedIcon: Icon(Icons.add_circle), 
-            label: "New"
-          ), 
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined), 
-            selectedIcon: Icon(Icons.settings),
-            label: "Settings",
-          ),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+
+              color:Theme.of(context).colorScheme.onSurface.withAlpha(70)
+            )
+          )
+        ),
+        child: NavigationBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          selectedIndex: currentPageIndex,
+          indicatorColor: Theme.of(context).colorScheme.surface,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          destinations: [ 
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined), 
+              selectedIcon: Icon(Icons.home),
+              label: "Home",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.add_circle_outline),
+              selectedIcon: Icon(Icons.add_circle), 
+              label: "New"
+            ), 
+            NavigationDestination(
+              icon: Icon(Icons.settings_outlined), 
+              selectedIcon: Icon(Icons.settings),
+              label: "Settings",
+            ),
+          ],
+        ),
       ),
       body: isLoading ? Center(child: CircularProgressIndicator()) : screens[currentPageIndex],
 

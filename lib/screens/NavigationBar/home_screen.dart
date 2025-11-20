@@ -105,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   thickness: 1,
                   height: 64,
                   endIndent: 8,
+                  color: Theme.of(context).colorScheme.onSurface,
                   indent: 8,
                   radius: BorderRadius.circular(32),
                 ),
