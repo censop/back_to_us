@@ -27,7 +27,7 @@ class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisp
     ? StreamBuilder(
       stream: FirebaseService.profilePicStream(),
       builder: (context, asyncSnapshot) {
-        return InkWell(
+        return GestureDetector(
           onTap: widget.onPressed,
           child: CircleAvatar(
             backgroundColor: const Color.fromARGB(255, 206, 203, 203),
@@ -44,7 +44,7 @@ class _CustomProfilePictureDisplayerState extends State<CustomProfilePictureDisp
         );
       }
     )
-    : InkWell(
+    : GestureDetector(
       onTap: widget.onPressed,
       child: CircleAvatar(
         backgroundColor: const Color.fromARGB(255, 206, 203, 203),

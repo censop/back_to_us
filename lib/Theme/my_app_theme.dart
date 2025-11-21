@@ -7,6 +7,16 @@ class MyAppTheme {
   static const Color darkContainerColor = Color.fromARGB(255, 55, 50, 50);
   static const Color lightContainerColor = Color.fromARGB(255, 218, 214, 214);
 
+  static final ColorScheme _lightScheme = ColorScheme.fromSeed(
+    seedColor: mainColor,
+    brightness: Brightness.light,
+  );
+
+  static final ColorScheme _darkScheme = ColorScheme.fromSeed(
+    seedColor: mainColor,
+    brightness: Brightness.dark,
+  );
+
   static final TextTheme _baseTextTheme = TextTheme().copyWith(
     displayLarge: TextStyle(
       fontSize: 24, 
@@ -55,7 +65,7 @@ class MyAppTheme {
     bodySmall: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.normal,
-      //color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)
+
     ),
     labelLarge: TextStyle(
       fontSize: 14, 
@@ -71,26 +81,25 @@ class MyAppTheme {
   );
 
   static ThemeData lightTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: mainColor,
-    ).copyWith(
-      //surfaceContainer: lightContainerColor
-    ),
+    colorScheme: _lightScheme,
     fontFamily: interFont,
     brightness: Brightness.light,
-    textTheme: _baseTextTheme,
+    textTheme: _baseTextTheme.copyWith(
+      bodySmall: _baseTextTheme.bodySmall?.copyWith(
+        color: _lightScheme.onSurface.withValues(alpha: 0.5),
+      ),
+    ),
     useMaterial3: true,
   );
 
   static ThemeData darkTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.dark,
-      seedColor: mainColor,
-    ).copyWith(
-      //surfaceContainer: darkContainerColor
-    ),
+    colorScheme: _darkScheme,
     fontFamily: interFont,
-    textTheme: _baseTextTheme,
+    textTheme: _baseTextTheme.copyWith(
+      bodySmall: _baseTextTheme.bodySmall?.copyWith(
+        color: _darkScheme.onSurfaceVariant.withValues(alpha: 0.5),
+      ),
+    ),
     useMaterial3: true,
   );
 }

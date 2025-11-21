@@ -23,7 +23,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
 
   List<Widget> screens = [
     HomeScreen(),
-    CaptureScreen(),  //Camera(),
+    CaptureScreen(), 
     SettingsScreen(),
   ];
 
@@ -46,13 +46,16 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
         ),
         centerTitle: true,
         actions: [
-          CustomProfilePictureDisplayer(
-            radius: 24,
-            onPressed: () {
-              Navigator.of(context).pushNamed(
-                Routes.profile,
-              );
-            },
+          Hero(
+            tag: "profilePic",
+            child: CustomProfilePictureDisplayer(
+              radius: 24,
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  Routes.profile,
+                );
+              },
+            ),
           ),
           SizedBox(width: 16,)
         ],

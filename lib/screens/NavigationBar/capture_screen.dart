@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:back_to_us/Models/album_item.dart';
 import 'package:back_to_us/Screens/save_item_screen.dart';
 import 'package:back_to_us/Services/camera_service.dart';
-import 'package:back_to_us/Services/notifiers.dart';
 import 'package:back_to_us/Theme/my_app_theme.dart';
 import 'package:back_to_us/Widgets/CaptureScreenButtons/capture_button.dart';
 import 'package:back_to_us/Widgets/CaptureScreenModes/drawing_widget.dart';
@@ -100,17 +99,19 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Container(
-                            padding: EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: isActive ? MyAppTheme.mainColor : MyAppTheme.mainColor.withAlpha(60),
                               borderRadius: BorderRadius.circular(24),
                             ),
-                            child: Text(
-                              modes[index].toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: isActive ? Colors.white : Colors.white54,  
-                                fontSize: isActive ? 16 : 12,
-                                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                modes[index].toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  color: isActive ? Colors.white : Colors.white54,  
+                                  fontSize: isActive ? 16 : 12,
+                                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                                ),
                               ),
                             ),
                           ),

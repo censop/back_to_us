@@ -25,18 +25,24 @@ class _AlbumGallerySliversState extends State<AlbumGallerySlivers> {
     return SliverMainAxisGroup(
       slivers: [
         SliverToBoxAdapter(
-          child: Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  descending = !descending;
-                });
-              },
-              icon: descending
-                  ? const Icon(Icons.arrow_downward)
-                  : const Icon(Icons.arrow_upward),
-            ),
+          child: Row(
+            children: [
+              Text(
+                "Unlocked on ${widget.album.readableOpenAt}",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              Spacer(),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    descending = !descending;
+                  });
+                },
+                icon: descending
+                    ? const Icon(Icons.arrow_downward)
+                    : const Icon(Icons.arrow_upward),
+              ),
+            ],
           ),
         ),
 

@@ -20,8 +20,11 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              CustomProfilePictureDisplayer(
-               radius: 50,
+              Hero(
+                tag: "profilePic",
+                child: CustomProfilePictureDisplayer(
+                 radius: 50,
+                ),
               ),
               SizedBox(width: 10),
               Column(

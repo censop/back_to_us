@@ -58,7 +58,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       padding: const EdgeInsets.all(12),
                       child: AspectRatio(
                         aspectRatio: 5/6,
-                        child: AlbumCover(album: widget.album)
+                        child: Hero(
+                          tag: widget.album.id,
+                          child: AlbumCover(album: widget.album)
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -72,9 +75,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       builder: (context, snapshot) {
                         return Text(
                           "Created by ${snapshot.data ?? 'Unknown'}",
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
                         );
                       }
                     ),
